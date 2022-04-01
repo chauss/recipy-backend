@@ -14,7 +14,4 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and test with Maven
-        run: |
-          ls
-          pwd
-          ./mvnw --batch-mode --update-snapshots verify
+        run: ./mvnw --batch-mode --update-snapshots verify
