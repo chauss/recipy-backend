@@ -1,18 +1,15 @@
 package de.chauss.recipy.database.models
 
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
 
 @Entity
-@Table(name = "recipes")
 class Recipe(
     @Id
-    @Column
-    var id: UUID,
-
-    @Column(nullable = false)
-    var name: String
+    val recipeId: String = "recipe-${UUID.randomUUID()}",
+    val name: String = ""
 )
+
+interface RecipeRepository : JpaRepository<Recipe, String>

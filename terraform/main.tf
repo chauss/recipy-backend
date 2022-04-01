@@ -4,17 +4,15 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "2.16.0"
     }
-#    postgresql = {
-#      source  = "Facets-cloud/postgresql"
-#      version = "1.14.1"
-#    }
   }
 }
 
-provider "docker" {}
+provider "docker" {
+  host    = "npipe:////.//pipe//docker_engine"
+}
 
 resource "docker_image" "postgres" {
-  name = "postgres:14.2"
+  name = "postgres:14.2-alpine"
 }
 
 resource "docker_container" "postgres" {
@@ -28,13 +26,3 @@ resource "docker_container" "postgres" {
     external = "5432"
   }
 }
-
-#provider "postgresql" {
-#  host            = "localhost"
-#  port            = 5432
-#  database        = "recipy-backend"
-#  username        = var.dbSuperUser
-#  password        = var.dbPassword
-#  sslmode         = "require"
-#  connect_timeout = 15
-#}
