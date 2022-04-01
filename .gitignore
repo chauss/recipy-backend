@@ -63,5 +63,4 @@ Temporary Items
 
 # Terraform
 **/*.tfstate*
-
 **/.terraform*

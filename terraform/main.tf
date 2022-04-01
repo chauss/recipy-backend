@@ -8,7 +8,8 @@ terraform {
 }
 
 provider "docker" {
-  host    = "npipe:////.//pipe//docker_engine"
+  # Enable for windows
+  # host = "npipe:////.//pipe//docker_engine"
 }
 
 resource "docker_image" "postgres" {
@@ -20,7 +21,11 @@ resource "docker_container" "postgres" {
   name     = var.containerName
   restart  = "always"
   hostname = var.containerName
-  env      = ["POSTGRES_USER=${var.dbSuperUser}", "POSTGRES_PASSWORD=${var.dbPassword}", "POSTGRES_DB=${var.dbName}"]
+  env      = [
+    "POSTGRES_USER=${var.dbSuperUser}",
+    "POSTGRES_PASSWORD=${var.dbPassword}",
+    "POSTGRES_DB=${var.dbName}"
+  ]
   ports {
     internal = "5432"
     external = "5432"
