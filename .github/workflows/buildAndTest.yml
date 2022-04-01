@@ -3,8 +3,6 @@ on: [push]
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -16,4 +14,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and test with Maven
-        run: ./mvnw --batch-mode --update-snapshots verify
+        run:
+          ls
+          pwd
+          ./mvnw --batch-mode --update-snapshots verify
