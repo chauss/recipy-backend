@@ -1,4 +1,4 @@
-package de.chauss.recipy.recipy
+package de.chauss.recipy
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
