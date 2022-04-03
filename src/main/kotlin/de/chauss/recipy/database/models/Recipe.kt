@@ -8,7 +8,7 @@ import java.util.UUID
 @Entity
 class Recipe(
     @Id
-    val recipeId: String = "recipe-${UUID.randomUUID()}",
+    val recipeId: String = "recipe_${UUID.randomUUID()}",
     val name: String = ""
 )
 
