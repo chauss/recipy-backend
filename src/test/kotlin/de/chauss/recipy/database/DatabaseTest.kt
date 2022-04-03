@@ -5,6 +5,7 @@ import de.chauss.recipy.database.models.RecipeRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -26,7 +27,7 @@ fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit)
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @Testcontainers
-@Profile("local")
+@Disabled("Can only run local (not in pipeline)")
 class DatabaseTest(
     @Autowired val recipeRepository: RecipeRepository,
     @Autowired val jdbc: JdbcTemplate
