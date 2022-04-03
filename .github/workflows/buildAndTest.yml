@@ -17,4 +17,4 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and test with Maven
-        run: ./mvnw --batch-mode --update-snapshots verify
+        run: ./mvnw --batch-mode --update-snapshots verify -Dspring.profiles.active=github

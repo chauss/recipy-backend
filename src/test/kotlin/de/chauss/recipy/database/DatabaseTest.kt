@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -25,6 +26,7 @@ fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit)
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @Testcontainers
+@Profile("local")
 class DatabaseTest(
     @Autowired val recipeRepository: RecipeRepository,
     @Autowired val jdbc: JdbcTemplate
