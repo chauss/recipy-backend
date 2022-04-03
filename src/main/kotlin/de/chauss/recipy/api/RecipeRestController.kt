@@ -1,7 +1,8 @@
 package de.chauss.recipy.api
 
+import de.chauss.recipy.database.CreationResultStatus
 import de.chauss.recipy.database.models.Recipe
-import de.chauss.recipy.database.models.RecipeRepository
+import de.chauss.recipy.service.RecipeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,17 +13,18 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class RecipeRestController(
-    @Autowired val recipeRepository: RecipeRepository
+    @Autowired val recipeService: RecipeService
     ) {
     @GetMapping("/recipes")
-    fun getRecipe(): List<Recipe> {
-        val recipes = recipeRepository.findAll()
-        return recipes.toList()
-    }
+    fun getRecipe(): List<Recipe> = recipeService.getAllRecipes()
 
     @PostMapping("/recipe", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createRecipe(@RequestBody recipe: Recipe): HttpStatus {
-        recipeRepository.save(recipe)
-        return HttpStatus.CREATED
+    fun createRecipe(@RequestBody name: String): HttpStatus {
+        val result = recipeService.createRecipe(name)
+        return if (result.status == CreationResultStatus.ALREADY_EXISTS) {
+            HttpStatus.CONFLICT
+        } else {
+            HttpStatus.CREATED
+        }
     }
 }

@@ -1,16 +1,13 @@
-package de.chauss.recipy.database
+package de.chauss.recipy.database.models
 
-import de.chauss.recipy.database.models.Recipe
-import de.chauss.recipy.database.models.RecipeRepository
+import de.chauss.recipy.database.CreationResultStatus
+import de.chauss.recipy.service.RecipeService
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -20,7 +17,7 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
 
-fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
+fun postgresForRecipes(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
     PostgreSQLContainer<Nothing>(DockerImageName.parse(imageName)).apply(opts)
 
 @SpringBootTest(
@@ -28,8 +25,8 @@ fun postgres(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit)
 )
 @Testcontainers
 @Disabled("Can only run local (not in pipeline)")
-class DatabaseTest(
-    @Autowired val recipeRepository: RecipeRepository,
+class RecipeTest(
+    @Autowired val recipeService: RecipeService,
     @Autowired val jdbc: JdbcTemplate
 ) {
 
@@ -40,7 +37,7 @@ class DatabaseTest(
 
     companion object {
         @Container
-        val postgresqlContainer = postgres("postgres:14.2-alpine") {
+        val postgresqlContainer = postgresForRecipes("postgres:14.2-alpine") {
             withDatabaseName("recipy-backend-it")
             withUsername("root")
             withPassword("root")
@@ -64,13 +61,16 @@ class DatabaseTest(
     @Test
     fun `save a recipe and find it again`() {
         // given
-        val recipeToSave = Recipe(name = "Kartoffelauflauf")
-        val recipeId = recipeToSave.recipeId
+        val recipeNameToSave = "Kartoffelauflauf"
+
         // when
-        recipeRepository.save(recipeToSave)
-        val recipeFound = recipeRepository.findById(recipeId).get()
+        val result = recipeService.createRecipe(recipeNameToSave)
+        assertEquals(result.status, CreationResultStatus.CREATED)
+        assertNotNull(result.id)
+        val recipeId = result.id!!
 
         // expect
-        assertEquals(recipeFound.name, recipeToSave.name)
-        }
+        val recipeFound = recipeService.getRecipeById(recipeId).get()
+        assertEquals(recipeFound.name, recipeNameToSave)
     }
+}
