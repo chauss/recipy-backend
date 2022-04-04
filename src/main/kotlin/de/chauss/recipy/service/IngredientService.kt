@@ -1,7 +1,5 @@
 package de.chauss.recipy.service
 
-import de.chauss.recipy.database.CreationResult
-import de.chauss.recipy.database.CreationResultStatus
 import de.chauss.recipy.database.models.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -22,30 +20,63 @@ class IngredientService(
         val newIngredientUnit = IngredientUnit(name = name)
         ingredientUnitRepository.save(newIngredientUnit)
 
-        return CreationResult(status = CreationResultStatus.CREATED, id = newIngredientUnit.ingredientUnitId)
+        return CreationResult(
+            status = CreationResultStatus.CREATED, id = newIngredientUnit.ingredientUnitId
+        )
     }
 
     fun getIngredientUnitById(id: String): IngredientUnit =
         ingredientUnitRepository.findById(id).get()
 
-    fun findIngredientUnitByName(ingredientUnitName: String): List<IngredientUnit?>? =
+    fun findIngredientUnitByName(ingredientUnitName: String): List<IngredientUnit>? =
         ingredientUnitRepository.findByName(ingredientUnitName)
 
     // Ingredient
-    fun createIngredient(name: String, ingredientUnit: IngredientUnit): CreationResult {
+    fun createIngredient(name: String): CreationResult {
         val existingIngredients = ingredientRepository.findByName(name)
 
         if (existingIngredients?.isNotEmpty() == true) {
-            val ingredientWithSameNameAndUnitExists = existingIngredients.any { ingredient -> ingredient.unit.ingredientUnitId == ingredientUnit.ingredientUnitId }
-            if (ingredientWithSameNameAndUnitExists) {
-                return CreationResult(status = CreationResultStatus.ALREADY_EXISTS)
-            }
+            return CreationResult(status = CreationResultStatus.ALREADY_EXISTS)
         }
-        val newIngredient = Ingredient(name = name, unit = ingredientUnit)
+        val newIngredient = Ingredient(name = name)
         ingredientRepository.save(newIngredient)
 
-        return CreationResult(status = CreationResultStatus.CREATED, id = newIngredient.ingredientId)
+        return CreationResult(
+            status = CreationResultStatus.CREATED, id = newIngredient.ingredientId
+        )
     }
 
+    fun findIngredientByName(name: String) = ingredientRepository.findByName(name)
+
     fun getIngredientById(id: String) = ingredientRepository.findById(id).get()
+
+    // IngredientUsage
+    fun createIngredientUsage(
+        recipeId: String, ingredientId: String, ingredientUnitId: String, amount: Double
+    ): CreationResult {
+        val ingredient =
+            ingredientRepository.findById(ingredientId).orElseGet(null)
+                ?: return CreationResult(
+                    status = CreationResultStatus.INVALID_ARGUMENTS,
+                    message = "Given ingredientI does not exist"
+                )
+
+        val ingredientUnit =
+            ingredientUnitRepository.findById(ingredientUnitId).orElseGet(null)
+                ?: return CreationResult(
+                    status = CreationResultStatus.INVALID_ARGUMENTS,
+                    message = "Given ingredientUnitId does not exist"
+                )
+
+        // TODO Get all ingredientUsages of recipeId and check if there is already a usage of the same ingredientId
+
+        val newIngredientUsage = IngredientUsage(ingredient = ingredient, unit = ingredientUnit, amount = amount)
+        ingredientUsageRepository.save(newIngredientUsage)
+
+        return CreationResult(
+            status = CreationResultStatus.CREATED, id = newIngredientUsage.ingredientUsageId
+        )
+    }
+
+    fun getIngredientUsageById(id: String) = ingredientUsageRepository.findById(id).get()
 }

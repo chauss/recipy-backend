@@ -10,9 +10,7 @@ import java.util.UUID
 class Ingredient (
     @Id
     val ingredientId: String = "ingredient_${UUID.randomUUID()}",
-    val name: String = "",
-    @OneToOne
-    val unit: IngredientUnit = IngredientUnit()
+    val name: String = ""
 )
 
 interface IngredientRepository : JpaRepository<Ingredient, String> {

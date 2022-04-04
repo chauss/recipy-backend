@@ -1,6 +1,6 @@
 package de.chauss.recipy.database.models
 
-import de.chauss.recipy.database.CreationResultStatus
+import de.chauss.recipy.service.CreationResultStatus
 import de.chauss.recipy.service.IngredientService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -31,15 +31,9 @@ fun postgresForIngredients(imageName: String, opts: JdbcDatabaseContainer<Nothin
 @TestMethodOrder(OrderAnnotation::class)
 class IngredientTest(
     @Autowired val ingredientService: IngredientService,
-    @Autowired val jdbc: JdbcTemplate
 ) {
-
     val ingredientUnitName = "TL"
-
-    @AfterEach
-    fun cleanup() {
-        jdbc.execute("DELETE FROM ingredients WHERE true")
-    }
+    val ingredientName = "Olivenöl"
 
     companion object {
         @Container
@@ -60,12 +54,13 @@ class IngredientTest(
     }
 
     @Test
+    @Order(1)
     fun `container is up and running`() {
         assertTrue(postgresqlContainer.isRunning)
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     fun `created ingredientUnit is found again`() {
         // when
         val result = ingredientService.createIngredientUnit(ingredientUnitName)
@@ -78,23 +73,46 @@ class IngredientTest(
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     fun `created ingredient is found again`() {
-        // given
-        val ingredientName = "Olivenöl"
-        val existingIngredientUnits = ingredientService.findIngredientUnitByName(ingredientUnitName)
-        assertNotNull(existingIngredientUnits)
-        assertNotEquals(existingIngredientUnits!!.size, 0)
-        val ingredientUnit = existingIngredientUnits[0]!!
-
         // when
-        val result = ingredientService.createIngredient(ingredientName, ingredientUnit)
+        val result = ingredientService.createIngredient(ingredientName)
+
+        // expect
         assertEquals(result.status, CreationResultStatus.CREATED)
         assertNotNull(result.id)
         val ingredientFound = ingredientService.getIngredientById(result.id!!)
+        assertEquals(ingredientFound.name, ingredientName)
+    }
+
+    @Test
+    @Order(4)
+    fun `created ingredientUsage is found again`() {
+        val existingIngredients = ingredientService.findIngredientByName(ingredientName)
+        assertNotNull(existingIngredients)
+        assertNotEquals(existingIngredients!!.size, 0)
+        val ingredient = existingIngredients[0]
+
+        val existingIngredientUnits = ingredientService.findIngredientUnitByName(ingredientUnitName)
+        assertNotNull(existingIngredientUnits)
+        assertNotEquals(existingIngredientUnits!!.size, 0)
+        val ingredientUnit = existingIngredientUnits[0]
+
+        // when
+        val result = ingredientService.createIngredientUsage(
+            // TODO replace with corresponding recipe
+            "",
+            ingredientId = ingredient.ingredientId,
+            ingredientUnitId = ingredientUnit.ingredientUnitId,
+            amount = 2.0
+        )
 
         // expect
-        assertEquals(ingredientFound.name, ingredientName)
-        assertEquals(ingredientFound.unit.ingredientUnitId, ingredientUnit.ingredientUnitId)
+        assertEquals(result.status, CreationResultStatus.CREATED)
+        assertNotNull(result.id)
+        val ingredientUsageFound = ingredientService.getIngredientUsageById(result.id!!)
+        assertEquals(ingredientUsageFound.ingredientUsageId, result.id)
+        assertEquals(ingredientUsageFound.ingredient.ingredientId, ingredient.ingredientId)
+        assertEquals(ingredientUsageFound.unit.ingredientUnitId, ingredientUnit.ingredientUnitId)
     }
 }

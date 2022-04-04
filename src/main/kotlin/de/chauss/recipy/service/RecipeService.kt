@@ -1,7 +1,5 @@
 package de.chauss.recipy.service
 
-import de.chauss.recipy.database.CreationResult
-import de.chauss.recipy.database.CreationResultStatus
 import de.chauss.recipy.database.models.Recipe
 import de.chauss.recipy.database.models.RecipeRepository
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,6 +1,6 @@
 package de.chauss.recipy.database.models
 
-import de.chauss.recipy.database.CreationResultStatus
+import de.chauss.recipy.service.CreationResultStatus
 import de.chauss.recipy.service.RecipeService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*

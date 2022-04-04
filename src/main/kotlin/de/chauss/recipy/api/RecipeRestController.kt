@@ -1,6 +1,6 @@
 package de.chauss.recipy.api
 
-import de.chauss.recipy.database.CreationResultStatus
+import de.chauss.recipy.service.CreationResultStatus
 import de.chauss.recipy.database.models.Recipe
 import de.chauss.recipy.service.RecipeService
 import org.springframework.beans.factory.annotation.Autowired

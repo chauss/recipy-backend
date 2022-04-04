@@ -9,10 +9,12 @@ import java.util.UUID
 @Entity(name = "ingredient_usages")
 class IngredientUsage(
     @Id
-    val ingredientId: String = "ingredient_usage_${UUID.randomUUID()}",
+    val ingredientUsageId: String = "ingredient_usage_${UUID.randomUUID()}",
     @OneToOne
     val ingredient: Ingredient = Ingredient(),
-    val amount: Int = 0,
+    @OneToOne
+    val unit: IngredientUnit = IngredientUnit(),
+    val amount: Double = 0.0,
 )
 
 interface IngredientUsageRepository : JpaRepository<IngredientUsage, String>
