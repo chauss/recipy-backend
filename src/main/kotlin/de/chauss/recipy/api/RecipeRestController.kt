@@ -19,8 +19,8 @@ class RecipeRestController(
     fun getRecipe(): List<Recipe> = recipeService.getAllRecipes()
 
     @PostMapping("/recipe", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createRecipe(@RequestBody name: String): HttpStatus {
-        val result = recipeService.createRecipe(name)
+    fun createRecipe(@RequestBody request: CreateRecipeRequest): HttpStatus {
+        val result = recipeService.createRecipe(request.name)
         return if (result.status == CreationResultStatus.ALREADY_EXISTS) {
             HttpStatus.CONFLICT
         } else {
@@ -28,3 +28,7 @@ class RecipeRestController(
         }
     }
 }
+
+class CreateRecipeRequest (
+    val name: String
+)
