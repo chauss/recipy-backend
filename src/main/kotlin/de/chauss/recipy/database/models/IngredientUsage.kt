@@ -1,9 +1,6 @@
 package de.chauss.recipy.database.models
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToOne
+import jakarta.persistence.*
 import org.springframework.data.jpa.repository.JpaRepository
 import java.time.Instant
 import java.util.UUID
@@ -13,13 +10,18 @@ class IngredientUsage(
     @Id
     val ingredientUsageId: String = "ingredient_usage_${UUID.randomUUID()}",
     @OneToOne
-    val ingredient: Ingredient = Ingredient(),
+    @JoinColumn(name = "ingredientId")
+    var ingredient: Ingredient = Ingredient(),
     @OneToOne
-    val unit: IngredientUnit = IngredientUnit(),
-    @ManyToOne
+    @JoinColumn(name = "ingredientUnitId")
+    var unit: IngredientUnit = IngredientUnit(),
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipeId")
     val recipe: Recipe = Recipe(),
-    val amount: Double = 0.0,
+    var amount: Double = 0.0,
     val created: Instant = Instant.now()
 )
 
-interface IngredientUsageRepository : JpaRepository<IngredientUsage, String>
+interface IngredientUsageRepository : JpaRepository<IngredientUsage, String> {
+    fun findByRecipeRecipeId(recipeId: String): List<IngredientUsage>?
+}

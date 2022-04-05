@@ -3,18 +3,17 @@ package de.chauss.recipy.service
 import de.chauss.recipy.database.models.IngredientUsage
 import de.chauss.recipy.database.models.Recipe
 import de.chauss.recipy.database.models.RecipeRepository
+import de.chauss.recipy.service.dtos.RecipeDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class RecipeService(
     @Autowired val recipeRepository: RecipeRepository
 ) {
-
-    fun getAllRecipes(): List<Recipe> {
+    fun getAllRecipes(): List<RecipeDto> {
         val recipes = recipeRepository.findAll()
-        return recipes.toList()
+        return recipes.map { RecipeDto.from(it) }
     }
 
     fun createRecipe(name: String): CreationResult {
@@ -29,11 +28,11 @@ class RecipeService(
         return CreationResult(status = CreationResultStatus.CREATED, id = newRecipe.recipeId)
     }
 
-    fun getRecipeById(recipeId: String): Optional<Recipe> = recipeRepository.findById(recipeId)
-
-    fun addIngredientUsage(recipeId: String, ingredientUsage: IngredientUsage) {
-        val recipe = recipeRepository.findById(recipeId).get()
-        recipe.addIngredientUsage(ingredientUsage)
-        recipeRepository.save(recipe)
+    fun getRecipeById(recipeId: String): RecipeDto? {
+        val recipe = recipeRepository.findById(recipeId)
+        if (recipe.isPresent) {
+            return RecipeDto.from(recipe.get())
+        }
+        return null
     }
 }

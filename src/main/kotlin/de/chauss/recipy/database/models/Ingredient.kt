@@ -1,20 +1,21 @@
 package de.chauss.recipy.database.models
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import jakarta.persistence.OneToOne
 import org.springframework.data.jpa.repository.JpaRepository
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 @Entity(name = "ingredients")
-class Ingredient (
+class Ingredient(
     @Id
     val ingredientId: String = "ingredient_${UUID.randomUUID()}",
+    @Column(unique = true)
     val name: String = "",
     val created: Instant = Instant.now()
 )
 
 interface IngredientRepository : JpaRepository<Ingredient, String> {
-    fun findByName(name: String?): List<Ingredient>?
+    fun findByName(name: String): Ingredient?
 }

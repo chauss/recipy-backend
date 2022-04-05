@@ -1,7 +1,5 @@
-package de.chauss.recipy.database.models
+package de.chauss.recipy.service
 
-import de.chauss.recipy.service.CreationResultStatus
-import de.chauss.recipy.service.RecipeService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
@@ -70,7 +68,7 @@ class RecipeTest(
         val recipeId = result.id!!
 
         // expect
-        val recipeFound = recipeService.getRecipeById(recipeId).get()
+        val recipeFound = recipeService.getRecipeById(recipeId)!!
         assertEquals(recipeFound.name, recipeNameToSave)
     }
 }
