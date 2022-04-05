@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service
 class IngredientService(
     @Autowired val ingredientUsageRepository: IngredientUsageRepository,
     @Autowired val ingredientUnitRepository: IngredientUnitRepository,
-    @Autowired val ingredientRepository: IngredientRepository
+    @Autowired val ingredientRepository: IngredientRepository,
+    @Autowired val recipeService: RecipeService
 ) {
     // Ingredient Unit
     fun createIngredientUnit(name: String): CreationResult {
@@ -58,7 +59,7 @@ class IngredientService(
             ingredientRepository.findById(ingredientId).orElseGet(null)
                 ?: return CreationResult(
                     status = CreationResultStatus.INVALID_ARGUMENTS,
-                    message = "Given ingredientI does not exist"
+                    message = "Given ingredientId does not exist"
                 )
 
         val ingredientUnit =
@@ -68,10 +69,28 @@ class IngredientService(
                     message = "Given ingredientUnitId does not exist"
                 )
 
-        // TODO Get all ingredientUsages of recipeId and check if there is already a usage of the same ingredientId
+        val recipe =
+            recipeService.getRecipeById(recipeId).orElseGet(null)
+                ?: return CreationResult(
+                    status = CreationResultStatus.INVALID_ARGUMENTS,
+                    message = "Given recipeId does not exist"
+                )
 
-        val newIngredientUsage = IngredientUsage(ingredient = ingredient, unit = ingredientUnit, amount = amount)
+        if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId }) {
+            return CreationResult(
+                status = CreationResultStatus.INVALID_ARGUMENTS,
+                message = "Given ingredient does already exist in given recipe"
+            )
+        }
+
+        val newIngredientUsage = IngredientUsage(
+            ingredient = ingredient,
+            unit = ingredientUnit,
+            recipe = recipe,
+            amount = amount
+        )
         ingredientUsageRepository.save(newIngredientUsage)
+        recipeService.addIngredientUsage(recipeId, newIngredientUsage)
 
         return CreationResult(
             status = CreationResultStatus.CREATED, id = newIngredientUsage.ingredientUsageId

@@ -1,5 +1,6 @@
 package de.chauss.recipy.service
 
+import de.chauss.recipy.database.models.IngredientUsage
 import de.chauss.recipy.database.models.Recipe
 import de.chauss.recipy.database.models.RecipeRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,4 +30,10 @@ class RecipeService(
     }
 
     fun getRecipeById(recipeId: String): Optional<Recipe> = recipeRepository.findById(recipeId)
+
+    fun addIngredientUsage(recipeId: String, ingredientUsage: IngredientUsage) {
+        val recipe = recipeRepository.findById(recipeId).get()
+        recipe.addIngredientUsage(ingredientUsage)
+        recipeRepository.save(recipe)
+    }
 }

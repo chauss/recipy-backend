@@ -2,6 +2,7 @@ package de.chauss.recipy.database.models
 
 import de.chauss.recipy.service.CreationResultStatus
 import de.chauss.recipy.service.IngredientService
+import de.chauss.recipy.service.RecipeService
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Disabled
@@ -31,6 +32,7 @@ fun postgresForIngredients(imageName: String, opts: JdbcDatabaseContainer<Nothin
 @TestMethodOrder(OrderAnnotation::class)
 class IngredientTest(
     @Autowired val ingredientService: IngredientService,
+    @Autowired val recipeService: RecipeService,
 ) {
     val ingredientUnitName = "TL"
     val ingredientName = "Olivenöl"
@@ -88,6 +90,12 @@ class IngredientTest(
     @Test
     @Order(4)
     fun `created ingredientUsage is found again`() {
+        // given
+        val ingredientUsageAmount = 2.0
+        val recipeCreationResult = recipeService.createRecipe("Kartoffelauflauf")
+        assertNotNull(recipeCreationResult.id)
+        val recipeId = recipeCreationResult.id!!
+
         val existingIngredients = ingredientService.findIngredientByName(ingredientName)
         assertNotNull(existingIngredients)
         assertNotEquals(existingIngredients!!.size, 0)
@@ -100,11 +108,10 @@ class IngredientTest(
 
         // when
         val result = ingredientService.createIngredientUsage(
-            // TODO replace with corresponding recipe
-            "",
+            recipeId,
             ingredientId = ingredient.ingredientId,
             ingredientUnitId = ingredientUnit.ingredientUnitId,
-            amount = 2.0
+            amount = ingredientUsageAmount
         )
 
         // expect
@@ -114,5 +121,51 @@ class IngredientTest(
         assertEquals(ingredientUsageFound.ingredientUsageId, result.id)
         assertEquals(ingredientUsageFound.ingredient.ingredientId, ingredient.ingredientId)
         assertEquals(ingredientUsageFound.unit.ingredientUnitId, ingredientUnit.ingredientUnitId)
+        assertEquals(ingredientUsageFound.amount, ingredientUsageAmount)
+    }
+
+    @Test
+    @Order(5)
+    fun `recipe can't have two ingredientUsages for the same ingredientId`() {
+        // given
+        val ingredientUsageAmount = 2.0
+        val recipeCreationResult = recipeService.createRecipe("Kartoffelsalat")
+        assertNotNull(recipeCreationResult.id)
+        val recipeId = recipeCreationResult.id!!
+
+        val existingIngredients = ingredientService.findIngredientByName(ingredientName)
+        assertNotNull(existingIngredients)
+        assertNotEquals(existingIngredients!!.size, 0)
+        val ingredient = existingIngredients[0]
+
+        val existingIngredientUnits = ingredientService.findIngredientUnitByName(ingredientUnitName)
+        assertNotNull(existingIngredientUnits)
+        assertNotEquals(existingIngredientUnits!!.size, 0)
+        val ingredientUnit = existingIngredientUnits[0]
+
+        // when
+        val successResult = ingredientService.createIngredientUsage(
+            recipeId,
+            ingredientId = ingredient.ingredientId,
+            ingredientUnitId = ingredientUnit.ingredientUnitId,
+            amount = ingredientUsageAmount
+        )
+        val failureResult = ingredientService.createIngredientUsage(
+            recipeId,
+            ingredientId = ingredient.ingredientId,
+            ingredientUnitId = ingredientUnit.ingredientUnitId,
+            amount = 3.0
+        )
+
+        // expect
+        assertEquals(successResult.status, CreationResultStatus.CREATED)
+        assertNotNull(successResult.id)
+        assertEquals(failureResult.status, CreationResultStatus.INVALID_ARGUMENTS)
+        assertNull(failureResult.id)
+        val ingredientUsageFound = ingredientService.getIngredientUsageById(successResult.id!!)
+        assertEquals(ingredientUsageFound.ingredientUsageId, successResult.id)
+        assertEquals(ingredientUsageFound.ingredient.ingredientId, ingredient.ingredientId)
+        assertEquals(ingredientUsageFound.unit.ingredientUnitId, ingredientUnit.ingredientUnitId)
+        assertEquals(ingredientUsageFound.amount, ingredientUsageAmount)
     }
 }
