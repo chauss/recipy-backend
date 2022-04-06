@@ -1,7 +1,6 @@
 package de.chauss.recipy.service.dtos
 
 import de.chauss.recipy.database.models.IngredientUsage
-import java.time.Instant
 
 class IngredientUsageDto(
     val ingredientUsageId: String,
@@ -9,7 +8,7 @@ class IngredientUsageDto(
     val ingredientUnitId: String,
     val recipeId: String,
     val amount: Double,
-    val created: Instant
+    val created: Long
 ) {
     companion object {
         fun from(ingredientUsage: IngredientUsage): IngredientUsageDto =
@@ -19,7 +18,7 @@ class IngredientUsageDto(
                 ingredientUnitId = ingredientUsage.unit.ingredientUnitId,
                 recipeId = ingredientUsage.recipe.recipeId,
                 amount = ingredientUsage.amount,
-                created = ingredientUsage.created,
+                created = ingredientUsage.created.toEpochMilli(),
             )
     }
 }
