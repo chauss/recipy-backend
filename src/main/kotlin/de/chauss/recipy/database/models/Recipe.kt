@@ -1,5 +1,6 @@
 package de.chauss.recipy.database.models
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
@@ -13,7 +14,8 @@ class Recipe(
     @Id
     val recipeId: String = "recipe_${UUID.randomUUID()}",
     val name: String = "",
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe")
+    // TODO test if deletion of a recipe deletes also the ingredientusages
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
     val ingredientUsages: Set<IngredientUsage> = HashSet(),
     val created: Instant = Instant.now(),
 )
