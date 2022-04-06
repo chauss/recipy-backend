@@ -1,6 +1,5 @@
 package de.chauss.recipy.service
 
-import de.chauss.recipy.database.models.IngredientUsage
 import de.chauss.recipy.database.models.Recipe
 import de.chauss.recipy.database.models.RecipeRepository
 import de.chauss.recipy.service.dtos.RecipeDto
@@ -34,5 +33,12 @@ class RecipeService(
             return RecipeDto.from(recipe.get())
         }
         return null
+    }
+
+    fun deleteRecipeById(recipeId: String): Boolean {
+        recipeRepository.findById(recipeId).orElse(null) ?: return true
+        recipeRepository.deleteById(recipeId)
+        recipeRepository.findById(recipeId).orElse(null) ?: return true
+        return false
     }
 }

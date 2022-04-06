@@ -103,21 +103,21 @@ class IngredientService(
         recipeId: String, ingredientId: String, ingredientUnitId: String, amount: Double
     ): CreationResult {
         val ingredient =
-            ingredientRepository.findById(ingredientId).orElseGet(null)
+            ingredientRepository.findById(ingredientId).orElse(null)
                 ?: return CreationResult(
                     status = CreationResultStatus.INVALID_ARGUMENTS,
                     message = "ERROR: IngredientId \"$ingredientId\" does not exist"
                 )
 
         val ingredientUnit =
-            ingredientUnitRepository.findById(ingredientUnitId).orElseGet(null)
+            ingredientUnitRepository.findById(ingredientUnitId).orElse(null)
                 ?: return CreationResult(
                     status = CreationResultStatus.INVALID_ARGUMENTS,
                     message = "ERROR: IngredientUnitId \"$ingredientUnitId\" does not exist"
                 )
 
         val recipe =
-            recipeRepository.findById(recipeId).orElseGet(null)
+            recipeRepository.findById(recipeId).orElse(null)
                 ?: return CreationResult(
                     status = CreationResultStatus.INVALID_ARGUMENTS,
                     message = "ERROR: RecipeId \"$recipeId\" does not exist"

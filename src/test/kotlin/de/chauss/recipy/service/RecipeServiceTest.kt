@@ -30,7 +30,7 @@ class RecipeTest(
 
     @AfterEach
     fun cleanup() {
-        jdbc.execute("DROP TABLE IF EXISTS recipe")
+        jdbc.execute("DELETE FROM recipes WHERE TRUE")
     }
 
     companion object {
@@ -70,5 +70,35 @@ class RecipeTest(
         // expect
         val recipeFound = recipeService.getRecipeById(recipeId)!!
         assertEquals(recipeFound.name, recipeNameToSave)
+    }
+
+    @Test
+    fun `deleted recipe is not found again`() {
+        // given
+        val recipeNameToSave = "Kartoffelauflauf"
+        val result = recipeService.createRecipe(recipeNameToSave)
+        assertEquals(result.status, CreationResultStatus.CREATED)
+        assertNotNull(result.id)
+        val recipeId = result.id!!
+        val recipeFound = recipeService.getRecipeById(recipeId)!!
+        assertEquals(recipeFound.name, recipeNameToSave)
+
+        // when
+        val recipeDeleted = recipeService.deleteRecipeById(recipeId)
+
+        // expect
+        assertTrue(recipeDeleted);
+        val recipeFoundAgain = recipeService.getRecipeById(recipeId)
+        assertNull(recipeFoundAgain)
+    }
+
+    @Test
+    fun `deleting an unknown recipe returns true`() {
+        val unknownRecipeId = "unknown_recipe_id"
+        // when
+        val recipeDeleted = recipeService.deleteRecipeById(unknownRecipeId)
+
+        // expect
+        assertTrue(recipeDeleted);
     }
 }
