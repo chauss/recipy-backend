@@ -1,6 +1,7 @@
 package de.chauss.recipy.database.models
 
 import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.Id
@@ -13,6 +14,7 @@ import java.util.*
 class Recipe(
     @Id
     val recipeId: String = "recipe_${UUID.randomUUID()}",
+    @Column(unique = true)
     val name: String = "",
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
     val ingredientUsages: Set<IngredientUsage> = HashSet(),

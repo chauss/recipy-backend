@@ -7,14 +7,14 @@ import org.springframework.http.ResponseEntity
 
 class CreationResponse(
     val id: String = "",
-    val error: String = ""
+    val message: String = ""
 ) {
     companion object {
         fun responseEntityForResult(result: CreationResult): ResponseEntity<CreationResponse> {
             return if (result.status == CreationResultStatus.CREATED) {
                 ResponseEntity(CreationResponse(id = result.id!!), HttpStatus.CREATED)
             } else {
-                ResponseEntity(CreationResponse(error = result.message), HttpStatus.CONFLICT)
+                ResponseEntity(CreationResponse(message = result.message), HttpStatus.CONFLICT)
             }
         }
     }
