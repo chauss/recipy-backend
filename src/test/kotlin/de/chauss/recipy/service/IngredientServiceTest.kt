@@ -176,4 +176,37 @@ class IngredientTest(
         assertNotEquals(creationResult.message, "")
         assertNull(creationResult.id)
     }
+
+    @Test
+    @Order(8)
+    fun `deleting a recipe also deletes the connected ingredientUsages`() {
+        // given
+        val ingredientUsageAmount = 2.0
+        val recipeCreationResult = recipeService.createRecipe("Eindeutiger Kartoffelsalat")
+        assertEquals(recipeCreationResult.status, CreationResultStatus.CREATED)
+        assertNotNull(recipeCreationResult.id)
+        val recipeId = recipeCreationResult.id!!
+
+        val existingIngredient = ingredientService.findIngredientByName(ingredientName)!!
+
+        val existingIngredientUnit =
+            ingredientService.findIngredientUnitByName(ingredientUnitName)!!
+
+        val creationResult = ingredientService.createIngredientUsage(
+            recipeId,
+            ingredientId = existingIngredient.ingredientId,
+            ingredientUnitId = existingIngredientUnit.ingredientUnitId,
+            amount = ingredientUsageAmount
+        )
+        val ingredientUsageFound = ingredientService.getIngredientUsageById(creationResult.id!!)
+        assertNotNull(ingredientUsageFound)
+
+        // when
+        recipeService.deleteRecipeById(recipeId)
+
+        // expect
+        val deletedIngredientUsageFinding =
+            ingredientService.getIngredientUsageById(creationResult.id!!)
+        assertNull(deletedIngredientUsageFinding)
+    }
 }
