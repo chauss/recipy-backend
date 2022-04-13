@@ -1,9 +1,7 @@
 package de.chauss.recipy.api;
 
-import de.chauss.recipy.service.CreationResultStatus
 import de.chauss.recipy.service.IngredientService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
