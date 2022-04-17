@@ -18,9 +18,9 @@ class RecipeRestController(
     fun getAllRecipes() = recipeService.getAllRecipes()
 
     @PostMapping("/recipe", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createRecipe(@RequestBody request: CreateRecipeRequest): ResponseEntity<CreationResponse> {
+    fun createRecipe(@RequestBody request: CreateRecipeRequest): ResponseEntity<ActionResponse> {
         val result = recipeService.createRecipe(request.name)
-        return CreationResponse.responseEntityForResult(result = result)
+        return ActionResponse.responseEntityForResult(result = result)
     }
 
     @GetMapping("/recipe/{recipeId}")

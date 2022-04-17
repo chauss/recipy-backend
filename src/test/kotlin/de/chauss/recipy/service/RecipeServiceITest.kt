@@ -63,7 +63,7 @@ class RecipeTest(
 
         // when
         val result = recipeService.createRecipe(recipeNameToSave)
-        assertEquals(result.status, CreationResultStatus.CREATED)
+        assertEquals(result.status, ActionResultStatus.CREATED)
         assertNotNull(result.id)
         val recipeId = result.id!!
 
@@ -77,7 +77,7 @@ class RecipeTest(
         // given
         val recipeNameToSave = "Kartoffelauflauf"
         val result = recipeService.createRecipe(recipeNameToSave)
-        assertEquals(result.status, CreationResultStatus.CREATED)
+        assertEquals(result.status, ActionResultStatus.CREATED)
         assertNotNull(result.id)
         val recipeId = result.id!!
         val recipeFound = recipeService.getRecipeById(recipeId)!!

@@ -2,8 +2,8 @@ package de.chauss.recipy.api
 
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.ninjasquad.springmockk.MockkBean
-import de.chauss.recipy.service.CreationResult
-import de.chauss.recipy.service.CreationResultStatus
+import de.chauss.recipy.service.ActionResult
+import de.chauss.recipy.service.ActionResultStatus
 import de.chauss.recipy.service.RecipeService
 import de.chauss.recipy.service.dtos.RecipeDto
 import io.mockk.every
@@ -30,7 +30,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
         // given
         val newRecipeId = "new_recipe_id"
         val createRecipeResult =
-            CreationResult(status = CreationResultStatus.CREATED, id = newRecipeId)
+            ActionResult(status = ActionResultStatus.CREATED, id = newRecipeId)
         every { recipeService.createRecipe(any()) } returns createRecipeResult
 
         // when
@@ -52,7 +52,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
         // given
         val newRecipeId = "new_recipe_id"
         val createRecipeResult =
-            CreationResult(status = CreationResultStatus.ALREADY_EXISTS, message = "Duplicate")
+            ActionResult(status = ActionResultStatus.ALREADY_EXISTS, message = "Duplicate")
         every { recipeService.createRecipe(any()) } returns createRecipeResult
 
         // when

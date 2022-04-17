@@ -61,7 +61,7 @@ class IngredientTest(
     fun `created ingredientUnit is found again`() {
         // when
         val result = ingredientService.createIngredientUnit(ingredientUnitName)
-        assertEquals(result.status, CreationResultStatus.CREATED)
+        assertEquals(result.status, ActionResultStatus.CREATED)
         val ingredientUnitId = result.id!!
 
         val ingredientUnitFound = ingredientService.getIngredientUnitById(ingredientUnitId)
@@ -77,7 +77,7 @@ class IngredientTest(
         val result = ingredientService.createIngredient(ingredientName)
 
         // expect
-        assertEquals(result.status, CreationResultStatus.CREATED)
+        assertEquals(result.status, ActionResultStatus.CREATED)
         assertNotNull(result.id)
         val ingredientFound = ingredientService.getIngredientById(result.id!!)
         assertEquals(ingredientFound?.name, ingredientName)
@@ -104,7 +104,7 @@ class IngredientTest(
         )
 
         // expect
-        assertEquals(result.status, CreationResultStatus.CREATED)
+        assertEquals(result.status, ActionResultStatus.CREATED)
         assertNotNull(result.id)
         val ingredientUsageFound = ingredientService.getIngredientUsageById(result.id!!)
         assertEquals(ingredientUsageFound!!.ingredientUsageId, result.id)
@@ -142,9 +142,9 @@ class IngredientTest(
         )
 
         // expect
-        assertEquals(successResult.status, CreationResultStatus.CREATED)
+        assertEquals(successResult.status, ActionResultStatus.CREATED)
         assertNotNull(successResult.id)
-        assertEquals(failureResult.status, CreationResultStatus.INVALID_ARGUMENTS)
+        assertEquals(failureResult.status, ActionResultStatus.INVALID_ARGUMENTS)
         assertNull(failureResult.id)
         val ingredientUsageFound = ingredientService.getIngredientUsageById(successResult.id!!)!!
         assertEquals(ingredientUsageFound.ingredientUsageId, successResult.id)
@@ -160,7 +160,7 @@ class IngredientTest(
         val creationResult = ingredientService.createIngredient(ingredientName)
 
         // expect
-        assertEquals(creationResult.status, CreationResultStatus.ALREADY_EXISTS)
+        assertEquals(creationResult.status, ActionResultStatus.ALREADY_EXISTS)
         assertNotEquals(creationResult.message, "")
         assertNull(creationResult.id)
     }
@@ -172,7 +172,7 @@ class IngredientTest(
         val creationResult = ingredientService.createIngredientUnit(ingredientUnitName)
 
         // expect
-        assertEquals(creationResult.status, CreationResultStatus.ALREADY_EXISTS)
+        assertEquals(creationResult.status, ActionResultStatus.ALREADY_EXISTS)
         assertNotEquals(creationResult.message, "")
         assertNull(creationResult.id)
     }
@@ -183,7 +183,7 @@ class IngredientTest(
         // given
         val ingredientUsageAmount = 2.0
         val recipeCreationResult = recipeService.createRecipe("Eindeutiger Kartoffelsalat")
-        assertEquals(recipeCreationResult.status, CreationResultStatus.CREATED)
+        assertEquals(recipeCreationResult.status, ActionResultStatus.CREATED)
         assertNotNull(recipeCreationResult.id)
         val recipeId = recipeCreationResult.id!!
 

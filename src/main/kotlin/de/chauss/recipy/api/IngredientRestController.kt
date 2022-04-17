@@ -18,9 +18,9 @@ class IngredientRestController(
     fun getAllIngredientUnits() = ingredientService.getAllIngredientUnits()
 
     @PostMapping("/ingredient/unit", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createIngredientUnit(@RequestBody request: CreateIngredientUnitRequest): ResponseEntity<CreationResponse> {
+    fun createIngredientUnit(@RequestBody request: CreateIngredientUnitRequest): ResponseEntity<ActionResponse> {
         val result = ingredientService.createIngredientUnit(request.name)
-        return CreationResponse.responseEntityForResult(result = result)
+        return ActionResponse.responseEntityForResult(result = result)
     }
 
     // ########################################################################
@@ -30,9 +30,9 @@ class IngredientRestController(
     fun getAllIngredients() = ingredientService.getAllIngredients()
 
     @PostMapping("/ingredient", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createIngredient(@RequestBody request: CreateIngredientRequest): ResponseEntity<CreationResponse> {
+    fun createIngredient(@RequestBody request: CreateIngredientRequest): ResponseEntity<ActionResponse> {
         val result = ingredientService.createIngredient(request.name)
-        return CreationResponse.responseEntityForResult(result = result)
+        return ActionResponse.responseEntityForResult(result = result)
     }
 
     // ########################################################################
@@ -43,14 +43,31 @@ class IngredientRestController(
         ingredientService.getAllIngredientUsagesForRecipe(recipeId)
 
     @PostMapping("/ingredient/usage", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createIngredientUsage(@RequestBody request: CreateIngredientUsageRequest): ResponseEntity<CreationResponse> {
+    fun createIngredientUsage(@RequestBody request: CreateIngredientUsageRequest): ResponseEntity<ActionResponse> {
         val result = ingredientService.createIngredientUsage(
             recipeId = request.recipeId,
             ingredientId = request.ingredientId,
             ingredientUnitId = request.ingredientUnitId,
             amount = request.amount
         )
-        return CreationResponse.responseEntityForResult(result = result)
+        return ActionResponse.responseEntityForResult(result = result)
+    }
+
+    @PutMapping(
+        "/ingredient/usage/{ingredientUsageId}",
+        consumes = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun createIngredientUsage(
+        @RequestBody request: UpdateIngredientUsageRequest,
+        @PathVariable(value = "ingredientUsageId") ingredientUsageId: String
+    ): ResponseEntity<ActionResponse> {
+        val result = ingredientService.updateIngredientUsage(
+            ingredientUsageId = ingredientUsageId,
+            ingredientId = request.ingredientId,
+            ingredientUnitId = request.ingredientUnitId,
+            amount = request.amount
+        )
+        return ActionResponse.responseEntityForResult(result = result)
     }
 }
 
@@ -64,6 +81,12 @@ class CreateIngredientUnitRequest(
 
 class CreateIngredientUsageRequest(
     val recipeId: String,
+    val ingredientId: String,
+    val ingredientUnitId: String,
+    val amount: Double,
+)
+
+class UpdateIngredientUsageRequest(
     val ingredientId: String,
     val ingredientUnitId: String,
     val amount: Double,

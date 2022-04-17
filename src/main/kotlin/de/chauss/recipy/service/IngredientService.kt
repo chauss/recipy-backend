@@ -18,20 +18,20 @@ class IngredientService(
     // ########################################################################
     // # Ingredient Unit
     // ########################################################################
-    fun createIngredientUnit(name: String): CreationResult {
+    fun createIngredientUnit(name: String): ActionResult {
         val existingIngredientUnits = ingredientUnitRepository.findByNameIgnoreCase(name)
 
         if (existingIngredientUnits != null) {
-            return CreationResult(
-                status = CreationResultStatus.ALREADY_EXISTS,
+            return ActionResult(
+                status = ActionResultStatus.ALREADY_EXISTS,
                 message = "ERROR: An ingredientUnit with the name \"$name\" already exists."
             )
         }
         val newIngredientUnit = IngredientUnit(name = name)
         ingredientUnitRepository.save(newIngredientUnit)
 
-        return CreationResult(
-            status = CreationResultStatus.CREATED, id = newIngredientUnit.ingredientUnitId
+        return ActionResult(
+            status = ActionResultStatus.CREATED, id = newIngredientUnit.ingredientUnitId
         )
     }
 
@@ -58,20 +58,20 @@ class IngredientService(
     // ########################################################################
     // # Ingredient
     // ########################################################################
-    fun createIngredient(name: String): CreationResult {
+    fun createIngredient(name: String): ActionResult {
         val existingIngredient = ingredientRepository.findByNameIgnoreCase(name)
 
         if (existingIngredient != null) {
-            return CreationResult(
-                status = CreationResultStatus.ALREADY_EXISTS,
+            return ActionResult(
+                status = ActionResultStatus.ALREADY_EXISTS,
                 message = "ERROR: An ingredient with the name \"$name\" already exists."
             )
         }
         val newIngredient = Ingredient(name = name)
         ingredientRepository.save(newIngredient)
 
-        return CreationResult(
-            status = CreationResultStatus.CREATED, id = newIngredient.ingredientId
+        return ActionResult(
+            status = ActionResultStatus.CREATED, id = newIngredient.ingredientId
         )
     }
 
@@ -101,31 +101,31 @@ class IngredientService(
     // ########################################################################
     fun createIngredientUsage(
         recipeId: String, ingredientId: String, ingredientUnitId: String, amount: Double
-    ): CreationResult {
+    ): ActionResult {
         val ingredient =
             ingredientRepository.findById(ingredientId).orElse(null)
-                ?: return CreationResult(
-                    status = CreationResultStatus.INVALID_ARGUMENTS,
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
                     message = "ERROR: IngredientId \"$ingredientId\" does not exist"
                 )
 
         val ingredientUnit =
             ingredientUnitRepository.findById(ingredientUnitId).orElse(null)
-                ?: return CreationResult(
-                    status = CreationResultStatus.INVALID_ARGUMENTS,
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
                     message = "ERROR: IngredientUnitId \"$ingredientUnitId\" does not exist"
                 )
 
         val recipe =
             recipeRepository.findById(recipeId).orElse(null)
-                ?: return CreationResult(
-                    status = CreationResultStatus.INVALID_ARGUMENTS,
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
                     message = "ERROR: RecipeId \"$recipeId\" does not exist"
                 )
 
         if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId }) {
-            return CreationResult(
-                status = CreationResultStatus.INVALID_ARGUMENTS,
+            return ActionResult(
+                status = ActionResultStatus.INVALID_ARGUMENTS,
                 message = "ERROR: IngredientId \"$ingredientId\" does already exist in recipe \"$recipeId\""
             )
         }
@@ -138,8 +138,8 @@ class IngredientService(
         )
         ingredientUsageRepository.save(newIngredientUsage)
 
-        return CreationResult(
-            status = CreationResultStatus.CREATED, id = newIngredientUsage.ingredientUsageId
+        return ActionResult(
+            status = ActionResultStatus.CREATED, id = newIngredientUsage.ingredientUsageId
         )
     }
 
@@ -158,5 +158,34 @@ class IngredientService(
         return ingredientUsages?.let {
             it.map { ingredientUsage -> IngredientUsageDto.from(ingredientUsage = ingredientUsage) }
         } ?: Collections.emptyList()
+    }
+
+    fun updateIngredientUsage(
+        ingredientUsageId: String,
+        ingredientId: String,
+        ingredientUnitId: String,
+        amount: Double
+    ): ActionResult {
+        val ingredientUsageOptional = ingredientUsageRepository.findById(ingredientUsageId)
+        val ingredientOptional = ingredientRepository.findById(ingredientId)
+        val ingredientUnitOptional = ingredientUnitRepository.findById(ingredientUnitId)
+
+        return try {
+            val ingredientUsage = ingredientUsageOptional.get()
+            val ingredient = ingredientOptional.get()
+            val ingredientUnit = ingredientUnitOptional.get()
+            ingredientUsage.amount = amount
+            ingredientUsage.ingredient = ingredient
+            ingredientUsage.unit = ingredientUnit
+
+            ingredientUsageRepository.save(ingredientUsage)
+
+            ActionResult(status = ActionResultStatus.UPDATED, id = ingredientUsageId)
+        } catch (e: NoSuchElementException) {
+            ActionResult(
+                status = ActionResultStatus.ELEMENT_NOT_FOUND,
+                message = "ERROR: One of the given ids did not match any element"
+            )
+        }
     }
 }

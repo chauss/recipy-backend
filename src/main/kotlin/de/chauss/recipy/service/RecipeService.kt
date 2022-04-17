@@ -15,16 +15,16 @@ class RecipeService(
         return recipes.map { RecipeDto.from(it) }
     }
 
-    fun createRecipe(name: String): CreationResult {
+    fun createRecipe(name: String): ActionResult {
         val existingRecipes = recipeRepository.findByName(name)
 
         if (existingRecipes?.isNotEmpty() == true) {
-            return CreationResult(status = CreationResultStatus.ALREADY_EXISTS)
+            return ActionResult(status = ActionResultStatus.ALREADY_EXISTS)
         }
         val newRecipe = Recipe(name = name)
         recipeRepository.save(newRecipe)
 
-        return CreationResult(status = CreationResultStatus.CREATED, id = newRecipe.recipeId)
+        return ActionResult(status = ActionResultStatus.CREATED, id = newRecipe.recipeId)
     }
 
     fun getRecipeById(recipeId: String): RecipeDto? {
