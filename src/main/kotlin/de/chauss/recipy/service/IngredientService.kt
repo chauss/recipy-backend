@@ -19,7 +19,7 @@ class IngredientService(
     // # Ingredient Unit
     // ########################################################################
     fun createIngredientUnit(name: String): CreationResult {
-        val existingIngredientUnits = ingredientUnitRepository.findByName(name)
+        val existingIngredientUnits = ingredientUnitRepository.findByNameIgnoreCase(name)
 
         if (existingIngredientUnits != null) {
             return CreationResult(
@@ -45,7 +45,7 @@ class IngredientService(
     }
 
     fun findIngredientUnitByName(ingredientUnitName: String): IngredientUnitDto? {
-        val ingredientUnit = ingredientUnitRepository.findByName(ingredientUnitName)
+        val ingredientUnit = ingredientUnitRepository.findByNameIgnoreCase(ingredientUnitName)
         return ingredientUnit?.let { IngredientUnitDto.from(ingredientUnit = it) }
     }
 
@@ -59,7 +59,7 @@ class IngredientService(
     // # Ingredient
     // ########################################################################
     fun createIngredient(name: String): CreationResult {
-        val existingIngredient = ingredientRepository.findByName(name)
+        val existingIngredient = ingredientRepository.findByNameIgnoreCase(name)
 
         if (existingIngredient != null) {
             return CreationResult(
@@ -76,7 +76,7 @@ class IngredientService(
     }
 
     fun findIngredientByName(name: String): IngredientDto? {
-        val ingredient = ingredientRepository.findByName(name)
+        val ingredient = ingredientRepository.findByNameIgnoreCase(name)
 
         return ingredient?.let { IngredientDto.from(ingredient = it) }
     }

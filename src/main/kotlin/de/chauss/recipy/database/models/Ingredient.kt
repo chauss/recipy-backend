@@ -17,5 +17,5 @@ class Ingredient(
 )
 
 interface IngredientRepository : JpaRepository<Ingredient, String> {
-    fun findByName(name: String): Ingredient?
+    fun findByNameIgnoreCase(name: String): Ingredient?
 }

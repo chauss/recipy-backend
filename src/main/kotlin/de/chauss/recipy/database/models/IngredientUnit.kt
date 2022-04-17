@@ -17,5 +17,5 @@ class IngredientUnit(
 )
 
 interface IngredientUnitRepository : JpaRepository<IngredientUnit, String> {
-    fun findByName(name: String): IngredientUnit?
+    fun findByNameIgnoreCase(name: String): IngredientUnit?
 }
