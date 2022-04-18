@@ -2,6 +2,7 @@ package de.chauss.recipy.api
 
 import de.chauss.recipy.service.RecipeService
 import de.chauss.recipy.service.dtos.RecipeDto
+import de.chauss.recipy.service.dtos.RecipeOverviewDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -17,6 +18,11 @@ class RecipeRestController(
     @GetMapping("/recipes")
     fun getAllRecipes() = recipeService.getAllRecipes()
 
+    @GetMapping("/recipes/overview")
+    fun getAllRecipesAsOverview(): List<RecipeOverviewDto> {
+        return recipeService.getAllRecipesAsOverview()
+    }
+
     @PostMapping("/recipe", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createRecipe(@RequestBody request: CreateRecipeRequest): ResponseEntity<ActionResponse> {
         val result = recipeService.createRecipe(request.name)
@@ -25,11 +31,17 @@ class RecipeRestController(
 
     @GetMapping("/recipe/{recipeId}")
     fun getRecipeById(@PathVariable(value = "recipeId") recipeId: String): RecipeDto {
-        val result = recipeService.getRecipeById(recipeId = recipeId)
-        if (result != null) {
-            return result
+        val foundRecipe = recipeService.getRecipeById(recipeId = recipeId)
+        if (foundRecipe != null) {
+            return foundRecipe
         }
         throw ResponseStatusException(HttpStatus.NOT_FOUND, "No recipe with the given id found")
+    }
+
+    @DeleteMapping("/recipe/{recipeId}")
+    fun deleteRecipeById(@PathVariable(value = "recipeId") recipeId: String): ResponseEntity<ActionResponse> {
+        val result = recipeService.deleteRecipeById(recipeId = recipeId)
+        return ActionResponse.responseEntityForResult(result = result)
     }
 }
 

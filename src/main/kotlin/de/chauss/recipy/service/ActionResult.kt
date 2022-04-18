@@ -6,6 +6,8 @@ enum class ActionResultStatus {
     INVALID_ARGUMENTS,
     ELEMENT_NOT_FOUND,
     UPDATED,
+    DELETED,
+    FAILED_TO_DELETE,
 }
 
 class ActionResult(

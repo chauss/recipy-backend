@@ -3,8 +3,10 @@ package de.chauss.recipy.service
 import de.chauss.recipy.database.models.Recipe
 import de.chauss.recipy.database.models.RecipeRepository
 import de.chauss.recipy.service.dtos.RecipeDto
+import de.chauss.recipy.service.dtos.RecipeOverviewDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.swing.Action
 
 @Service
 class RecipeService(
@@ -13,6 +15,11 @@ class RecipeService(
     fun getAllRecipes(): List<RecipeDto> {
         val recipes = recipeRepository.findAll()
         return recipes.map { RecipeDto.from(it) }
+    }
+
+    fun getAllRecipesAsOverview(): List<RecipeOverviewDto> {
+        val recipes = recipeRepository.findAll()
+        return recipes.map { RecipeOverviewDto.from(it) }
     }
 
     fun createRecipe(name: String): ActionResult {
@@ -35,10 +42,19 @@ class RecipeService(
         return null
     }
 
-    fun deleteRecipeById(recipeId: String): Boolean {
-        recipeRepository.findById(recipeId).orElse(null) ?: return true
+    fun deleteRecipeById(recipeId: String): ActionResult {
+        recipeRepository.findById(recipeId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.ELEMENT_NOT_FOUND,
+            message = "INFO: Could not delete recipe with id $recipeId because no recipe with the given id exists"
+        )
         recipeRepository.deleteById(recipeId)
-        recipeRepository.findById(recipeId).orElse(null) ?: return true
-        return false
+        recipeRepository.findById(recipeId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.DELETED,
+            id = recipeId,
+        )
+        return ActionResult(
+            status = ActionResultStatus.FAILED_TO_DELETE,
+            message = "ERROR: Could not delete recipe with id $recipeId for unknown reason"
+        )
     }
 }

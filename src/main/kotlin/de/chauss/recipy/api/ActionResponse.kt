@@ -12,15 +12,36 @@ class ActionResponse(
     companion object {
         fun responseEntityForResult(result: ActionResult): ResponseEntity<ActionResponse> {
             return when (result.status) {
-                ActionResultStatus.CREATED -> {
-                    ResponseEntity(ActionResponse(id = result.id!!), HttpStatus.CREATED)
-                }
-                ActionResultStatus.UPDATED -> {
-                    ResponseEntity(ActionResponse(id = result.id!!), HttpStatus.OK)
-                }
-                else -> {
-                    ResponseEntity(ActionResponse(message = result.message), HttpStatus.CONFLICT)
-                }
+                // 2xx
+                ActionResultStatus.CREATED -> ResponseEntity(
+                    ActionResponse(id = result.id!!),
+                    HttpStatus.CREATED
+                )
+                ActionResultStatus.UPDATED -> ResponseEntity(
+                    ActionResponse(id = result.id!!),
+                    HttpStatus.OK
+                )
+                ActionResultStatus.DELETED -> ResponseEntity(
+                    ActionResponse(id = result.id!!),
+                    HttpStatus.OK
+                )
+                // 4xx
+                ActionResultStatus.ELEMENT_NOT_FOUND -> ResponseEntity(
+                    ActionResponse(message = result.message),
+                    HttpStatus.NOT_FOUND
+                )
+                ActionResultStatus.ALREADY_EXISTS -> ResponseEntity(
+                    ActionResponse(message = result.message),
+                    HttpStatus.CONFLICT
+                )
+                ActionResultStatus.FAILED_TO_DELETE -> ResponseEntity(
+                    ActionResponse(message = result.message),
+                    HttpStatus.CONFLICT
+                )
+                ActionResultStatus.INVALID_ARGUMENTS -> ResponseEntity(
+                    ActionResponse(message = result.message),
+                    HttpStatus.CONFLICT
+                )
             }
         }
     }

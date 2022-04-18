@@ -76,29 +76,29 @@ class RecipeTest(
     fun `deleted recipe is not found again`() {
         // given
         val recipeNameToSave = "Kartoffelauflauf"
-        val result = recipeService.createRecipe(recipeNameToSave)
-        assertEquals(result.status, ActionResultStatus.CREATED)
-        assertNotNull(result.id)
-        val recipeId = result.id!!
+        val creationResult = recipeService.createRecipe(recipeNameToSave)
+        assertEquals(creationResult.status, ActionResultStatus.CREATED)
+        assertNotNull(creationResult.id)
+        val recipeId = creationResult.id!!
         val recipeFound = recipeService.getRecipeById(recipeId)!!
         assertEquals(recipeFound.name, recipeNameToSave)
 
         // when
-        val recipeDeleted = recipeService.deleteRecipeById(recipeId)
+        val deletionResult = recipeService.deleteRecipeById(recipeId)
 
         // expect
-        assertTrue(recipeDeleted);
+        assertEquals(deletionResult.status, ActionResultStatus.DELETED);
         val recipeFoundAgain = recipeService.getRecipeById(recipeId)
         assertNull(recipeFoundAgain)
     }
 
     @Test
-    fun `deleting an unknown recipe returns true`() {
+    fun `deleting an unknown recipe returns ELEMENT_NOT_FOUND`() {
         val unknownRecipeId = "unknown_recipe_id"
         // when
-        val recipeDeleted = recipeService.deleteRecipeById(unknownRecipeId)
+        val deletionResult = recipeService.deleteRecipeById(unknownRecipeId)
 
         // expect
-        assertTrue(recipeDeleted);
+        assertEquals(deletionResult.status, ActionResultStatus.ELEMENT_NOT_FOUND)
     }
 }
