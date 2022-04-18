@@ -9,12 +9,12 @@ import java.util.UUID
 class IngredientUsage(
     @Id
     val ingredientUsageId: String = "ingredient_usage_${UUID.randomUUID()}",
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "ingredientId")
     var ingredient: Ingredient = Ingredient(),
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "ingredientUnitId")
-    var unit: IngredientUnit = IngredientUnit(),
+    var ingredientUnit: IngredientUnit = IngredientUnit(),
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipeId")
     val recipe: Recipe = Recipe(),
@@ -23,5 +23,6 @@ class IngredientUsage(
 )
 
 interface IngredientUsageRepository : JpaRepository<IngredientUsage, String> {
-    fun findByRecipeRecipeId(recipeId: String): List<IngredientUsage>?
+    fun findByRecipeRecipeId(recipeId: String): List<IngredientUsage>
+    fun findByIngredientUnitIngredientUnitId(ingredientUnitId: String): List<IngredientUsage>
 }

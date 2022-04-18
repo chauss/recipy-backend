@@ -55,6 +55,32 @@ class IngredientService(
         return ingredientUnits.map { IngredientUnitDto.from(ingredientUnit = it) }
     }
 
+    fun deleteIngredientUnitById(ingredientUnitId: String): ActionResult {
+        ingredientUnitRepository.findById(ingredientUnitId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.ELEMENT_NOT_FOUND,
+            message = "INFO: Could not delete ingredientUnit with id $ingredientUnitId because no recipe with the given id exists"
+        )
+
+        val existingUsages =
+            ingredientUsageRepository.findByIngredientUnitIngredientUnitId(ingredientUnitId)
+        if (existingUsages.isNotEmpty()) {
+            return ActionResult(
+                status = ActionResultStatus.FAILED_TO_DELETE,
+                message = "ERROR: Could not delete ingredientUnit with id $ingredientUnitId because it still has usages"
+            )
+        }
+
+        ingredientUnitRepository.deleteById(ingredientUnitId)
+        ingredientUnitRepository.findById(ingredientUnitId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.DELETED,
+            id = ingredientUnitId,
+        )
+        return ActionResult(
+            status = ActionResultStatus.FAILED_TO_DELETE,
+            message = "ERROR: Could not delete ingredientUnit with id $ingredientUnitId for unknown reason"
+        )
+    }
+
     // ########################################################################
     // # Ingredient
     // ########################################################################
@@ -132,7 +158,7 @@ class IngredientService(
 
         val newIngredientUsage = IngredientUsage(
             ingredient = ingredient,
-            unit = ingredientUnit,
+            ingredientUnit = ingredientUnit,
             recipe = recipe,
             amount = amount
         )
@@ -176,7 +202,7 @@ class IngredientService(
             val ingredientUnit = ingredientUnitOptional.get()
             ingredientUsage.amount = amount
             ingredientUsage.ingredient = ingredient
-            ingredientUsage.unit = ingredientUnit
+            ingredientUsage.ingredientUnit = ingredientUnit
 
             ingredientUsageRepository.save(ingredientUsage)
 

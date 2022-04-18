@@ -29,7 +29,7 @@ class IngredientTest(
     @Autowired val ingredientService: IngredientService,
     @Autowired val recipeService: RecipeService,
 ) {
-    val ingredientUnitName = "TL"
+    val ingredientUnitName = "Prise"
     val ingredientName = "Olivenöl"
 
     companion object {
@@ -155,9 +155,9 @@ class IngredientTest(
 
     @Test
     @Order(6)
-    fun `can not create two ingredients with the same name`() {
+    fun `can not create two ingredients with the same name (case insensitive)`() {
         // when
-        val creationResult = ingredientService.createIngredient(ingredientName)
+        val creationResult = ingredientService.createIngredient(ingredientName.uppercase())
 
         // expect
         assertEquals(creationResult.status, ActionResultStatus.ALREADY_EXISTS)
@@ -167,9 +167,9 @@ class IngredientTest(
 
     @Test
     @Order(7)
-    fun `can not create two ingredientsUnits with the same name`() {
+    fun `can not create two ingredientsUnits with the same name (case insensitive)`() {
         // when
-        val creationResult = ingredientService.createIngredientUnit(ingredientUnitName)
+        val creationResult = ingredientService.createIngredientUnit(ingredientUnitName.uppercase())
 
         // expect
         assertEquals(creationResult.status, ActionResultStatus.ALREADY_EXISTS)
@@ -179,6 +179,21 @@ class IngredientTest(
 
     @Test
     @Order(8)
+    fun `deleting used ingredientUnit is not possible`() {
+        // given
+        val ingredientUnitId = ingredientService.findIngredientUnitByName(ingredientUnitName)!!.ingredientUnitId
+
+        // when
+        val result = ingredientService.deleteIngredientUnitById(ingredientUnitId)
+
+        // expect
+        assertEquals(result.status, ActionResultStatus.FAILED_TO_DELETE)
+        val triedToDeleteIngredientUnit = ingredientService.findIngredientUnitByName(ingredientUnitName)
+        assertNotNull(triedToDeleteIngredientUnit)
+    }
+
+    @Test
+    @Order(9)
     fun `deleting a recipe also deletes the connected ingredientUsages`() {
         // given
         val ingredientUsageAmount = 2.0
@@ -208,5 +223,35 @@ class IngredientTest(
         val deletedIngredientUsageFinding =
             ingredientService.getIngredientUsageById(creationResult.id!!)
         assertNull(deletedIngredientUsageFinding)
+    }
+
+    @Test
+    fun `deleted ingredientUnit is not found again`() {
+        // given
+        val ingredientUnitToSave = "Teelöffel"
+        val creationResult = ingredientService.createIngredientUnit(ingredientUnitToSave)
+        assertEquals(creationResult.status, ActionResultStatus.CREATED)
+        assertNotNull(creationResult.id)
+        val ingredientUnitId = creationResult.id!!
+        val ingredientUnitFound = ingredientService.getIngredientUnitById(ingredientUnitId)!!
+        assertEquals(ingredientUnitFound.name, ingredientUnitToSave)
+
+        // when
+        val deletionResult = ingredientService.deleteIngredientUnitById(ingredientUnitId)
+
+        // expect
+        assertEquals(deletionResult.status, ActionResultStatus.DELETED);
+        val ingredientUnitFoundAgain = ingredientService.getIngredientUnitById(ingredientUnitId)
+        assertNull(ingredientUnitFoundAgain)
+    }
+
+    @Test
+    fun `deleting an unknown ingredientUnit returns ELEMENT_NOT_FOUND`() {
+        val unknownIngredientUnitId = "unknown_ingredient_unit_id"
+        // when
+        val deletionResult = ingredientService.deleteIngredientUnitById(unknownIngredientUnitId)
+
+        // expect
+        assertEquals(deletionResult.status, ActionResultStatus.ELEMENT_NOT_FOUND)
     }
 }

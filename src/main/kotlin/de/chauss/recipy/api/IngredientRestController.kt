@@ -23,6 +23,12 @@ class IngredientRestController(
         return ActionResponse.responseEntityForResult(result = result)
     }
 
+    @DeleteMapping("/ingredient/unit/{ingredientUnitId}")
+    fun deleteIngredientUnitById(@PathVariable(value = "ingredientUnitId") ingredientUnitId: String): ResponseEntity<ActionResponse> {
+        val result = ingredientService.deleteIngredientUnitById(ingredientUnitId = ingredientUnitId)
+        return ActionResponse.responseEntityForResult(result = result)
+    }
+
     // ########################################################################
     // # Ingredient
     // ########################################################################

@@ -15,7 +15,7 @@ class IngredientUsageDto(
             IngredientUsageDto(
                 ingredientUsageId = ingredientUsage.ingredientUsageId,
                 ingredientId = ingredientUsage.ingredient.ingredientId,
-                ingredientUnitId = ingredientUsage.unit.ingredientUnitId,
+                ingredientUnitId = ingredientUsage.ingredientUnit.ingredientUnitId,
                 recipeId = ingredientUsage.recipe.recipeId,
                 amount = ingredientUsage.amount,
                 created = ingredientUsage.created.toEpochMilli(),
