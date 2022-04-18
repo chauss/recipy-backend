@@ -122,6 +122,32 @@ class IngredientService(
         return ingredients.map { IngredientDto.from(ingredient = it) }
     }
 
+    fun deleteIngredientById(ingredientId: String): ActionResult {
+        ingredientRepository.findById(ingredientId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.ELEMENT_NOT_FOUND,
+            message = "INFO: Could not delete ingredient with id $ingredientId because no recipe with the given id exists"
+        )
+
+        val existingUsages =
+            ingredientUsageRepository.findByIngredientIngredientId(ingredientId)
+        if (existingUsages.isNotEmpty()) {
+            return ActionResult(
+                status = ActionResultStatus.FAILED_TO_DELETE,
+                message = "ERROR: Could not delete ingredient with id $ingredientId because it still has usages"
+            )
+        }
+
+        ingredientRepository.deleteById(ingredientId)
+        ingredientRepository.findById(ingredientId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.DELETED,
+            id = ingredientId,
+        )
+        return ActionResult(
+            status = ActionResultStatus.FAILED_TO_DELETE,
+            message = "ERROR: Could not delete ingredient with id $ingredientId for unknown reason"
+        )
+    }
+
     // ########################################################################
     // # IngredientUsage
     // ########################################################################

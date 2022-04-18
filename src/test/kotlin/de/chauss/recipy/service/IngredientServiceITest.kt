@@ -181,19 +181,38 @@ class IngredientTest(
     @Order(8)
     fun `deleting used ingredientUnit is not possible`() {
         // given
-        val ingredientUnitId = ingredientService.findIngredientUnitByName(ingredientUnitName)!!.ingredientUnitId
+        val ingredientUnitId =
+            ingredientService.findIngredientUnitByName(ingredientUnitName)!!.ingredientUnitId
 
         // when
         val result = ingredientService.deleteIngredientUnitById(ingredientUnitId)
 
         // expect
         assertEquals(result.status, ActionResultStatus.FAILED_TO_DELETE)
-        val triedToDeleteIngredientUnit = ingredientService.findIngredientUnitByName(ingredientUnitName)
+        val triedToDeleteIngredientUnit =
+            ingredientService.findIngredientUnitByName(ingredientUnitName)
         assertNotNull(triedToDeleteIngredientUnit)
     }
 
     @Test
     @Order(9)
+    fun `deleting used ingredient is not possible`() {
+        // given
+        val ingredientId =
+            ingredientService.findIngredientByName(ingredientName)!!.ingredientId
+
+        // when
+        val result = ingredientService.deleteIngredientById(ingredientId)
+
+        // expect
+        assertEquals(result.status, ActionResultStatus.FAILED_TO_DELETE)
+        val triedToDeleteIngredient =
+            ingredientService.findIngredientByName(ingredientName)
+        assertNotNull(triedToDeleteIngredient)
+    }
+
+    @Test
+    @Order(10)
     fun `deleting a recipe also deletes the connected ingredientUsages`() {
         // given
         val ingredientUsageAmount = 2.0
@@ -250,6 +269,36 @@ class IngredientTest(
         val unknownIngredientUnitId = "unknown_ingredient_unit_id"
         // when
         val deletionResult = ingredientService.deleteIngredientUnitById(unknownIngredientUnitId)
+
+        // expect
+        assertEquals(deletionResult.status, ActionResultStatus.ELEMENT_NOT_FOUND)
+    }
+
+    @Test
+    fun `deleted ingredient is not found again`() {
+        // given
+        val ingredientToSave = "Pflaumenmarmelade"
+        val creationResult = ingredientService.createIngredient(ingredientToSave)
+        assertEquals(creationResult.status, ActionResultStatus.CREATED)
+        assertNotNull(creationResult.id)
+        val ingredientId = creationResult.id!!
+        val ingredientFound = ingredientService.getIngredientById(ingredientId)!!
+        assertEquals(ingredientFound.name, ingredientToSave)
+
+        // when
+        val deletionResult = ingredientService.deleteIngredientById(ingredientId)
+
+        // expect
+        assertEquals(deletionResult.status, ActionResultStatus.DELETED);
+        val ingredientFoundAgain = ingredientService.getIngredientById(ingredientId)
+        assertNull(ingredientFoundAgain)
+    }
+
+    @Test
+    fun `deleting an unknown ingredient returns ELEMENT_NOT_FOUND`() {
+        val unknownIngredientId = "unknown_ingredient_id"
+        // when
+        val deletionResult = ingredientService.deleteIngredientById(unknownIngredientId)
 
         // expect
         assertEquals(deletionResult.status, ActionResultStatus.ELEMENT_NOT_FOUND)

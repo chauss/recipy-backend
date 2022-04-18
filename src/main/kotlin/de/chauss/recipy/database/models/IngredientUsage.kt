@@ -25,4 +25,5 @@ class IngredientUsage(
 interface IngredientUsageRepository : JpaRepository<IngredientUsage, String> {
     fun findByRecipeRecipeId(recipeId: String): List<IngredientUsage>
     fun findByIngredientUnitIngredientUnitId(ingredientUnitId: String): List<IngredientUsage>
+    fun findByIngredientIngredientId(ingredientId: String): List<IngredientUsage>
 }
