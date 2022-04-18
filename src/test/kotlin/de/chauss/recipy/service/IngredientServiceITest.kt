@@ -213,6 +213,40 @@ class IngredientTest(
 
     @Test
     @Order(10)
+    fun `deleted ingredientUsage is not found again`() {
+        // given
+        val ingredientUsageAmount = 3.5
+        val recipeCreationResult = recipeService.createRecipe("Hühnersuppe")
+        assertEquals(recipeCreationResult.status, ActionResultStatus.CREATED)
+        assertNotNull(recipeCreationResult.id)
+        val recipeId = recipeCreationResult.id!!
+
+        val existingIngredient = ingredientService.findIngredientByName(ingredientName)!!
+
+        val existingIngredientUnit =
+            ingredientService.findIngredientUnitByName(ingredientUnitName)!!
+
+        val creationResult = ingredientService.createIngredientUsage(
+            recipeId,
+            ingredientId = existingIngredient.ingredientId,
+            ingredientUnitId = existingIngredientUnit.ingredientUnitId,
+            amount = ingredientUsageAmount
+        )
+        val ingredientUsageFound = ingredientService.getIngredientUsageById(creationResult.id!!)
+        assertNotNull(ingredientUsageFound)
+        val ingredientUsageId = ingredientUsageFound!!.ingredientUsageId
+
+        // when
+        ingredientService.deleteIngredientUsageById(ingredientUsageId)
+
+        // expect
+        val deletedIngredientUsageFinding =
+            ingredientService.getIngredientUsageById(ingredientUsageId)
+        assertNull(deletedIngredientUsageFinding)
+    }
+
+    @Test
+    @Order(11)
     fun `deleting a recipe also deletes the connected ingredientUsages`() {
         // given
         val ingredientUsageAmount = 2.0
@@ -299,6 +333,16 @@ class IngredientTest(
         val unknownIngredientId = "unknown_ingredient_id"
         // when
         val deletionResult = ingredientService.deleteIngredientById(unknownIngredientId)
+
+        // expect
+        assertEquals(deletionResult.status, ActionResultStatus.ELEMENT_NOT_FOUND)
+    }
+
+    @Test
+    fun `deleting an unknown ingredientUsage returns ELEMENT_NOT_FOUND`() {
+        val unknownIngredientUsageId = "unknown_ingredient_usage_id"
+        // when
+        val deletionResult = ingredientService.deleteIngredientUsageById(unknownIngredientUsageId)
 
         // expect
         assertEquals(deletionResult.status, ActionResultStatus.ELEMENT_NOT_FOUND)

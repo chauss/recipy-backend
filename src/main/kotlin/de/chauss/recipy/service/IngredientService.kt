@@ -58,7 +58,7 @@ class IngredientService(
     fun deleteIngredientUnitById(ingredientUnitId: String): ActionResult {
         ingredientUnitRepository.findById(ingredientUnitId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.ELEMENT_NOT_FOUND,
-            message = "INFO: Could not delete ingredientUnit with id $ingredientUnitId because no recipe with the given id exists"
+            message = "INFO: Could not delete ingredientUnit with id $ingredientUnitId because no ingredientUnit with the given id exists"
         )
 
         val existingUsages =
@@ -125,7 +125,7 @@ class IngredientService(
     fun deleteIngredientById(ingredientId: String): ActionResult {
         ingredientRepository.findById(ingredientId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.ELEMENT_NOT_FOUND,
-            message = "INFO: Could not delete ingredient with id $ingredientId because no recipe with the given id exists"
+            message = "INFO: Could not delete ingredient with id $ingredientId because no ingredient with the given id exists"
         )
 
         val existingUsages =
@@ -207,9 +207,7 @@ class IngredientService(
     fun getAllIngredientUsagesForRecipe(recipeId: String): List<IngredientUsageDto> {
         val ingredientUsages = ingredientUsageRepository.findByRecipeRecipeId(recipeId)
 
-        return ingredientUsages?.let {
-            it.map { ingredientUsage -> IngredientUsageDto.from(ingredientUsage = ingredientUsage) }
-        } ?: Collections.emptyList()
+        return ingredientUsages.map { ingredientUsage -> IngredientUsageDto.from(ingredientUsage = ingredientUsage) }
     }
 
     fun updateIngredientUsage(
@@ -239,5 +237,21 @@ class IngredientService(
                 message = "ERROR: One of the given ids did not match any element"
             )
         }
+    }
+
+    fun deleteIngredientUsageById(ingredientUsageId: String): ActionResult {
+        ingredientUsageRepository.findById(ingredientUsageId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.ELEMENT_NOT_FOUND,
+            message = "INFO: Could not delete ingredientUsage with id $ingredientUsageId because no ingredientUsage with the given id exists"
+        )
+        ingredientUsageRepository.deleteById(ingredientUsageId)
+        ingredientUsageRepository.findById(ingredientUsageId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.DELETED,
+            id = ingredientUsageId,
+        )
+        return ActionResult(
+            status = ActionResultStatus.FAILED_TO_DELETE,
+            message = "ERROR: Could not delete ingredientUsage with id $ingredientUsageId for unknown reason"
+        )
     }
 }
