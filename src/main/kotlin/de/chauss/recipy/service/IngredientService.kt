@@ -6,7 +6,6 @@ import de.chauss.recipy.service.dtos.IngredientUnitDto
 import de.chauss.recipy.service.dtos.IngredientUsageDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class IngredientService(
@@ -19,15 +18,16 @@ class IngredientService(
     // # Ingredient Unit
     // ########################################################################
     fun createIngredientUnit(name: String): ActionResult {
-        val existingIngredientUnits = ingredientUnitRepository.findByNameIgnoreCase(name)
+        val trimmedName = name.trim()
+        val existingIngredientUnits = ingredientUnitRepository.findByNameIgnoreCase(trimmedName)
 
         if (existingIngredientUnits != null) {
             return ActionResult(
                 status = ActionResultStatus.ALREADY_EXISTS,
-                message = "ERROR: An ingredientUnit with the name \"$name\" already exists."
+                message = "ERROR: An ingredientUnit with the name \"$trimmedName\" already exists."
             )
         }
-        val newIngredientUnit = IngredientUnit(name = name)
+        val newIngredientUnit = IngredientUnit(name = trimmedName)
         ingredientUnitRepository.save(newIngredientUnit)
 
         return ActionResult(
@@ -45,7 +45,8 @@ class IngredientService(
     }
 
     fun findIngredientUnitByName(ingredientUnitName: String): IngredientUnitDto? {
-        val ingredientUnit = ingredientUnitRepository.findByNameIgnoreCase(ingredientUnitName)
+        val trimmedName = ingredientUnitName.trim()
+        val ingredientUnit = ingredientUnitRepository.findByNameIgnoreCase(trimmedName)
         return ingredientUnit?.let { IngredientUnitDto.from(ingredientUnit = it) }
     }
 
@@ -85,15 +86,16 @@ class IngredientService(
     // # Ingredient
     // ########################################################################
     fun createIngredient(name: String): ActionResult {
-        val existingIngredient = ingredientRepository.findByNameIgnoreCase(name)
+        val trimmedName = name.trim()
+        val existingIngredient = ingredientRepository.findByNameIgnoreCase(trimmedName)
 
         if (existingIngredient != null) {
             return ActionResult(
                 status = ActionResultStatus.ALREADY_EXISTS,
-                message = "ERROR: An ingredient with the name \"$name\" already exists."
+                message = "ERROR: An ingredient with the name \"$trimmedName\" already exists."
             )
         }
-        val newIngredient = Ingredient(name = name)
+        val newIngredient = Ingredient(name = trimmedName)
         ingredientRepository.save(newIngredient)
 
         return ActionResult(
@@ -102,7 +104,8 @@ class IngredientService(
     }
 
     fun findIngredientByName(name: String): IngredientDto? {
-        val ingredient = ingredientRepository.findByNameIgnoreCase(name)
+        val trimmedName = name.trim()
+        val ingredient = ingredientRepository.findByNameIgnoreCase(trimmedName)
 
         return ingredient?.let { IngredientDto.from(ingredient = it) }
     }

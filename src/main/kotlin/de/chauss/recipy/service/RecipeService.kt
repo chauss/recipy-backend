@@ -6,7 +6,6 @@ import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import javax.swing.Action
 
 @Service
 class RecipeService(
@@ -23,12 +22,13 @@ class RecipeService(
     }
 
     fun createRecipe(name: String): ActionResult {
-        val existingRecipes = recipeRepository.findByName(name)
+        val trimmedName = name.trim()
+        val existingRecipes = recipeRepository.findByName(trimmedName)
 
         if (existingRecipes?.isNotEmpty() == true) {
             return ActionResult(status = ActionResultStatus.ALREADY_EXISTS)
         }
-        val newRecipe = Recipe(name = name)
+        val newRecipe = Recipe(name = trimmedName)
         recipeRepository.save(newRecipe)
 
         return ActionResult(status = ActionResultStatus.CREATED, id = newRecipe.recipeId)
