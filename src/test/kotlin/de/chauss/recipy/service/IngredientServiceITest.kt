@@ -115,7 +115,7 @@ class IngredientTest(
 
     @Test
     @Order(5)
-    fun `recipe can't have two ingredientUsages for the same ingredientId`() {
+    fun `recipe can't have two ingredientUsages with the same ingredientId`() {
         // given
         val ingredientUsageAmount = 2.0
         val recipeCreationResult = recipeService.createRecipe("Kartoffelsalat")

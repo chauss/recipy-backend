@@ -216,14 +216,42 @@ class IngredientService(
         ingredientUnitId: String,
         amount: Double
     ): ActionResult {
-        val ingredientUsageOptional = ingredientUsageRepository.findById(ingredientUsageId)
-        val ingredientOptional = ingredientRepository.findById(ingredientId)
-        val ingredientUnitOptional = ingredientUnitRepository.findById(ingredientUnitId)
+        val ingredientUsage =
+            ingredientUsageRepository.findById(ingredientUsageId).orElse(null)
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
+                    message = "ERROR: IngredientUsageId \"$ingredientUnitId\" does not exist"
+                )
+
+        val ingredient =
+            ingredientRepository.findById(ingredientId).orElse(null)
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
+                    message = "ERROR: IngredientId \"$ingredientId\" does not exist"
+                )
+
+        val ingredientUnit =
+            ingredientUnitRepository.findById(ingredientUnitId).orElse(null)
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
+                    message = "ERROR: IngredientUnitId \"$ingredientId\" does not exist"
+                )
+
+        val recipe =
+            recipeRepository.findById(ingredientUsage.recipe.recipeId).orElse(null)
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
+                    message = "ERROR: RecipeId \"${ingredientUsage.recipe.recipeId}\" does not exist"
+                )
+
+        if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId }) {
+            return ActionResult(
+                status = ActionResultStatus.INVALID_ARGUMENTS,
+                message = "ERROR: IngredientId \"${ingredient.name}\" does already exist in recipe \"${recipe.name}\""
+            )
+        }
 
         return try {
-            val ingredientUsage = ingredientUsageOptional.get()
-            val ingredient = ingredientOptional.get()
-            val ingredientUnit = ingredientUnitOptional.get()
             ingredientUsage.amount = amount
             ingredientUsage.ingredient = ingredient
             ingredientUsage.ingredientUnit = ingredientUnit
