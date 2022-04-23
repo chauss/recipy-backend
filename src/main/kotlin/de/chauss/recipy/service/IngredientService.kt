@@ -24,7 +24,8 @@ class IngredientService(
         if (existingIngredientUnits != null) {
             return ActionResult(
                 status = ActionResultStatus.ALREADY_EXISTS,
-                message = "ERROR: An ingredientUnit with the name \"$trimmedName\" already exists."
+                message = "ERROR: An ingredientUnit with the name \"$trimmedName\" already exists.",
+                errorCode = ErrorCodes.CREATE_INGREDIENT_UNIT_INGREDIENT_UNIT_NAME_ALREADY_EXISTS.value
             )
         }
         val newIngredientUnit = IngredientUnit(name = trimmedName)
@@ -59,7 +60,8 @@ class IngredientService(
     fun deleteIngredientUnitById(ingredientUnitId: String): ActionResult {
         ingredientUnitRepository.findById(ingredientUnitId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.ELEMENT_NOT_FOUND,
-            message = "INFO: Could not delete ingredientUnit with id $ingredientUnitId because no ingredientUnit with the given id exists"
+            message = "INFO: Could not delete ingredientUnit with id $ingredientUnitId because no ingredientUnit with the given id exists",
+            errorCode = ErrorCodes.DELETE_INGREDIENT_UNIT_INGREDIENT_UNIT_ID_NOT_FOUND.value
         )
 
         val existingUsages =
@@ -67,7 +69,8 @@ class IngredientService(
         if (existingUsages.isNotEmpty()) {
             return ActionResult(
                 status = ActionResultStatus.FAILED_TO_DELETE,
-                message = "ERROR: Could not delete ingredientUnit with id $ingredientUnitId because it still has usages"
+                message = "ERROR: Could not delete ingredientUnit with id $ingredientUnitId because it still has usages",
+                errorCode = ErrorCodes.DELETE_INGREDIENT_UNIT_INGREDIENT_UNIT_STILL_HAS_USAGES.value
             )
         }
 
@@ -78,7 +81,8 @@ class IngredientService(
         )
         return ActionResult(
             status = ActionResultStatus.FAILED_TO_DELETE,
-            message = "ERROR: Could not delete ingredientUnit with id $ingredientUnitId for unknown reason"
+            message = "ERROR: Could not delete ingredientUnit with id $ingredientUnitId for unknown reason",
+            errorCode = ErrorCodes.DELETE_INGREDIENT_UNIT_UNKNOWN_REASON.value
         )
     }
 
@@ -92,7 +96,8 @@ class IngredientService(
         if (existingIngredient != null) {
             return ActionResult(
                 status = ActionResultStatus.ALREADY_EXISTS,
-                message = "ERROR: An ingredient with the name \"$trimmedName\" already exists."
+                message = "ERROR: An ingredient with the name \"$trimmedName\" already exists.",
+                errorCode = ErrorCodes.CREATE_INGREDIENT_INGREDIENT_NAME_ALREADY_EXISTS.value
             )
         }
         val newIngredient = Ingredient(name = trimmedName)
@@ -128,7 +133,8 @@ class IngredientService(
     fun deleteIngredientById(ingredientId: String): ActionResult {
         ingredientRepository.findById(ingredientId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.ELEMENT_NOT_FOUND,
-            message = "INFO: Could not delete ingredient with id $ingredientId because no ingredient with the given id exists"
+            message = "INFO: Could not delete ingredient with id $ingredientId because no ingredient with the given id exists",
+            errorCode = ErrorCodes.DELETE_INGREDIENT_INGREDIENT_ID_NOT_FOUND.value
         )
 
         val existingUsages =
@@ -136,7 +142,8 @@ class IngredientService(
         if (existingUsages.isNotEmpty()) {
             return ActionResult(
                 status = ActionResultStatus.FAILED_TO_DELETE,
-                message = "ERROR: Could not delete ingredient with id $ingredientId because it still has usages"
+                message = "ERROR: Could not delete ingredient with id $ingredientId because it still has usages",
+                errorCode = ErrorCodes.DELETE_INGREDIENT_INGREDIENT_STILL_HAS_USAGES.value
             )
         }
 
@@ -147,7 +154,8 @@ class IngredientService(
         )
         return ActionResult(
             status = ActionResultStatus.FAILED_TO_DELETE,
-            message = "ERROR: Could not delete ingredient with id $ingredientId for unknown reason"
+            message = "ERROR: Could not delete ingredient with id $ingredientId for unknown reason",
+            errorCode = ErrorCodes.DELETE_INGREDIENT_UNKNOWN_REASON.value
         )
     }
 
@@ -161,27 +169,31 @@ class IngredientService(
             ingredientRepository.findById(ingredientId).orElse(null)
                 ?: return ActionResult(
                     status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: IngredientId \"$ingredientId\" does not exist"
+                    message = "ERROR: IngredientId \"$ingredientId\" does not exist",
+                    errorCode = ErrorCodes.CREATE_INGREDIENT_USAGE_INGREDIENT_ID_DOES_NOT_EXIST.value
                 )
 
         val ingredientUnit =
             ingredientUnitRepository.findById(ingredientUnitId).orElse(null)
                 ?: return ActionResult(
                     status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: IngredientUnitId \"$ingredientUnitId\" does not exist"
+                    message = "ERROR: IngredientUnitId \"$ingredientUnitId\" does not exist",
+                    errorCode = ErrorCodes.CREATE_INGREDIENT_USAGE_INGREDIENT_UNIT_ID_DOES_NOT_EXIST.value
                 )
 
         val recipe =
             recipeRepository.findById(recipeId).orElse(null)
                 ?: return ActionResult(
                     status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: RecipeId \"$recipeId\" does not exist"
+                    message = "ERROR: RecipeId \"$recipeId\" does not exist",
+                    errorCode = ErrorCodes.CREATE_INGREDIENT_USAGE_RECIPE_ID_DOES_NOT_EXIST.value
                 )
 
         if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId }) {
             return ActionResult(
                 status = ActionResultStatus.INVALID_ARGUMENTS,
-                message = "ERROR: IngredientId \"${ingredient.name}\" does already exist in recipe \"${recipe.name}\""
+                message = "ERROR: IngredientId \"${ingredient.name}\" does already exist in recipe \"${recipe.name}\"",
+                errorCode = ErrorCodes.CREATE_INGREDIENT_USAGE_INGREDIENT_ALREADY_USED_IN_RECIPE.value
             )
         }
 
@@ -223,57 +235,55 @@ class IngredientService(
             ingredientUsageRepository.findById(ingredientUsageId).orElse(null)
                 ?: return ActionResult(
                     status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: IngredientUsageId \"$ingredientUnitId\" does not exist"
+                    message = "ERROR: IngredientUsageId \"$ingredientUsageId\" does not exist",
+                    errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_INGREDIENT_USAGE_ID_NOT_FOUND.value
                 )
 
         val ingredient =
             ingredientRepository.findById(ingredientId).orElse(null)
                 ?: return ActionResult(
                     status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: IngredientId \"$ingredientId\" does not exist"
+                    message = "ERROR: IngredientId \"$ingredientId\" does not exist",
+                    errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_INGREDIENT_ID_NOT_FOUND.value
                 )
 
         val ingredientUnit =
             ingredientUnitRepository.findById(ingredientUnitId).orElse(null)
                 ?: return ActionResult(
                     status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: IngredientUnitId \"$ingredientId\" does not exist"
+                    message = "ERROR: IngredientUnitId \"$ingredientUnitId\" does not exist",
+                    errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_INGREDIENT_UNIT_ID_NOT_FOUND.value
                 )
 
         val recipe =
             recipeRepository.findById(ingredientUsage.recipe.recipeId).orElse(null)
                 ?: return ActionResult(
                     status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: RecipeId \"${ingredientUsage.recipe.recipeId}\" does not exist"
+                    message = "ERROR: RecipeId \"${ingredientUsage.recipe.recipeId}\" does not exist",
+                    errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_RECIPE_ID_NOT_FOUND.value
                 )
 
         if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId }) {
             return ActionResult(
                 status = ActionResultStatus.INVALID_ARGUMENTS,
-                message = "ERROR: IngredientId \"${ingredient.name}\" does already exist in recipe \"${recipe.name}\""
+                message = "ERROR: IngredientId \"${ingredient.name}\" does already exist in recipe \"${recipe.name}\"",
+                errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_INGREDIENT_ALREADY_USED_IN_RECIPE.value
             )
         }
 
-        return try {
-            ingredientUsage.amount = amount
-            ingredientUsage.ingredient = ingredient
-            ingredientUsage.ingredientUnit = ingredientUnit
+        ingredientUsage.amount = amount
+        ingredientUsage.ingredient = ingredient
+        ingredientUsage.ingredientUnit = ingredientUnit
 
-            ingredientUsageRepository.save(ingredientUsage)
-
-            ActionResult(status = ActionResultStatus.UPDATED, id = ingredientUsageId)
-        } catch (e: NoSuchElementException) {
-            ActionResult(
-                status = ActionResultStatus.ELEMENT_NOT_FOUND,
-                message = "ERROR: One of the given ids did not match any element"
-            )
-        }
+        ingredientUsageRepository.save(ingredientUsage)
+        return ActionResult(status = ActionResultStatus.UPDATED, id = ingredientUsageId)
     }
 
     fun deleteIngredientUsageById(ingredientUsageId: String): ActionResult {
         ingredientUsageRepository.findById(ingredientUsageId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.ELEMENT_NOT_FOUND,
-            message = "INFO: Could not delete ingredientUsage with id $ingredientUsageId because no ingredientUsage with the given id exists"
+            message = "INFO: Could not delete ingredientUsage with id $ingredientUsageId because no ingredientUsage with the given id exists",
+            errorCode = ErrorCodes.DELETE_INGREDIENT_USAGE_INGREDIENT_USAGE_ID_NOT_FOUND.value
         )
         ingredientUsageRepository.deleteById(ingredientUsageId)
         ingredientUsageRepository.findById(ingredientUsageId).orElse(null) ?: return ActionResult(
@@ -282,7 +292,8 @@ class IngredientService(
         )
         return ActionResult(
             status = ActionResultStatus.FAILED_TO_DELETE,
-            message = "ERROR: Could not delete ingredientUsage with id $ingredientUsageId for unknown reason"
+            message = "ERROR: Could not delete ingredientUsage with id $ingredientUsageId for unknown reason",
+            errorCode = ErrorCodes.DELETE_INGREDIENT_USAGE_UNKNOWN_REASON.value
         )
     }
 }

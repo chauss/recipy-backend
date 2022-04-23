@@ -26,7 +26,11 @@ class RecipeService(
         val existingRecipes = recipeRepository.findByName(trimmedName)
 
         if (existingRecipes?.isNotEmpty() == true) {
-            return ActionResult(status = ActionResultStatus.ALREADY_EXISTS)
+            return ActionResult(
+                status = ActionResultStatus.ALREADY_EXISTS,
+                message = "ERROR: A recipe with the name \"${name}\" does already exist",
+                errorCode = ErrorCodes.CREATE_RECIPE_RECIPE_NAME_ALREADY_EXISTS.value
+            )
         }
         val newRecipe = Recipe(name = trimmedName)
         recipeRepository.save(newRecipe)
@@ -45,7 +49,8 @@ class RecipeService(
     fun deleteRecipeById(recipeId: String): ActionResult {
         recipeRepository.findById(recipeId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.ELEMENT_NOT_FOUND,
-            message = "INFO: Could not delete recipe with id $recipeId because no recipe with the given id exists"
+            message = "INFO: Could not delete recipe with id $recipeId because no recipe with the given id exists",
+            errorCode = ErrorCodes.DELETE_RECIPE_RECIPE_ID_NOT_FOUND.value
         )
         recipeRepository.deleteById(recipeId)
         recipeRepository.findById(recipeId).orElse(null) ?: return ActionResult(
@@ -54,7 +59,8 @@ class RecipeService(
         )
         return ActionResult(
             status = ActionResultStatus.FAILED_TO_DELETE,
-            message = "ERROR: Could not delete recipe with id $recipeId for unknown reason"
+            message = "ERROR: Could not delete recipe with id $recipeId for unknown reason",
+            errorCode = ErrorCodes.DELETE_RECIPE_UNKNOWN_REASON.value
         )
     }
 }

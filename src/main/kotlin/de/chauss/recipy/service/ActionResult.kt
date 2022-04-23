@@ -13,5 +13,6 @@ enum class ActionResultStatus {
 class ActionResult(
     val status: ActionResultStatus,
     val id: String? = null,
-    val message: String = ""
+    val message: String? = null,
+    val errorCode: Int? = null
 )

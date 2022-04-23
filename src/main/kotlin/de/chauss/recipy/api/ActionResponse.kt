@@ -6,8 +6,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
 class ActionResponse(
-    val id: String = "",
-    val message: String = ""
+    val id: String? = null,
+    val message: String? = null,
+    val errorCode: Int? = null
 ) {
     companion object {
         fun responseEntityForResult(result: ActionResult): ResponseEntity<ActionResponse> {
@@ -27,19 +28,19 @@ class ActionResponse(
                 )
                 // 4xx
                 ActionResultStatus.ELEMENT_NOT_FOUND -> ResponseEntity(
-                    ActionResponse(message = result.message),
+                    ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.NOT_FOUND
                 )
                 ActionResultStatus.ALREADY_EXISTS -> ResponseEntity(
-                    ActionResponse(message = result.message),
+                    ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.CONFLICT
                 )
                 ActionResultStatus.FAILED_TO_DELETE -> ResponseEntity(
-                    ActionResponse(message = result.message),
+                    ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.CONFLICT
                 )
                 ActionResultStatus.INVALID_ARGUMENTS -> ResponseEntity(
-                    ActionResponse(message = result.message),
+                    ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.CONFLICT
                 )
             }
