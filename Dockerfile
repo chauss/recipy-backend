@@ -1,6 +1,14 @@
-FROM openjdk:18.0.1-slim
-RUN addgroup --system recipy && adduser --system --group recipy
-USER recipy:recipy
+# Safe for later, raspberry pi 2 is too old
+FROM alpine:latest
+
+COPY src /usr/app/src
+COPY pom.xml /usr/app/
+COPY mvnw /usr/app/
+COPY .mvn /usr/app/.mvn
+
+WORKDIR /usr/app
+RUN ./mvnw clean package
+
 ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+
+ENTRYPOINT ["/opt/jdk/jvm/jdk-17.0.3/bin/java","-jar","$JAR_FILE"]

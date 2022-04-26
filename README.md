@@ -34,7 +34,7 @@ scp -r ./terraform pi@raspberrypi:/home/pi/recipy/terraform
 4. On the raspberry load the docker image and run terraform
 
 ```shell
-docker load ~/recipy/recipy-backend-image.tar
+docker load -i ~/recipy/recipy-backend-image.tar
 cd ~/recipy/terraform
 terraform apply
 ```

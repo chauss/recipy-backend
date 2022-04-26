@@ -42,6 +42,7 @@ resource "docker_container" "postgres" {
 
 resource "docker_image" "recipy_backend" {
   name = "recipy-backend"
+  keep_locally = true
 }
 
 resource "docker_container" "recipy_backend" {
