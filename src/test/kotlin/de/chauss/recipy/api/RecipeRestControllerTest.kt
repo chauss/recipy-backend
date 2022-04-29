@@ -82,12 +82,14 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
                 recipeId = recipeIdOne,
                 name = recipeNameOne,
                 ingredientUsages = Collections.emptySet(),
+                preparationSteps = Collections.emptyList(),
                 created = 123
             ),
             RecipeDto(
                 recipeId = recipeIdTwo,
                 name = recipeNameTwo,
                 ingredientUsages = Collections.emptySet(),
+                preparationSteps = Collections.emptyList(),
                 created = 234
             ),
         )

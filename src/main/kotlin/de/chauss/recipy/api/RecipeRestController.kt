@@ -13,8 +13,11 @@ import org.springframework.web.server.ResponseStatusException
 @RestController
 @RequestMapping(value = ["/v1"])
 class RecipeRestController(
-    @Autowired val recipeService: RecipeService
+    @Autowired val recipeService: RecipeService,
 ) {
+    // ########################################################################
+    // # Recipes
+    // ########################################################################
     @GetMapping("/recipes")
     fun getAllRecipes() = recipeService.getAllRecipes()
 
@@ -43,8 +46,33 @@ class RecipeRestController(
         val result = recipeService.deleteRecipeById(recipeId = recipeId)
         return ActionResponse.responseEntityForResult(result = result)
     }
+
+    // ########################################################################
+    // # Preparation steps
+    // ########################################################################
+    @PostMapping("/recipe/preparationStep", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun createRecipe(@RequestBody request: CreatePreparationStepRequest): ResponseEntity<ActionResponse> {
+        val result = recipeService.createPreparationStep(
+            recipeId = request.recipeId,
+            stepNumber = request.stepNumber,
+            description = request.description
+        )
+        return ActionResponse.responseEntityForResult(result = result)
+    }
+
+    @DeleteMapping("/recipe/preparationStep/{preparationStepId}")
+    fun deletePreparationStepById(@PathVariable(value = "preparationStepId") preparationStepId: String): ResponseEntity<ActionResponse> {
+        val result = recipeService.deletePreparationStepById(preparationStepId = preparationStepId)
+        return ActionResponse.responseEntityForResult(result = result)
+    }
 }
 
 class CreateRecipeRequest(
     val name: String
+)
+
+class CreatePreparationStepRequest(
+    val recipeId: String,
+    val stepNumber: Int,
+    val description: String,
 )

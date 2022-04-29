@@ -270,9 +270,11 @@ class IngredientTest(
         assertNotNull(ingredientUsageFound)
 
         // when
-        recipeService.deleteRecipeById(recipeId)
+        val deletionResult = recipeService.deleteRecipeById(recipeId)
 
         // expect
+        assertEquals(deletionResult.status, ActionResultStatus.DELETED)
+        assertEquals(deletionResult.id, recipeId)
         val deletedIngredientUsageFinding =
             ingredientService.getIngredientUsageById(creationResult.id!!)
         assertNull(deletedIngredientUsageFinding)

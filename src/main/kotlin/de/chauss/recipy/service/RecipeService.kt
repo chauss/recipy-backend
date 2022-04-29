@@ -1,7 +1,11 @@
 package de.chauss.recipy.service
 
+import de.chauss.recipy.database.models.PreparationStep
+import de.chauss.recipy.database.models.PreparationStepRepository
 import de.chauss.recipy.database.models.Recipe
 import de.chauss.recipy.database.models.RecipeRepository
+import de.chauss.recipy.service.dtos.IngredientUsageDto
+import de.chauss.recipy.service.dtos.PreparationStepDto
 import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,8 +13,12 @@ import org.springframework.stereotype.Service
 
 @Service
 class RecipeService(
-    @Autowired val recipeRepository: RecipeRepository
+    @Autowired val recipeRepository: RecipeRepository,
+    @Autowired val preparationStepRepository: PreparationStepRepository,
 ) {
+    // ########################################################################
+    // # Recipe
+    // ########################################################################
     fun getAllRecipes(): List<RecipeDto> {
         val recipes = recipeRepository.findAll()
         return recipes.map { RecipeDto.from(it) }
@@ -61,6 +69,66 @@ class RecipeService(
             status = ActionResultStatus.FAILED_TO_DELETE,
             message = "ERROR: Could not delete recipe with id $recipeId for unknown reason",
             errorCode = ErrorCodes.DELETE_RECIPE_UNKNOWN_REASON.value
+        )
+    }
+
+    // ########################################################################
+    // # Preparation Step
+    // ########################################################################
+    fun getPreparationStepById(id: String): PreparationStepDto? {
+        val preparationStep = preparationStepRepository.findById(id)
+
+        if (preparationStep.isPresent) {
+            return PreparationStepDto.from(preparationStep = preparationStep.get())
+        }
+        return null
+    }
+
+    fun createPreparationStep(recipeId: String, stepNumber: Int, description: String): ActionResult {
+        val recipeOptional = recipeRepository.findById(recipeId)
+        if (recipeOptional.isEmpty) {
+            return ActionResult(
+                status = ActionResultStatus.INVALID_ARGUMENTS,
+                message = "ERROR: Could not create preparation step for recipeId ($recipeId) because no recipe with the given id exists",
+                errorCode = ErrorCodes.CREATE_PREPARATION_STEP_RECIPE_ID_DOES_NOT_EXIST.value
+            )
+        }
+        val recipe = recipeOptional.get()
+
+        if (recipe.preparationSteps.find { it.stepNumber == stepNumber } != null) {
+            return ActionResult(
+                status = ActionResultStatus.INVALID_ARGUMENTS,
+                message = "ERROR: Could not create preparation step for recipe (${recipe.name}) because recipe has already a step number \"$stepNumber\"",
+                errorCode = ErrorCodes.CREATE_PREPARATION_STEP_STEP_NUMBER_ALREADY_EXISTS_ON_RECIPE.value
+            )
+        }
+
+        val newPreparationStep = PreparationStep(
+            recipe = recipe,
+            stepNumber = stepNumber,
+            description = description.trim(),
+        )
+
+        preparationStepRepository.save(newPreparationStep)
+
+        return ActionResult(status = ActionResultStatus.CREATED, id = newPreparationStep.preparationStepId)
+    }
+
+    fun deletePreparationStepById(preparationStepId: String): ActionResult {
+        preparationStepRepository.findById(preparationStepId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.ELEMENT_NOT_FOUND,
+            message = "INFO: Could not delete preparationStep with id $preparationStepId because no preparationStep with the given id exists",
+            errorCode = ErrorCodes.DELETE_PREPARATION_STEP_PREPARATION_STEP_ID_NOT_FOUND.value
+        )
+        preparationStepRepository.deleteById(preparationStepId)
+        recipeRepository.findById(preparationStepId).orElse(null) ?: return ActionResult(
+            status = ActionResultStatus.DELETED,
+            id = preparationStepId,
+        )
+        return ActionResult(
+            status = ActionResultStatus.FAILED_TO_DELETE,
+            message = "ERROR: Could not delete preparationStep with id $preparationStepId for unknown reason",
+            errorCode = ErrorCodes.DELETE_PREPARATION_STEP_UNKNOWN_REASON.value
         )
     }
 }

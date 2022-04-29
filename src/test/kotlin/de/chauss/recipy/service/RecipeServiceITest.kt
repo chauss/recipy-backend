@@ -23,13 +23,14 @@ fun postgresForRecipes(imageName: String, opts: JdbcDatabaseContainer<Nothing>.(
 )
 @Testcontainers
 @Disabled("Can only run local (not in pipeline)")
-class RecipeTest(
+class RecipeServiceITest(
     @Autowired val recipeService: RecipeService,
     @Autowired val jdbc: JdbcTemplate
 ) {
 
     @AfterEach
     fun cleanup() {
+        jdbc.execute("DELETE FROM preparation_steps WHERE TRUE")
         jdbc.execute("DELETE FROM recipes WHERE TRUE")
     }
 
@@ -63,11 +64,12 @@ class RecipeTest(
 
         // when
         val result = recipeService.createRecipe(recipeNameToSave)
+
+        // expect
         assertEquals(result.status, ActionResultStatus.CREATED)
         assertNotNull(result.id)
         val recipeId = result.id!!
 
-        // expect
         val recipeFound = recipeService.getRecipeById(recipeId)!!
         assertEquals(recipeFound.name, recipeNameToSave)
     }
@@ -94,11 +96,79 @@ class RecipeTest(
 
     @Test
     fun `deleting an unknown recipe returns ELEMENT_NOT_FOUND`() {
+        // given
         val unknownRecipeId = "unknown_recipe_id"
+
         // when
         val deletionResult = recipeService.deleteRecipeById(unknownRecipeId)
 
         // expect
         assertEquals(deletionResult.status, ActionResultStatus.ELEMENT_NOT_FOUND)
+    }
+
+    @Test
+    fun `created preparationStep is found again`() {
+        // given
+        val recipeNameToSave = "Recipe with step"
+        val stepNumber = 1
+        val stepDescription =
+            "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
+
+        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave)
+        assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
+        assertNotNull(recipeCreateResult.id)
+        val recipeId = recipeCreateResult.id!!
+
+        // when
+        val result = recipeService.createPreparationStep(
+            recipeId = recipeId,
+            stepNumber = stepNumber,
+            description = stepDescription,
+        )
+
+        // expect
+        assertEquals(result.status, ActionResultStatus.CREATED)
+        assertNotNull(result.id)
+        val preparationStepId = result.id!!
+
+        val recipeFound = recipeService.getRecipeById(recipeId)!!
+        assertEquals(recipeFound.preparationSteps.size, 1)
+        assertEquals(recipeFound.preparationSteps.first().preparationStepId, preparationStepId)
+        assertEquals(recipeFound.preparationSteps.first().recipe.recipeId, recipeId)
+        assertEquals(recipeFound.preparationSteps.first().stepNumber, stepNumber)
+        assertEquals(recipeFound.preparationSteps.first().description, stepDescription)
+        assertEquals(recipeFound.name, recipeNameToSave)
+    }
+
+    @Test
+    fun `deleting recipe also deletes connected preparationStep`() {
+        // given
+        val recipeNameToSave = "Recipe with step to be deleted"
+        val stepNumber = 1
+        val stepDescription =
+            "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
+
+        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave)
+        assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
+        assertNotNull(recipeCreateResult.id)
+        val recipeId = recipeCreateResult.id!!
+        val createPreparationStepResult = recipeService.createPreparationStep(
+            recipeId = recipeId,
+            stepNumber = stepNumber,
+            description = stepDescription,
+        )
+        assertEquals(createPreparationStepResult.status, ActionResultStatus.CREATED)
+        assertNotNull(createPreparationStepResult.id)
+        val preparationStepId = createPreparationStepResult.id!!
+
+        // when
+        val deleteResult = recipeService.deleteRecipeById(recipeId)!!
+
+        // expect
+        assertEquals(deleteResult.status, ActionResultStatus.DELETED)
+        assertEquals(deleteResult.id, recipeId)
+
+        val foundPreparationStep = recipeService.getPreparationStepById(preparationStepId)
+        assertNull(foundPreparationStep)
     }
 }
