@@ -40,22 +40,22 @@ resource "docker_container" "postgres" {
   }
 }
 
-resource "docker_image" "recipy_backend" {
-  name = "recipy-backend"
-  keep_locally = true
-}
-
-resource "docker_container" "recipy_backend" {
-  depends_on = [docker_container.postgres]
-  image    = docker_image.recipy_backend.latest
-  name     = var.appContainerName
-  restart  = "always"
-  hostname = var.appContainerName
-  networks_advanced {
-    name = docker_network.recipy_network.name
-  }
-  ports {
-    internal = "8080"
-    external = "8080"
-  }
-}
+#resource "docker_image" "recipy_backend" {
+#  name = "recipy-backend"
+#  keep_locally = true
+#}
+#
+#resource "docker_container" "recipy_backend" {
+#  depends_on = [docker_container.postgres]
+#  image    = docker_image.recipy_backend.latest
+#  name     = var.appContainerName
+#  restart  = "always"
+#  hostname = var.appContainerName
+#  networks_advanced {
+#    name = docker_network.recipy_network.name
+#  }
+#  ports {
+#    internal = "8080"
+#    external = "8080"
+#  }
+#}
