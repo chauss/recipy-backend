@@ -1,11 +1,6 @@
 package de.chauss.recipy.database.models
 
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
+import jakarta.persistence.*
 import org.springframework.data.jpa.repository.JpaRepository
 import java.time.Instant
 import java.util.*
@@ -19,6 +14,8 @@ class Recipe(
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
     val ingredientUsages: Set<IngredientUsage> = HashSet(),
     val created: Instant = Instant.now(),
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
+    val preparationSteps: List<PreparationStep> = ArrayList(),
 )
 
 interface RecipeRepository : JpaRepository<Recipe, String> {
