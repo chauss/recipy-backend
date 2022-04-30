@@ -11,8 +11,8 @@ class PreparationStep (
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipeId")
     val recipe: Recipe = Recipe(),
-    val stepNumber: Int = 1,
-    val description: String = "",
+    var stepNumber: Int = 1,
+    var description: String = "",
 )
 
 interface PreparationStepRepository : JpaRepository<PreparationStep, String>

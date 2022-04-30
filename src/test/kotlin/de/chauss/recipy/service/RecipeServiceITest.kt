@@ -162,7 +162,7 @@ class RecipeServiceITest(
         val preparationStepId = createPreparationStepResult.id!!
 
         // when
-        val deleteResult = recipeService.deleteRecipeById(recipeId)!!
+        val deleteResult = recipeService.deleteRecipeById(recipeId)
 
         // expect
         assertEquals(deleteResult.status, ActionResultStatus.DELETED)
@@ -170,5 +170,47 @@ class RecipeServiceITest(
 
         val foundPreparationStep = recipeService.getPreparationStepById(preparationStepId)
         assertNull(foundPreparationStep)
+    }
+
+    @Test
+    fun `update preparationStep works`() {
+        // given
+        val recipeNameToSave = "Recipe with step to be updated"
+        val stepNumber = 1
+        val stepDescription =
+            "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
+        val newStepNumber = 2
+        val newStepDescription =
+            "Heftig umrühren bis die Soße sich richtig verflüssigt. Dabei darauf achten, dass die Pilze nicht zerstört werden da sonst ein Brei entsteht"
+
+        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave)
+        assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
+        assertNotNull(recipeCreateResult.id)
+        val recipeId = recipeCreateResult.id!!
+        val createPreparationStepResult = recipeService.createPreparationStep(
+            recipeId = recipeId,
+            stepNumber = stepNumber,
+            description = stepDescription,
+        )
+        assertEquals(createPreparationStepResult.status, ActionResultStatus.CREATED)
+        assertNotNull(createPreparationStepResult.id)
+        val preparationStepId = createPreparationStepResult.id!!
+
+        // when
+        val updateResult = recipeService.updatePreparationStep(
+            preparationStepId = preparationStepId,
+            stepNumber = newStepNumber,
+            description = newStepDescription
+        )
+
+        // expect
+        assertEquals(updateResult.status, ActionResultStatus.UPDATED)
+        assertEquals(updateResult.id, preparationStepId)
+
+        val foundPreparationStep = recipeService.getPreparationStepById(preparationStepId)
+        assertNotNull(foundPreparationStep)
+        assertEquals(foundPreparationStep?.preparationStepId, preparationStepId)
+        assertEquals(foundPreparationStep?.preparationStepId, preparationStepId)
+        assertEquals(foundPreparationStep?.preparationStepId, preparationStepId)
     }
 }

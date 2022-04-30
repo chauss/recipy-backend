@@ -10,6 +10,7 @@ import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import javax.swing.Action
 
 @Service
 class RecipeService(
@@ -84,7 +85,11 @@ class RecipeService(
         return null
     }
 
-    fun createPreparationStep(recipeId: String, stepNumber: Int, description: String): ActionResult {
+    fun createPreparationStep(
+        recipeId: String,
+        stepNumber: Int,
+        description: String
+    ): ActionResult {
         val recipeOptional = recipeRepository.findById(recipeId)
         if (recipeOptional.isEmpty) {
             return ActionResult(
@@ -111,7 +116,10 @@ class RecipeService(
 
         preparationStepRepository.save(newPreparationStep)
 
-        return ActionResult(status = ActionResultStatus.CREATED, id = newPreparationStep.preparationStepId)
+        return ActionResult(
+            status = ActionResultStatus.CREATED,
+            id = newPreparationStep.preparationStepId
+        )
     }
 
     fun deletePreparationStepById(preparationStepId: String): ActionResult {
@@ -130,5 +138,24 @@ class RecipeService(
             message = "ERROR: Could not delete preparationStep with id $preparationStepId for unknown reason",
             errorCode = ErrorCodes.DELETE_PREPARATION_STEP_UNKNOWN_REASON.value
         )
+    }
+
+    fun updatePreparationStep(
+        preparationStepId: String,
+        stepNumber: Int,
+        description: String
+    ): ActionResult {
+        val preparationStep = preparationStepRepository.findById(preparationStepId).orElse(null)
+            ?: return ActionResult(
+                status = ActionResultStatus.ELEMENT_NOT_FOUND,
+                message = "ERROR: Could not update preparationStep with id $preparationStepId because no preparationStep with the given id exists",
+                errorCode = ErrorCodes.UPDATE_PREPARATION_STEP_PREPARATION_STEP_ID_NOT_FOUND.value
+            )
+        preparationStep.stepNumber = stepNumber
+        preparationStep.description = description
+
+        preparationStepRepository.save(preparationStep)
+
+        return ActionResult(status = ActionResultStatus.UPDATED, id = preparationStep.preparationStepId)
     }
 }

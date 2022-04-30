@@ -65,6 +65,22 @@ class RecipeRestController(
         val result = recipeService.deletePreparationStepById(preparationStepId = preparationStepId)
         return ActionResponse.responseEntityForResult(result = result)
     }
+
+    @PutMapping(
+        "/recipe/preparationStep/{preparationStepId}",
+        consumes = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun createIngredientUsage(
+        @RequestBody request: UpdatePreparationStepRequest,
+        @PathVariable(value = "preparationStepId") preparationStepId: String
+    ): ResponseEntity<ActionResponse> {
+        val result = recipeService.updatePreparationStep(
+            preparationStepId = preparationStepId,
+            stepNumber = request.stepNumber,
+            description = request.description,
+        )
+        return ActionResponse.responseEntityForResult(result = result)
+    }
 }
 
 class CreateRecipeRequest(
@@ -73,6 +89,11 @@ class CreateRecipeRequest(
 
 class CreatePreparationStepRequest(
     val recipeId: String,
+    val stepNumber: Int,
+    val description: String,
+)
+
+class UpdatePreparationStepRequest(
     val stepNumber: Int,
     val description: String,
 )
