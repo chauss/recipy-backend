@@ -70,7 +70,7 @@ class RecipeRestController(
         "/recipe/preparationStep/{preparationStepId}",
         consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun createIngredientUsage(
+    fun updatePreparationStep(
         @RequestBody request: UpdatePreparationStepRequest,
         @PathVariable(value = "preparationStepId") preparationStepId: String
     ): ResponseEntity<ActionResponse> {

@@ -1,11 +1,10 @@
 package de.chauss.recipy.service.dtos
 
 import de.chauss.recipy.database.models.PreparationStep
-import de.chauss.recipy.database.models.Recipe
 
 data class PreparationStepDto(
     val preparationStepId: String,
-    val recipe: Recipe,
+    val recipeId: String,
     val stepNumber: Int,
     val description: String,
 ) {
@@ -13,7 +12,7 @@ data class PreparationStepDto(
         fun from(preparationStep: PreparationStep): PreparationStepDto {
             return PreparationStepDto(
                 preparationStepId = preparationStep.preparationStepId,
-                recipe = preparationStep.recipe,
+                recipeId = preparationStep.recipe.recipeId,
                 stepNumber = preparationStep.stepNumber,
                 description = preparationStep.description,
             )

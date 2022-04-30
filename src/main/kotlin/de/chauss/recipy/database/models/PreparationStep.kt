@@ -11,6 +11,7 @@ class PreparationStep (
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipeId")
     val recipe: Recipe = Recipe(),
+    @Column(unique = true)
     var stepNumber: Int = 1,
     var description: String = "",
 )

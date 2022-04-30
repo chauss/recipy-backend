@@ -134,7 +134,7 @@ class RecipeServiceITest(
         val recipeFound = recipeService.getRecipeById(recipeId)!!
         assertEquals(recipeFound.preparationSteps.size, 1)
         assertEquals(recipeFound.preparationSteps.first().preparationStepId, preparationStepId)
-        assertEquals(recipeFound.preparationSteps.first().recipe.recipeId, recipeId)
+        assertEquals(recipeFound.preparationSteps.first().recipeId, recipeId)
         assertEquals(recipeFound.preparationSteps.first().stepNumber, stepNumber)
         assertEquals(recipeFound.preparationSteps.first().description, stepDescription)
         assertEquals(recipeFound.name, recipeNameToSave)
