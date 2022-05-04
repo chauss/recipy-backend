@@ -3,38 +3,75 @@
 This is the backend service for my new home projekt "recipy". Recipy can hold recipes and make
 random suggestions for a weekly cooking plan.
 
-## Building the docker image
+# Raspberry Pi
 
-```shell
-docker build -t recipy-backend .
+The following section explains how to build this for a raspberry pi 4 running a 64bit version of
+raspbian.
+
+## Setup
+
+On a fresh installed raspbian first update apt-get:
+
+```bash
+sudo apt-get update && sudo apt-get upgrade
 ```
 
-## Run on raspberry
+### Install Terraform
 
-1. Build the application
+Run following commands on the raspberry.
 
-```shell
-./mvnw clean package
+```bash
+sudo apt install snapd
+sudo reboot
+sudo snap install core
+sudo snap install terraform --candidate --classic
 ```
 
-2. Build the image for the right platform
+### Install Docker
 
-```shell
-docker buildx build --no-cache --platform <platform> -t recipy-backend .
+Run following commands on the raspberry. This is for the user pi.
+
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker pi
+dockerd-rootless-setuptool.sh install
+sudo reboot
 ```
 
-3. Copy the image and terraform to the raspberry
+### Create directories
 
-```shell
-docker save -o ./recipy-backend-image.tar recipy-backend
-scp ./recipy-backend-image.tar pi@raspberrypi:/home/pi/recipy/recipy-backend-image.tar
-scp -r ./terraform pi@raspberrypi:/home/pi/recipy/terraform
+On the raspberry run:
+
+```bash
+mkdir -p ~/recipy/terraform
 ```
 
-4. On the raspberry load the docker image and run terraform
+### Copy terraform scripts
 
-```shell
-docker load -i ~/recipy/recipy-backend-image.tar
+On the host run:
+
+```bash
+scp -r ./terraform/* pi@recipy-server.local:/home/pi/recipy/terraform/
+```
+
+## Build and push the docker image
+
+On the host run:
+
+```bash
+docker buildx build --platform linux/arm64/v8 -t chauss/recipy-backend:alpha-0.0.1 .
+docker chauss/recipy-backend:alpha-0.0.1
+```
+
+## Run
+
+On the raspberry run:
+
+```bash
 cd ~/recipy/terraform
+terraform init
 terraform apply
 ```
+
+
