@@ -63,3 +63,19 @@ resource "docker_container" "recipy_backend" {
     external = "8080"
   }
 }
+
+resource "docker_image" "recipy_website" {
+  name = "chauss/recipy-website:alpha-0.0.1"
+}
+
+resource "docker_container" "recipy_website" {
+  image    = docker_image.recipy_website.latest
+  name     = var.webContainerName
+  restart  = "always"
+  hostname = var.webContainerName
+  env      = ["DB_IP_ADDRESS=${docker_container.postgres.ip_address}"]
+  ports {
+    internal = "80"
+    external = "80"
+  }
+}
