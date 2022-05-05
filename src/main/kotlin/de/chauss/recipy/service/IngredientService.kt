@@ -263,7 +263,7 @@ class IngredientService(
                     errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_RECIPE_ID_NOT_FOUND.value
                 )
 
-        if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId }) {
+        if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId && it.ingredientUsageId != ingredientUsageId }) {
             return ActionResult(
                 status = ActionResultStatus.INVALID_ARGUMENTS,
                 message = "ERROR: IngredientId \"${ingredient.name}\" does already exist in recipe \"${recipe.name}\"",

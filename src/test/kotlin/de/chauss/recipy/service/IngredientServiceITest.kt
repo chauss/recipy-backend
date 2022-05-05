@@ -247,6 +247,120 @@ class IngredientTest(
 
     @Test
     @Order(11)
+    fun `can update the amount, unit and ingredient of an ingredientUsage`() {
+        // given
+        val ingredientUsageAmount = 2.0
+        val recipeCreationResult = recipeService.createRecipe("Toller Kartoffelsalat")
+        assertEquals(recipeCreationResult.status, ActionResultStatus.CREATED)
+        assertNotNull(recipeCreationResult.id)
+        val recipeId = recipeCreationResult.id!!
+
+        val existingIngredient = ingredientService.findIngredientByName(ingredientName)!!
+        val existingIngredientUnit =
+            ingredientService.findIngredientUnitByName(ingredientUnitName)!!
+
+        val ingredientUnitCreationResult = ingredientService.createIngredientUnit("Neue Einheit!")
+        assertEquals(ingredientUnitCreationResult.status, ActionResultStatus.CREATED)
+        val newIngredientUnitId = ingredientUnitCreationResult.id!!
+
+        val ingredientCreationResult = ingredientService.createIngredient("Neue Zutat!")
+        assertEquals(ingredientCreationResult.status, ActionResultStatus.CREATED)
+        val newIngredientId = ingredientCreationResult.id!!
+
+        val newAmount = ingredientUsageAmount + 2
+
+        val creationResult = ingredientService.createIngredientUsage(
+            recipeId,
+            ingredientId = existingIngredient.ingredientId,
+            ingredientUnitId = existingIngredientUnit.ingredientUnitId,
+            amount = ingredientUsageAmount
+        )
+        val ingredientUsageFound = ingredientService.getIngredientUsageById(creationResult.id!!)
+        assertNotNull(ingredientUsageFound)
+
+        // when
+        val updateResult = ingredientService.updateIngredientUsage(
+            ingredientUsageId = ingredientUsageFound!!.ingredientUsageId,
+            ingredientId = newIngredientId,
+            ingredientUnitId = newIngredientUnitId,
+            amount = newAmount
+        )
+
+        // expect
+        assertEquals(updateResult.status, ActionResultStatus.UPDATED)
+        assertEquals(updateResult.id, ingredientUsageFound.ingredientUsageId)
+        val updatedIngredientUsage =
+            ingredientService.getIngredientUsageById(ingredientUsageFound.ingredientUsageId)
+        assertNotNull(updatedIngredientUsage!!)
+        assertEquals(updatedIngredientUsage.ingredientId, newIngredientId)
+        assertEquals(updatedIngredientUsage.ingredientUnitId, newIngredientUnitId)
+        assertEquals(updatedIngredientUsage.amount, newAmount)
+    }
+
+    @Test
+    @Order(12)
+    fun `can not update ingredient of an ingredientUsage to an ingredient that already exists on recipe`() {
+        // given
+        val ingredientUsageAmount = 2.0
+        val recipeCreationResult = recipeService.createRecipe("Tollster Kartoffelsalat")
+        assertEquals(recipeCreationResult.status, ActionResultStatus.CREATED)
+        assertNotNull(recipeCreationResult.id)
+        val recipeId = recipeCreationResult.id!!
+
+        val existingIngredient = ingredientService.findIngredientByName(ingredientName)!!
+        val existingIngredientUnit =
+            ingredientService.findIngredientUnitByName(ingredientUnitName)!!
+
+        val ingredientUnitCreationResult =
+            ingredientService.createIngredientUnit("Neueste Einheit!")
+        assertEquals(ingredientUnitCreationResult.status, ActionResultStatus.CREATED)
+        val newIngredientUnitId = ingredientUnitCreationResult.id!!
+
+        val ingredientCreationResult = ingredientService.createIngredient("Neueste Zutat!")
+        assertEquals(ingredientCreationResult.status, ActionResultStatus.CREATED)
+        val newIngredientId = ingredientCreationResult.id!!
+
+        val newAmount = ingredientUsageAmount + 2
+
+        val creationResultOne = ingredientService.createIngredientUsage(
+            recipeId,
+            ingredientId = existingIngredient.ingredientId,
+            ingredientUnitId = existingIngredientUnit.ingredientUnitId,
+            amount = ingredientUsageAmount
+        )
+        val ingredientUsageOne = ingredientService.getIngredientUsageById(creationResultOne.id!!)
+        assertNotNull(ingredientUsageOne!!)
+
+        val creationResultTwo = ingredientService.createIngredientUsage(
+            recipeId,
+            ingredientId = newIngredientId,
+            ingredientUnitId = newIngredientUnitId,
+            amount = newAmount
+        )
+        val ingredientUsageTwo = ingredientService.getIngredientUsageById(creationResultTwo.id!!)
+        assertNotNull(creationResultTwo)
+
+        // when
+        val updateResult = ingredientService.updateIngredientUsage(
+            ingredientUsageId = ingredientUsageOne.ingredientUsageId,
+            ingredientId = newIngredientId,
+            ingredientUnitId = ingredientUsageOne.ingredientUnitId,
+            amount = ingredientUsageOne.amount
+        )
+
+        // expect
+        assertEquals(updateResult.status, ActionResultStatus.INVALID_ARGUMENTS)
+        assertNull(updateResult.id)
+        val updatedIngredientUsage =
+            ingredientService.getIngredientUsageById(ingredientUsageOne.ingredientUsageId)
+        assertNotNull(updatedIngredientUsage!!)
+        assertEquals(updatedIngredientUsage.ingredientId, ingredientUsageOne.ingredientId)
+        assertEquals(updatedIngredientUsage.ingredientUnitId, ingredientUsageOne.ingredientUnitId)
+        assertEquals(updatedIngredientUsage.amount, ingredientUsageOne.amount)
+    }
+
+    @Test
+    @Order(13)
     fun `deleting a recipe also deletes the connected ingredientUsages`() {
         // given
         val ingredientUsageAmount = 2.0
