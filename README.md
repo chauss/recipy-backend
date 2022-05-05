@@ -61,7 +61,7 @@ On the host run:
 
 ```bash
 docker buildx build --platform linux/arm64/v8 -t chauss/recipy-backend:alpha-0.0.1 .
-docker chauss/recipy-backend:alpha-0.0.1
+docker push chauss/recipy-backend:alpha-0.0.1
 ```
 
 ## Run
