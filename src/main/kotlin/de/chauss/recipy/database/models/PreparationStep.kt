@@ -5,13 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 @Entity(name = "preparation_steps")
-class PreparationStep (
+class PreparationStep(
     @Id
     val preparationStepId: String = "preparation_step_${UUID.randomUUID()}",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipeId")
     val recipe: Recipe = Recipe(),
-    @Column(unique = true)
     var stepNumber: Int = 1,
     var description: String = "",
 )
