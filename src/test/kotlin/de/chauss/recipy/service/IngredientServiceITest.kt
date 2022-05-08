@@ -1,29 +1,16 @@
 package de.chauss.recipy.service
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
-import org.testcontainers.containers.JdbcDatabaseContainer
-import org.testcontainers.containers.PostgreSQLContainer
-import org.testcontainers.junit.jupiter.Container
-import org.testcontainers.junit.jupiter.Testcontainers
-import org.testcontainers.utility.DockerImageName
-
-fun postgresForIngredients(imageName: String, opts: JdbcDatabaseContainer<Nothing>.() -> Unit) =
-    PostgreSQLContainer<Nothing>(DockerImageName.parse(imageName)).apply(opts)
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-@Testcontainers
-@Disabled("Can only run local (not in pipeline)")
 @TestMethodOrder(OrderAnnotation::class)
 class IngredientTest(
     @Autowired val ingredientService: IngredientService,
@@ -31,30 +18,6 @@ class IngredientTest(
 ) {
     val ingredientUnitName = "Prise"
     val ingredientName = "Olivenöl"
-
-    companion object {
-        @Container
-        val postgresqlContainer = postgresForIngredients("postgres:14.2-alpine") {
-            withDatabaseName("recipy-backend-it")
-            withUsername("root")
-            withPassword("root")
-            //withInitScript("sql/schema.sql")
-        }
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun datasourceconfig(registry: DynamicPropertyRegistry) {
-            registry.add("spring.datasource.url", postgresqlContainer::getJdbcUrl)
-            registry.add("spring.datasource.username", postgresqlContainer::getUsername)
-            registry.add("spring.datasource.password", postgresqlContainer::getPassword)
-        }
-    }
-
-    @Test
-    @Order(1)
-    fun `container is up and running`() {
-        assertTrue(postgresqlContainer.isRunning)
-    }
 
     @Test
     @Order(2)

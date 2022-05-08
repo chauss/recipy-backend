@@ -3,6 +3,10 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>recipy-backend</artifactId>
+  <description>Backend for Recipy</description>
+  <groupId>de.chauss.recipy</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <name>recipy-backend</name>
 
   <properties>
     <java.version>17</java.version>
@@ -10,6 +14,13 @@
     <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
     <kotlin.version>1.6.20-RC2</kotlin.version>
   </properties>
+
+  <parent>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <relativePath/>
+    <version>3.0.0-M2</version> <!-- lookup parent from repository -->
+  </parent>
 
   <build>
     <plugins>
@@ -55,6 +66,7 @@
   </build>
 
   <dependencies>
+    <!--Compile Time Dependencies -->
     <dependency>
       <artifactId>spring-boot-starter-web</artifactId>
       <groupId>org.springframework.boot</groupId>
@@ -68,16 +80,34 @@
       <groupId>org.jetbrains.kotlin</groupId>
     </dependency>
     <dependency>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>kotlin-maven-noarg</artifactId>
       <groupId>org.jetbrains.kotlin</groupId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>hibernate-core</artifactId>
+      <groupId>org.hibernate</groupId>
+      <version>5.6.7.Final</version>
     </dependency>
 
+    <!--Runtime Dependencies -->
+    <dependency>
+      <artifactId>postgresql</artifactId>
+      <groupId>org.postgresql</groupId>
+      <scope>runtime</scope>
+    </dependency>
     <dependency>
       <artifactId>spring-boot-devtools</artifactId>
       <groupId>org.springframework.boot</groupId>
       <optional>true</optional>
       <scope>runtime</scope>
     </dependency>
+
+    <!--Testing Dependencies -->
     <dependency>
       <artifactId>spring-boot-starter-test</artifactId>
       <exclusions>
@@ -89,81 +119,31 @@
       <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>com.ninja-squad</groupId>
       <artifactId>springmockk</artifactId>
       <version>3.0.1</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>postgresql</artifactId>
-      <groupId>org.postgresql</groupId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <artifactId>hibernate-core</artifactId>
-      <groupId>org.hibernate</groupId>
-      <version>5.6.7.Final</version>
+      <artifactId>h2</artifactId>
+      <groupId>com.h2database</groupId>
+      <version>2.1.210</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <artifactId>hibernate-testing</artifactId>
       <groupId>org.hibernate</groupId>
-      <scope>test</scope>
       <version>5.6.7.Final</version>
-    </dependency>
-    <dependency>
-      <artifactId>kotlin-maven-noarg</artifactId>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <version>${kotlin.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <artifactId>junit-jupiter</artifactId>
       <groupId>org.junit.jupiter</groupId>
+      <version>5.8.2</version>
       <scope>test</scope>
-      <version>5.8.1</version>
-    </dependency>
-    <dependency>
-      <artifactId>testcontainers</artifactId>
-      <groupId>org.testcontainers</groupId>
-      <scope>test</scope>
-      <version>1.16.3</version>
-    </dependency>
-    <dependency>
-      <artifactId>junit-jupiter</artifactId>
-      <groupId>org.testcontainers</groupId>
-      <scope>test</scope>
-      <version>1.16.3</version>
-    </dependency>
-    <dependency>
-      <artifactId>postgresql</artifactId>
-      <groupId>org.testcontainers</groupId>
-      <scope>test</scope>
-      <version>1.16.3</version>
-    </dependency>
-    <dependency>
-      <artifactId>h2</artifactId>
-      <groupId>com.h2database</groupId>
-      <scope>runtime</scope>
-      <version>2.1.210</version>
     </dependency>
   </dependencies>
-  <description>Backend for Recipy</description>
-  <groupId>de.chauss.recipy</groupId>
-  <modelVersion>4.0.0</modelVersion>
-  <name>recipy-backend</name>
-
-  <parent>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <groupId>org.springframework.boot</groupId>
-    <relativePath/>
-    <version>3.0.0-M2</version> <!-- lookup parent from repository -->
-  </parent>
 
   <pluginRepositories>
     <pluginRepository>
