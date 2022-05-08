@@ -18,8 +18,8 @@ jobs:
       #          java-version: '17'
       #          distribution: 'temurin'
 
-      - name: Build and test with Maven
-        run: ./mvnw --batch-mode --update-snapshots verify
+      #      - name: Build and test with Maven
+      #        run: ./mvnw --batch-mode --update-snapshots verify
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v2
