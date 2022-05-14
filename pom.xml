@@ -134,7 +134,7 @@
     <dependency>
       <artifactId>hibernate-testing</artifactId>
       <groupId>org.hibernate</groupId>
-      <version>5.6.7.Final</version>
+      <version>6.0.0.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
