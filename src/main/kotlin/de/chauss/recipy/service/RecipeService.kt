@@ -4,13 +4,11 @@ import de.chauss.recipy.database.models.PreparationStep
 import de.chauss.recipy.database.models.PreparationStepRepository
 import de.chauss.recipy.database.models.Recipe
 import de.chauss.recipy.database.models.RecipeRepository
-import de.chauss.recipy.service.dtos.IngredientUsageDto
 import de.chauss.recipy.service.dtos.PreparationStepDto
 import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import javax.swing.Action
 
 @Service
 class RecipeService(
@@ -100,14 +98,6 @@ class RecipeService(
         }
         val recipe = recipeOptional.get()
 
-        if (recipe.preparationSteps.find { it.stepNumber == stepNumber } != null) {
-            return ActionResult(
-                status = ActionResultStatus.INVALID_ARGUMENTS,
-                message = "ERROR: Could not create preparation step for recipe (${recipe.name}) because recipe has already a step number \"$stepNumber\"",
-                errorCode = ErrorCodes.CREATE_PREPARATION_STEP_STEP_NUMBER_ALREADY_EXISTS_ON_RECIPE.value
-            )
-        }
-
         val newPreparationStep = PreparationStep(
             recipe = recipe,
             stepNumber = stepNumber,
@@ -156,6 +146,9 @@ class RecipeService(
 
         preparationStepRepository.save(preparationStep)
 
-        return ActionResult(status = ActionResultStatus.UPDATED, id = preparationStep.preparationStepId)
+        return ActionResult(
+            status = ActionResultStatus.UPDATED,
+            id = preparationStep.preparationStepId
+        )
     }
 }

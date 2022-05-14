@@ -7,7 +7,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping(value = ["/v1"])
+@CrossOrigin("*")
+@RequestMapping(value = ["/api/v1"])
 class IngredientRestController(
     @Autowired val ingredientService: IngredientService,
 ) {
@@ -84,7 +85,8 @@ class IngredientRestController(
 
     @DeleteMapping("/ingredient/usage/{ingredientUsageId}")
     fun deleteIngredientUsageById(@PathVariable(value = "ingredientUsageId") ingredientUsageId: String): ResponseEntity<ActionResponse> {
-        val result = ingredientService.deleteIngredientUsageById(ingredientUsageId = ingredientUsageId)
+        val result =
+            ingredientService.deleteIngredientUsageById(ingredientUsageId = ingredientUsageId)
         return ActionResponse.responseEntityForResult(result = result)
     }
 }

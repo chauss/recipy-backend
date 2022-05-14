@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping(value = ["/v1"])
+@CrossOrigin("*")
+@RequestMapping(value = ["/api/v1"])
 class RecipeRestController(
     @Autowired val recipeService: RecipeService,
 ) {

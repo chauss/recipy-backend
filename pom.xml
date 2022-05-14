@@ -91,7 +91,7 @@
     <dependency>
       <artifactId>hibernate-core</artifactId>
       <groupId>org.hibernate</groupId>
-      <version>5.6.7.Final</version>
+      <version>6.0.0.Final</version>
     </dependency>
 
     <!--Runtime Dependencies -->
