@@ -300,13 +300,14 @@ class IngredientTest(
             ingredientUnitId = newIngredientUnitId,
             amount = newAmount
         )
-        val ingredientUsageTwo = ingredientService.getIngredientUsageById(creationResultTwo.id!!)
         assertNotNull(creationResultTwo)
+
+        val ingredientUsageTwo = ingredientService.getIngredientUsageById(creationResultTwo.id!!)!!
 
         // when
         val updateResult = ingredientService.updateIngredientUsage(
             ingredientUsageId = ingredientUsageOne.ingredientUsageId,
-            ingredientId = newIngredientId,
+            ingredientId = ingredientUsageTwo.ingredientId,
             ingredientUnitId = ingredientUsageOne.ingredientUnitId,
             amount = ingredientUsageOne.amount
         )

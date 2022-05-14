@@ -34,7 +34,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
         every { recipeService.createRecipe(any()) } returns createRecipeResult
 
         // when
-        mockMvc.post("/v1/recipe") {
+        mockMvc.post("/api/v1/recipe") {
             contentType = MediaType.APPLICATION_JSON
             content = jsonMapper().writeValueAsString(CreateRecipeRequest(name = newRecipeId))
             accept = MediaType.APPLICATION_JSON
@@ -56,7 +56,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
         every { recipeService.createRecipe(any()) } returns createRecipeResult
 
         // when
-        mockMvc.post("/v1/recipe") {
+        mockMvc.post("/api/v1/recipe") {
             contentType = MediaType.APPLICATION_JSON
             content = jsonMapper().writeValueAsString(CreateRecipeRequest(name = newRecipeId))
             accept = MediaType.APPLICATION_JSON
@@ -96,7 +96,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
         every { recipeService.getAllRecipes() } returns recipes
 
         // when
-        mockMvc.get("/v1/recipes") {
+        mockMvc.get("/api/v1/recipes") {
             accept = MediaType.APPLICATION_JSON
         }
             // expect
