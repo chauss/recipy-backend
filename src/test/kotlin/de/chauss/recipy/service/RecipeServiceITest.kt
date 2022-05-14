@@ -19,6 +19,7 @@ class RecipeServiceITest(
     @AfterEach
     fun cleanup() {
         jdbc.execute("DELETE FROM preparation_steps WHERE TRUE")
+        jdbc.execute("DELETE FROM ingredient_usages WHERE TRUE")
         jdbc.execute("DELETE FROM recipes WHERE TRUE")
     }
 
