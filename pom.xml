@@ -12,7 +12,12 @@
     <java.version>17</java.version>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-    <kotlin.version>1.6.20-RC2</kotlin.version>
+    <kotlin.version>1.6.21</kotlin.version>
+    <hibernate-core.version>6.0.1.Final</hibernate-core.version>
+    <flyway-core.version>8.5.11</flyway-core.version>
+    <h2.version>2.1.210</h2.version>
+    <springmockk.version>3.1.1</springmockk.version>
+    <junit-jupiter.version>5.8.2</junit-jupiter.version>
   </properties>
 
   <parent>
@@ -91,7 +96,12 @@
     <dependency>
       <artifactId>hibernate-core</artifactId>
       <groupId>org.hibernate</groupId>
-      <version>6.0.0.Final</version>
+      <version>${hibernate-core.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>flyway-core</artifactId>
+      <groupId>org.flywaydb</groupId>
+      <version>${flyway-core.version}</version>
     </dependency>
 
     <!--Runtime Dependencies -->
@@ -120,27 +130,27 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.ninja-squad</groupId>
       <artifactId>springmockk</artifactId>
-      <version>3.0.1</version>
+      <groupId>com.ninja-squad</groupId>
+      <version>${springmockk.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <artifactId>h2</artifactId>
       <groupId>com.h2database</groupId>
-      <version>2.1.210</version>
+      <version>${h2.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <artifactId>hibernate-testing</artifactId>
       <groupId>org.hibernate</groupId>
-      <version>6.0.0.Final</version>
+      <version>${hibernate-core.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <artifactId>junit-jupiter</artifactId>
       <groupId>org.junit.jupiter</groupId>
-      <version>5.8.2</version>
+      <version>${junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
