@@ -15,7 +15,7 @@
     <kotlin.version>1.6.21</kotlin.version>
     <hibernate-core.version>6.0.1.Final</hibernate-core.version>
     <flyway-core.version>8.5.11</flyway-core.version>
-    <h2.version>2.1.210</h2.version>
+    <h2.version>2.1.212</h2.version>
     <springmockk.version>3.1.1</springmockk.version>
     <junit-jupiter.version>5.8.2</junit-jupiter.version>
   </properties>
