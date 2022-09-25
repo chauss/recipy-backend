@@ -24,7 +24,7 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
     <relativePath/>
-    <version>3.0.0-M4</version> <!-- lookup parent from repository -->
+    <version>3.0.0-M5</version> <!-- lookup parent from repository -->
   </parent>
 
   <build>
