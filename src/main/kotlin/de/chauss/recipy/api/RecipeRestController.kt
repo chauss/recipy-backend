@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
@@ -52,7 +53,7 @@ class RecipeRestController(
     // # Preparation steps
     // ########################################################################
     @PostMapping("/recipe/preparationStep", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createRecipe(@RequestBody request: CreatePreparationStepRequest): ResponseEntity<ActionResponse> {
+    fun addPreparationStepToRecipe(@RequestBody request: CreatePreparationStepRequest): ResponseEntity<ActionResponse> {
         val result = recipeService.createPreparationStep(
             recipeId = request.recipeId,
             stepNumber = request.stepNumber,
@@ -82,6 +83,19 @@ class RecipeRestController(
         )
         return ActionResponse.responseEntityForResult(result = result)
     }
+
+    // ########################################################################
+    // # Recipe Images
+    // ########################################################################
+    @PostMapping("/recipe/image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun addImageToRecipe(@ModelAttribute request: AddImageToRecipeRequest): ResponseEntity<ActionResponse> {
+        val result = recipeService.addImageToRecipe(
+            recipeId = request.recipeId,
+            imageData = request.image.bytes,
+            fileExtension = request.fileExtension,
+        )
+        return ActionResponse.responseEntityForResult(result = result)
+    }
 }
 
 class CreateRecipeRequest(
@@ -97,4 +111,10 @@ class CreatePreparationStepRequest(
 class UpdatePreparationStepRequest(
     val stepNumber: Int,
     val description: String,
+)
+
+class AddImageToRecipeRequest(
+    val recipeId: String,
+    val image: MultipartFile,
+    val fileExtension: String,
 )

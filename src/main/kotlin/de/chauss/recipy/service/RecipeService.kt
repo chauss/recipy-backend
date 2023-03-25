@@ -1,9 +1,6 @@
 package de.chauss.recipy.service
 
-import de.chauss.recipy.database.models.PreparationStep
-import de.chauss.recipy.database.models.PreparationStepRepository
-import de.chauss.recipy.database.models.Recipe
-import de.chauss.recipy.database.models.RecipeRepository
+import de.chauss.recipy.database.models.*
 import de.chauss.recipy.service.dtos.PreparationStepDto
 import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
@@ -14,6 +11,8 @@ import org.springframework.stereotype.Service
 class RecipeService(
     @Autowired val recipeRepository: RecipeRepository,
     @Autowired val preparationStepRepository: PreparationStepRepository,
+    @Autowired val imageRepository: ImageRepository,
+    @Autowired val recipeImageRepository: RecipeImageRepository
 ) {
     // ########################################################################
     // # Recipe
@@ -149,6 +148,53 @@ class RecipeService(
         return ActionResult(
             status = ActionResultStatus.UPDATED,
             id = preparationStep.preparationStepId
+        )
+    }
+
+    fun addImageToRecipe(
+        imageData: ByteArray,
+        recipeId: String,
+        fileExtension: String,
+    ): ActionResult {
+        val recipeOptional = recipeRepository.findById(recipeId)
+        if (recipeOptional.isEmpty) {
+            return ActionResult(
+                status = ActionResultStatus.ELEMENT_NOT_FOUND,
+                message = "ERROR: Could not add image to recipe because no recipe with the given id $recipeId exists.",
+                errorCode = ErrorCodes.ADD_RECIPE_IMAGE_RECIPE_DOES_NOT_EXIST.value
+            )
+        }
+        val recipe = recipeOptional.get()
+        if (imageData.isEmpty()) {
+            return ActionResult(
+                status = ActionResultStatus.INVALID_ARGUMENTS,
+                message = "ERROR: Could not add image to recipe because the given image data is empty.",
+                errorCode = ErrorCodes.ADD_RECIPE_IMAGE_NO_IMAGE_UPLOADED.value
+            )
+        }
+
+        val imageId: String
+        try {
+            imageId = imageRepository.saveImage(imageData, recipeId, fileExtension)
+        } catch (e: Exception) {
+            return ActionResult(
+                status = ActionResultStatus.FAILED_TO_CREATE,
+                message = "ERROR: Could not add image to recipe for an unknown reason: ${e.message}.",
+                errorCode = ErrorCodes.ADD_RECIPE_IMAGE_UNKNOWN_REASON.value
+            )
+        }
+
+        val newRecipeImage = RecipeImage(
+            imageId = imageId,
+            recipe = recipe,
+            index = recipe.recipeImages.size,
+        )
+
+        recipeImageRepository.save(newRecipeImage)
+
+        return ActionResult(
+            status = ActionResultStatus.CREATED,
+            id = imageId
         )
     }
 }
