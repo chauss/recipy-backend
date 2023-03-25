@@ -96,6 +96,29 @@ class RecipeRestController(
         )
         return ActionResponse.responseEntityForResult(result = result)
     }
+
+    @DeleteMapping("/recipe/{recipeId}/image/{imageId}")
+    fun deleteRecipeImageById(
+        @PathVariable(value = "recipeId") recipeId: String,
+        @PathVariable(value = "imageId") imageId: String
+    ): ResponseEntity<ActionResponse> {
+        val result = recipeService.deleteRecipeImageById(recipeId = recipeId, imageId = imageId)
+        return ActionResponse.responseEntityForResult(result = result)
+    }
+
+    @GetMapping("/recipe/{recipeId}/image/{imageId}")
+    fun getRecipeImageById(
+        @PathVariable(value = "recipeId") recipeId: String,
+        @PathVariable(value = "imageId") imageId: String
+    ): ResponseEntity<Any> {
+        val result = recipeService.getRecipeImageById(recipeId = recipeId, imageId = imageId)
+        return if (result == null) {
+            ResponseEntity.notFound().build()
+        } else {
+            // TODO maybe add mediatype (jpeg, png, etc.) to response
+            ResponseEntity.ok().body(result)
+        }
+    }
 }
 
 class CreateRecipeRequest(

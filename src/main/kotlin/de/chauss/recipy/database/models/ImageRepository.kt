@@ -8,4 +8,6 @@ interface ImageRepository {
 
     fun deleteImage(imageId: String, recipeId: String)
 
+    fun deleteAllImagesForRecipe(recipeId: String)
+
 }

@@ -46,6 +46,11 @@ class FileSystemImageRepository(
         Files.deleteIfExists(imagePath)
     }
 
+    override fun deleteAllImagesForRecipe(recipeId: String) {
+        val imageDirForRecipe = imageDirForRecipe(recipeId)
+        Files.deleteIfExists(Paths.get(imageDirForRecipe))
+    }
+
     private fun imageDirForRecipe(recipeId: String): String {
         return "%s/%s/%s".format(appDataDir, imageDirName, recipeId)
     }

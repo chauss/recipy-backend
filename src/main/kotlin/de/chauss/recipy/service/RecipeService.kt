@@ -59,6 +59,7 @@ class RecipeService(
             errorCode = ErrorCodes.DELETE_RECIPE_RECIPE_ID_NOT_FOUND.value
         )
         recipeRepository.deleteById(recipeId)
+        imageRepository.deleteAllImagesForRecipe(recipeId = recipeId)
         recipeRepository.findById(recipeId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.DELETED,
             id = recipeId,
@@ -175,7 +176,11 @@ class RecipeService(
 
         val imageId: String
         try {
-            imageId = imageRepository.saveImage(imageData, recipeId, fileExtension)
+            imageId = imageRepository.saveImage(
+                bytes = imageData,
+                recipeId = recipeId,
+                extension = fileExtension
+            )
         } catch (e: Exception) {
             return ActionResult(
                 status = ActionResultStatus.FAILED_TO_CREATE,
@@ -196,5 +201,28 @@ class RecipeService(
             status = ActionResultStatus.CREATED,
             id = imageId
         )
+    }
+
+    fun deleteRecipeImageById(recipeId: String, imageId: String): ActionResult {
+        val recipeImageOptional = recipeImageRepository.findById(imageId)
+        if (recipeImageOptional.isEmpty) {
+            return ActionResult(
+                status = ActionResultStatus.INVALID_ARGUMENTS,
+                message = "ERROR: Could not delete image $imageId from recipe because no image with the given id exists",
+                errorCode = ErrorCodes.DELETE_RECIPE_IMAGE_IMAGE_DOES_NOT_EXIST.value
+            )
+        }
+        val recipeImage = recipeImageOptional.get()
+        recipeImageRepository.delete(recipeImage)
+        imageRepository.deleteImage(imageId = imageId, recipeId = recipeId)
+
+        return ActionResult(
+            status = ActionResultStatus.DELETED,
+            id = imageId
+        )
+    }
+
+    fun getRecipeImageById(recipeId: String, imageId: String): ByteArray? {
+        return imageRepository.loadImage(imageId = imageId, recipeId = recipeId)
     }
 }
