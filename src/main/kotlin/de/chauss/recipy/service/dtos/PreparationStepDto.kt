@@ -7,6 +7,7 @@ data class PreparationStepDto(
     val recipeId: String,
     val stepNumber: Int,
     val description: String,
+    val created: Long
 ) {
     companion object {
         fun from(preparationStep: PreparationStep): PreparationStepDto {
@@ -15,6 +16,7 @@ data class PreparationStepDto(
                 recipeId = preparationStep.recipe.recipeId,
                 stepNumber = preparationStep.stepNumber,
                 description = preparationStep.description,
+                created = preparationStep.created.toEpochMilli()
             )
         }
     }
