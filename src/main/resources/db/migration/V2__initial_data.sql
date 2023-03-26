@@ -186,57 +186,68 @@ VALUES ('ingredient_usage_1ce43bbf-9943-4089-b040-bbce0c479f04', 10,
 
 -- PREPARATION STEPS
 -- Kartoffelsalat
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_d426e40e-ef0c-411b-9063-3dd687893678',
         'Die Kartoffeln in Scheiben schneiden und kochen bis sie durch sind. Danach die Kartoffeln beiseite stellen und abkühlen lassen.',
         1,
-        'recipe_c9a3dee2-cac5-4547-bd4f-955f5ba1eca5');
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+        'recipe_c9a3dee2-cac5-4547-bd4f-955f5ba1eca5', now());
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_30ce0b06-2fc4-4b30-8f3d-e9d789ddf151',
         'Die Gurke in feine Scheiben schneiden und mit den abgekühlten Kartoffeln vermengen.', 2,
-        'recipe_c9a3dee2-cac5-4547-bd4f-955f5ba1eca5');
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+        'recipe_c9a3dee2-cac5-4547-bd4f-955f5ba1eca5', now());
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_83b59a2a-5d1f-46fd-a7d3-e96b8f2953d0',
         'Mit dem Salz abschmecken und mindestens 3 Stunden im Kühlschrank ziehen lassen.', 3,
-        'recipe_c9a3dee2-cac5-4547-bd4f-955f5ba1eca5');
+        'recipe_c9a3dee2-cac5-4547-bd4f-955f5ba1eca5', now());
 -- Karottensalat
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_43711dee-b2f6-4fc3-9594-e7eb9c785241',
         'Die Karrotten waschen und anschließend mit einer Reibe grob raspeln.', 1,
-        'recipe_7a84327e-8aab-4b4e-b08f-6cca50b9279e');
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+        'recipe_7a84327e-8aab-4b4e-b08f-6cca50b9279e', now());
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_5c93fbc7-5e44-439d-a2f6-6293aa884d6a',
         'Alle Zutaten miteinander vermengen und direkt servieren.', 2,
-        'recipe_7a84327e-8aab-4b4e-b08f-6cca50b9279e');
+        'recipe_7a84327e-8aab-4b4e-b08f-6cca50b9279e', now());
 -- Quinoasalat
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_38008a1e-06db-4493-9a50-09b63f16c472',
         'Den Quinoa nach Packungsanleitung kochen und abkühlen lassen', 1,
-        'recipe_a1885b4c-fe88-4f5d-91fe-742432db15c2');
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+        'recipe_a1885b4c-fe88-4f5d-91fe-742432db15c2', now());
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_7487d11e-cf95-4a3a-86e8-e3d24ad0b565',
         'Das ganze Gemüse klein schneiden und in einer Schüssel mit dem kalten Quinoa vermischen',
         2,
-        'recipe_a1885b4c-fe88-4f5d-91fe-742432db15c2');
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+        'recipe_a1885b4c-fe88-4f5d-91fe-742432db15c2', now());
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_b9a5de24-65c3-4d75-8f6c-7af672c1eaee',
         'Mit dem Olivenöl, Salz und Pfeffer abschmecken und direkt servieren.',
         3,
-        'recipe_a1885b4c-fe88-4f5d-91fe-742432db15c2');
+        'recipe_a1885b4c-fe88-4f5d-91fe-742432db15c2', now());
 -- Pizzateig
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_c3a6c673-adcc-4b56-85d2-4aaaaea13a41',
         'Den Hefewürfel im lauwarmen Wasser auflösen. Das Mehl und das Salz in einer großen Schüssel vermengen.',
         1,
-        'recipe_9d483aab-6435-4741-9e88-89cf5b5d8d7c');
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+        'recipe_9d483aab-6435-4741-9e88-89cf5b5d8d7c', now());
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_99d29260-fd48-4080-a93c-934686c4df7b',
         'Aus dem Hefewasser und der Mehlmischung einen glatten Teig kneten. Hier sollte man mindestens 5 Minuten kneten!',
         2,
-        'recipe_9d483aab-6435-4741-9e88-89cf5b5d8d7c');
-INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id)
+        'recipe_9d483aab-6435-4741-9e88-89cf5b5d8d7c', now());
+INSERT INTO recipy.preparation_steps (preparation_step_id, description, step_number, recipe_id,
+                                      created)
 VALUES ('preparation_step_5aa6e9b1-63ba-4741-832f-fd4e4522b212',
         'Das Olivenöl auf den Teigballen geben und erneut kneten bis das Olivenöl im Teig aufgenommen wurde.',
         3,
-        'recipe_9d483aab-6435-4741-9e88-89cf5b5d8d7c');
+        'recipe_9d483aab-6435-4741-9e88-89cf5b5d8d7c', now());
 
