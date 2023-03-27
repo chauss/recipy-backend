@@ -18,10 +18,17 @@ class ActionResponse(
                     ActionResponse(id = result.id!!),
                     HttpStatus.CREATED
                 )
+
+                ActionResultStatus.FAILED_TO_CREATE -> ResponseEntity(
+                    ActionResponse(message = result.message, errorCode = result.errorCode),
+                    HttpStatus.CONFLICT
+                )
+
                 ActionResultStatus.UPDATED -> ResponseEntity(
                     ActionResponse(id = result.id!!),
                     HttpStatus.OK
                 )
+
                 ActionResultStatus.DELETED -> ResponseEntity(
                     ActionResponse(id = result.id!!),
                     HttpStatus.OK
@@ -31,14 +38,17 @@ class ActionResponse(
                     ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.NOT_FOUND
                 )
+
                 ActionResultStatus.ALREADY_EXISTS -> ResponseEntity(
                     ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.CONFLICT
                 )
+
                 ActionResultStatus.FAILED_TO_DELETE -> ResponseEntity(
                     ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.CONFLICT
                 )
+
                 ActionResultStatus.INVALID_ARGUMENTS -> ResponseEntity(
                     ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.CONFLICT

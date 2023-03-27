@@ -11,15 +11,23 @@ import java.util.*
 class Recipe(
     @Id
     val recipeId: String = "recipe_${UUID.randomUUID()}",
+
     @Column(unique = true)
     val name: String = "",
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
     @Fetch(FetchMode.SUBSELECT)
     val ingredientUsages: Set<IngredientUsage> = HashSet(),
+
     val created: Instant = Instant.now(),
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
     @Fetch(FetchMode.SUBSELECT)
     val preparationSteps: List<PreparationStep> = ArrayList(),
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
+    @Fetch(FetchMode.SUBSELECT)
+    val recipeImages: List<RecipeImage> = ArrayList(),
 )
 
 interface RecipeRepository : JpaRepository<Recipe, String> {
