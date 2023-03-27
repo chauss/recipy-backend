@@ -18,4 +18,6 @@ class RecipeImage(
     val created: Instant = Instant.now(),
 )
 
-interface RecipeImageRepository : JpaRepository<RecipeImage, String>
+interface RecipeImageRepository : JpaRepository<RecipeImage, String> {
+    fun findByRecipeRecipeId(recipeId: String): Collection<RecipeImage>?
+}

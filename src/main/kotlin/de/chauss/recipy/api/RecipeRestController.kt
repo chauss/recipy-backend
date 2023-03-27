@@ -2,6 +2,7 @@ package de.chauss.recipy.api
 
 import de.chauss.recipy.service.RecipeService
 import de.chauss.recipy.service.dtos.RecipeDto
+import de.chauss.recipy.service.dtos.RecipeImageDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -118,6 +119,13 @@ class RecipeRestController(
             // TODO maybe add mediatype (jpeg, png, etc.) to response
             ResponseEntity.ok().body(result)
         }
+    }
+
+    @GetMapping("/recipe/{recipeId}/images")
+    fun getRecipeImagesForRecipeId(
+        @PathVariable(value = "recipeId") recipeId: String
+    ): Collection<RecipeImageDto> {
+        return recipeService.getRecipeImagesForRecipeId(recipeId = recipeId)
     }
 }
 

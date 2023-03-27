@@ -3,9 +3,11 @@ package de.chauss.recipy.service
 import de.chauss.recipy.database.models.*
 import de.chauss.recipy.service.dtos.PreparationStepDto
 import de.chauss.recipy.service.dtos.RecipeDto
+import de.chauss.recipy.service.dtos.RecipeImageDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class RecipeService(
@@ -224,5 +226,10 @@ class RecipeService(
 
     fun getRecipeImageById(recipeId: String, imageId: String): ByteArray? {
         return imageRepository.loadImage(imageId = imageId, recipeId = recipeId)
+    }
+
+    fun getRecipeImagesForRecipeId(recipeId: String): Collection<RecipeImageDto> {
+        val recipeImages = recipeImageRepository.findByRecipeRecipeId(recipeId = recipeId)
+        return recipeImages?.map { RecipeImageDto.from(it) } ?: Collections.emptyList()
     }
 }
