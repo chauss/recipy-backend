@@ -24,4 +24,4 @@ jobs:
       - uses: scacap/action-surefire-report@v1
         with:
           report_paths: "**/surefire-reports/TEST-*.xml"
-          check_name: Unit Test Results
+          check_name: Test Results
