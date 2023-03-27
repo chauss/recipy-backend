@@ -1,6 +1,6 @@
 name: Enabling auto-merge minor-updates and patches
 
-on: pull_request_target
+on: pull_request
 
 permissions:
   pull-requests: write
