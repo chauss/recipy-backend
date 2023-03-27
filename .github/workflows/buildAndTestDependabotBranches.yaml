@@ -19,9 +19,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and Test
-        run: ./mvnw --update-snapshots --no-transfer-progress --batch-mode --errors clean verify
+        run: ./mvnw --update-snapshots --no-transfer-progress --errors clean verify
 
       - uses: scacap/action-surefire-report@v1
         with:
           report_paths: "**/surefire-reports/TEST-*.xml"
-          check_name: Unit Test Results
+          check_name: Test Results
