@@ -2,6 +2,7 @@ package de.chauss.recipy.service
 
 enum class ActionResultStatus {
     CREATED,
+    FAILED_TO_CREATE,
     ALREADY_EXISTS,
     INVALID_ARGUMENTS,
     ELEMENT_NOT_FOUND,

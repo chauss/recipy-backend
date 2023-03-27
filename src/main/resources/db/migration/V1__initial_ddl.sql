@@ -74,6 +74,7 @@ CREATE TABLE recipy.preparation_steps
     description         character varying(255),
     step_number         integer                NOT NULL,
     recipe_id           character varying(255),
+    created             timestamp without time zone,
     CONSTRAINT preparation_steps_pkey PRIMARY KEY (preparation_step_id),
     CONSTRAINT preparation_steps_recipe_fkey FOREIGN KEY (recipe_id)
         REFERENCES recipy.recipes (recipe_id) MATCH SIMPLE
@@ -82,4 +83,21 @@ CREATE TABLE recipy.preparation_steps
 );
 
 ALTER TABLE recipy.preparation_steps
+    OWNER to root;
+
+-- RECIPE IMAGES
+CREATE TABLE recipy.recipe_images
+(
+    image_id  character varying(255) NOT NULL,
+    recipe_id character varying(255),
+    index     integer                NOT NULL,
+    created   timestamp without time zone,
+    CONSTRAINT recipe_images_pkey PRIMARY KEY (image_id),
+    CONSTRAINT recipe_images_recipe_fkey FOREIGN KEY (recipe_id)
+        REFERENCES recipy.recipes (recipe_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+);
+
+ALTER TABLE recipy.recipe_images
     OWNER to root;
