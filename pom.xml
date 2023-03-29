@@ -20,11 +20,12 @@
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
     <kotlin.version>1.8.10</kotlin.version>
-    <hibernate-core.version>6.0.1.Final</hibernate-core.version>
+    <hibernate-core.version>6.1.7.Final</hibernate-core.version>
     <flyway-core.version>9.16.1</flyway-core.version>
     <h2.version>2.1.214</h2.version>
     <springmockk.version>4.0.2</springmockk.version>
     <junit-jupiter.version>5.9.2</junit-jupiter.version>
+    <apache-common-io.version>2.11.0</apache-common-io.version>
   </properties>
 
   <build>
@@ -103,6 +104,11 @@
       <groupId>org.flywaydb</groupId>
       <version>${flyway-core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${apache-common-io.version}</version>
+    </dependency>
 
     <!--Runtime Dependencies -->
     <dependency>
@@ -175,7 +181,18 @@
       </snapshots>
       <url>https://repo.spring.io/milestone</url>
     </repository>
+    <repository>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
   </repositories>
+
   <version>0.0.1-SNAPSHOT</version>
 
 </project>

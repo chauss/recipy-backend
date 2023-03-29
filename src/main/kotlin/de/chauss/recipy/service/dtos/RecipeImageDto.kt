@@ -1,13 +1,12 @@
 package de.chauss.recipy.service.dtos
 
 import de.chauss.recipy.database.models.RecipeImage
-import java.time.Instant
 
 class RecipeImageDto(
     val imageId: String,
     val recipeId: String,
     var index: Int,
-    val created: Instant = Instant.now(),
+    val created: Long,
 ) {
     companion object {
         fun from(recipeImage: RecipeImage): RecipeImageDto {
@@ -15,7 +14,7 @@ class RecipeImageDto(
                 imageId = recipeImage.imageId,
                 recipeId = recipeImage.recipe.recipeId,
                 index = recipeImage.index,
-                created = recipeImage.created,
+                created = recipeImage.created.toEpochMilli(),
             )
         }
     }

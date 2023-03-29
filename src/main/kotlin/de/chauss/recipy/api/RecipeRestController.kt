@@ -4,6 +4,7 @@ import de.chauss.recipy.service.RecipeService
 import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeImageDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
+import org.apache.commons.io.FilenameUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -90,10 +91,11 @@ class RecipeRestController(
     // ########################################################################
     @PostMapping("/recipe/image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun addImageToRecipe(@ModelAttribute request: AddImageToRecipeRequest): ResponseEntity<ActionResponse> {
+        val fileExtension = FilenameUtils.getExtension(request.image.originalFilename)
         val result = recipeService.addImageToRecipe(
             recipeId = request.recipeId,
             imageData = request.image.bytes,
-            fileExtension = request.fileExtension,
+            fileExtension = fileExtension,
         )
         return ActionResponse.responseEntityForResult(result = result)
     }
@@ -147,5 +149,4 @@ class UpdatePreparationStepRequest(
 class AddImageToRecipeRequest(
     val recipeId: String,
     val image: MultipartFile,
-    val fileExtension: String,
 )
