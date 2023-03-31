@@ -29,7 +29,7 @@ class RecipeService(
         return recipes.map { RecipeOverviewDto.from(it) }
     }
 
-    fun createRecipe(name: String): ActionResult {
+    fun createRecipe(name: String, userId: String): ActionResult {
         val trimmedName = name.trim()
         val existingRecipes = recipeRepository.findByName(trimmedName)
 
@@ -40,7 +40,7 @@ class RecipeService(
                 errorCode = ErrorCodes.CREATE_RECIPE_RECIPE_NAME_ALREADY_EXISTS.value
             )
         }
-        val newRecipe = Recipe(name = trimmedName)
+        val newRecipe = Recipe(name = trimmedName, creator = userId)
         recipeRepository.save(newRecipe)
 
         return ActionResult(status = ActionResultStatus.CREATED, id = newRecipe.recipeId)

@@ -19,8 +19,6 @@ class Recipe(
     @Fetch(FetchMode.SUBSELECT)
     val ingredientUsages: Set<IngredientUsage> = HashSet(),
 
-    val created: Instant = Instant.now(),
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
     @Fetch(FetchMode.SUBSELECT)
     val preparationSteps: List<PreparationStep> = ArrayList(),
@@ -28,6 +26,10 @@ class Recipe(
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "recipe", cascade = [CascadeType.REMOVE])
     @Fetch(FetchMode.SUBSELECT)
     val recipeImages: List<RecipeImage> = ArrayList(),
+
+    val creator: String = "",
+
+    val created: Instant = Instant.now(),
 )
 
 interface RecipeRepository : JpaRepository<Recipe, String> {

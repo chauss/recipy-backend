@@ -41,7 +41,10 @@ enum class ErrorCodes(val value: Int) {
     ADD_RECIPE_IMAGE_RECIPE_DOES_NOT_EXIST(500),
     ADD_RECIPE_IMAGE_NO_IMAGE_UPLOADED(501),
     ADD_RECIPE_IMAGE_UNKNOWN_REASON(502),
-    DELETE_RECIPE_IMAGE_IMAGE_DOES_NOT_EXIST(520);
+    DELETE_RECIPE_IMAGE_IMAGE_DOES_NOT_EXIST(520),
+
+    // General
+    INVALID_USER_CREDENTIALS(900);
 
     companion object {
         fun fromInt(value: Int) = values().firstOrNull { it.value == value }

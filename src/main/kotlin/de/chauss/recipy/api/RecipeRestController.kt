@@ -1,5 +1,6 @@
 package de.chauss.recipy.api
 
+import de.chauss.recipy.service.ErrorCodes
 import de.chauss.recipy.service.RecipeService
 import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeImageDto
@@ -13,11 +14,13 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping(value = ["/api/v1"])
 class RecipeRestController(
     @Autowired val recipeService: RecipeService,
+    @Autowired val userAuthTokenVerifier: UserAuthTokenVerifier
 ) {
     // ########################################################################
     // # Recipes
@@ -32,7 +35,16 @@ class RecipeRestController(
 
     @PostMapping("/recipe", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun createRecipe(@RequestBody request: CreateRecipeRequest): ResponseEntity<ActionResponse> {
-        val result = recipeService.createRecipe(request.name)
+        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
+            ?: return ResponseEntity(
+                ActionResponse(
+                    message = "Invalid user token.",
+                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
+                ),
+                HttpStatus.UNAUTHORIZED
+            )
+
+        val result = recipeService.createRecipe(request.name, userId)
         return ActionResponse.responseEntityForResult(result = result)
     }
 
@@ -132,7 +144,8 @@ class RecipeRestController(
 }
 
 class CreateRecipeRequest(
-    val name: String
+    val name: String,
+    val userToken: String
 )
 
 class CreatePreparationStepRequest(
