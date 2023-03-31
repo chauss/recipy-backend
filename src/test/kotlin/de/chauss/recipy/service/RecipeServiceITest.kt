@@ -29,7 +29,7 @@ class RecipeServiceITest(
         val recipeNameToSave = "Kartoffelauflauf"
 
         // when
-        val result = recipeService.createRecipe(recipeNameToSave)
+        val result = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
 
         // expect
         assertEquals(result.status, ActionResultStatus.CREATED)
@@ -44,7 +44,7 @@ class RecipeServiceITest(
     fun `deleted recipe is not found again`() {
         // given
         val recipeNameToSave = "Kartoffelauflauf"
-        val creationResult = recipeService.createRecipe(recipeNameToSave)
+        val creationResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
         assertEquals(creationResult.status, ActionResultStatus.CREATED)
         assertNotNull(creationResult.id)
         val recipeId = creationResult.id!!
@@ -80,7 +80,7 @@ class RecipeServiceITest(
         val stepDescription =
             "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
 
-        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave)
+        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
         assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!
@@ -114,7 +114,7 @@ class RecipeServiceITest(
         val stepDescription =
             "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
 
-        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave)
+        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
         assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!
@@ -149,7 +149,7 @@ class RecipeServiceITest(
         val newStepDescription =
             "Heftig umrühren bis die Soße sich richtig verflüssigt. Dabei darauf achten, dass die Pilze nicht zerstört werden da sonst ein Brei entsteht"
 
-        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave)
+        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
         assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!

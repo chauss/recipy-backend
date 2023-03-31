@@ -7,6 +7,7 @@ import de.chauss.recipy.service.ActionResultStatus
 import de.chauss.recipy.service.RecipeService
 import de.chauss.recipy.service.dtos.RecipeDto
 import io.mockk.every
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -25,18 +26,32 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
     @MockkBean
     lateinit var recipeService: RecipeService
 
+    @MockkBean
+    lateinit var userAuthTokenVerifier: UserAuthTokenVerifier
+
+    @BeforeEach
+    fun setup() {
+        every { userAuthTokenVerifier.verifyToken(any()) } returns "fake-user-id"
+    }
+
     @Test
     fun `call to createRecipe endpoint returns created recipeId`() {
         // given
         val newRecipeId = "new_recipe_id"
+        val userAuthToken = "fake-auth-token"
         val createRecipeResult =
             ActionResult(status = ActionResultStatus.CREATED, id = newRecipeId)
-        every { recipeService.createRecipe(any()) } returns createRecipeResult
+        every { recipeService.createRecipe(any(), any()) } returns createRecipeResult
 
         // when
         mockMvc.post("/api/v1/recipe") {
             contentType = MediaType.APPLICATION_JSON
-            content = jsonMapper().writeValueAsString(CreateRecipeRequest(name = newRecipeId))
+            content = jsonMapper().writeValueAsString(
+                CreateRecipeRequest(
+                    name = newRecipeId,
+                    userToken = userAuthToken
+                )
+            )
             accept = MediaType.APPLICATION_JSON
         }
             // expect
@@ -51,14 +66,20 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
     fun `call to createRecipe endpoint returns reason if not created`() {
         // given
         val newRecipeId = "new_recipe_id"
+        val userAuthToken = "fake-auth-token"
         val createRecipeResult =
             ActionResult(status = ActionResultStatus.ALREADY_EXISTS, message = "Duplicate")
-        every { recipeService.createRecipe(any()) } returns createRecipeResult
+        every { recipeService.createRecipe(any(), any()) } returns createRecipeResult
 
         // when
         mockMvc.post("/api/v1/recipe") {
             contentType = MediaType.APPLICATION_JSON
-            content = jsonMapper().writeValueAsString(CreateRecipeRequest(name = newRecipeId))
+            content = jsonMapper().writeValueAsString(
+                CreateRecipeRequest(
+                    name = newRecipeId,
+                    userToken = userAuthToken
+                )
+            )
             accept = MediaType.APPLICATION_JSON
         }
             // expect

@@ -16,8 +16,8 @@ class IngredientTest(
     @Autowired val ingredientService: IngredientService,
     @Autowired val recipeService: RecipeService,
 ) {
-    val ingredientUnitName = "Prise"
-    val ingredientName = "Olivenöl"
+    private val ingredientUnitName = "Prise"
+    private val ingredientName = "Olivenöl"
 
     @Test
     @Order(2)
@@ -51,7 +51,7 @@ class IngredientTest(
     fun `created ingredientUsage is found again`() {
         // given
         val ingredientUsageAmount = 2.0
-        val recipeCreationResult = recipeService.createRecipe("Kartoffelauflauf")
+        val recipeCreationResult = recipeService.createRecipe("Kartoffelauflauf", "fake-user-id")
         val recipeId = recipeCreationResult.id!!
 
         val existingIngredient = ingredientService.findIngredientByName(ingredientName)!!
@@ -81,7 +81,7 @@ class IngredientTest(
     fun `recipe can't have two ingredientUsages with the same ingredientId`() {
         // given
         val ingredientUsageAmount = 2.0
-        val recipeCreationResult = recipeService.createRecipe("Kartoffelsalat")
+        val recipeCreationResult = recipeService.createRecipe("Kartoffelsalat", "fake-user-id")
         assertNotNull(recipeCreationResult.id)
         val recipeId = recipeCreationResult.id!!
 
@@ -179,7 +179,7 @@ class IngredientTest(
     fun `deleted ingredientUsage is not found again`() {
         // given
         val ingredientUsageAmount = 3.5
-        val recipeCreationResult = recipeService.createRecipe("Hühnersuppe")
+        val recipeCreationResult = recipeService.createRecipe("Hühnersuppe", "fake-user-id")
         assertEquals(recipeCreationResult.status, ActionResultStatus.CREATED)
         assertNotNull(recipeCreationResult.id)
         val recipeId = recipeCreationResult.id!!
@@ -213,7 +213,8 @@ class IngredientTest(
     fun `can update the amount, unit and ingredient of an ingredientUsage`() {
         // given
         val ingredientUsageAmount = 2.0
-        val recipeCreationResult = recipeService.createRecipe("Toller Kartoffelsalat")
+        val recipeCreationResult =
+            recipeService.createRecipe("Toller Kartoffelsalat", "fake-user-id")
         assertEquals(recipeCreationResult.status, ActionResultStatus.CREATED)
         assertNotNull(recipeCreationResult.id)
         val recipeId = recipeCreationResult.id!!
@@ -265,7 +266,8 @@ class IngredientTest(
     fun `can not update ingredient of an ingredientUsage to an ingredient that already exists on recipe`() {
         // given
         val ingredientUsageAmount = 2.0
-        val recipeCreationResult = recipeService.createRecipe("Tollster Kartoffelsalat")
+        val recipeCreationResult =
+            recipeService.createRecipe("Tollster Kartoffelsalat", "fake-user-id")
         assertEquals(recipeCreationResult.status, ActionResultStatus.CREATED)
         assertNotNull(recipeCreationResult.id)
         val recipeId = recipeCreationResult.id!!
@@ -328,7 +330,8 @@ class IngredientTest(
     fun `deleting a recipe also deletes the connected ingredientUsages`() {
         // given
         val ingredientUsageAmount = 2.0
-        val recipeCreationResult = recipeService.createRecipe("Eindeutiger Kartoffelsalat")
+        val recipeCreationResult =
+            recipeService.createRecipe("Eindeutiger Kartoffelsalat", "fake-user-id")
         assertEquals(recipeCreationResult.status, ActionResultStatus.CREATED)
         assertNotNull(recipeCreationResult.id)
         val recipeId = recipeCreationResult.id!!
