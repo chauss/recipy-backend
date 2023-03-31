@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build And Push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/arm64/v8
@@ -31,4 +31,3 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USER }}/recipy-backend:alpha-0.0.1
           cache-from: type=gha
           cache-to: type=gha,mode=max
-

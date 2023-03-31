@@ -2,6 +2,7 @@ package de.chauss.recipy.api
 
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.ninjasquad.springmockk.MockkBean
+import de.chauss.recipy.config.FirebaseConfig
 import de.chauss.recipy.service.ActionResult
 import de.chauss.recipy.service.ActionResultStatus
 import de.chauss.recipy.service.RecipeService
@@ -28,6 +29,9 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
 
     @MockkBean
     lateinit var userAuthTokenVerifier: UserAuthTokenVerifier
+    
+    @MockkBean
+    lateinit var firebaseConfig: FirebaseConfig
 
     @BeforeEach
     fun setup() {

@@ -1,5 +1,7 @@
 package de.chauss.recipy.service
 
+import com.ninjasquad.springmockk.MockkBean
+import de.chauss.recipy.config.FirebaseConfig
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -15,6 +17,10 @@ class RecipeServiceITest(
     @Autowired val recipeService: RecipeService,
     @Autowired val jdbc: JdbcTemplate
 ) {
+
+    @MockkBean
+    lateinit var firebaseConfig: FirebaseConfig
+    
     @BeforeEach
     @AfterEach
     fun cleanup() {

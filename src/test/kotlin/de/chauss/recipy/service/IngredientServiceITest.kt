@@ -1,5 +1,7 @@
 package de.chauss.recipy.service
 
+import com.ninjasquad.springmockk.MockkBean
+import de.chauss.recipy.config.FirebaseConfig
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
@@ -18,6 +20,9 @@ class IngredientTest(
 ) {
     private val ingredientUnitName = "Prise"
     private val ingredientName = "Olivenöl"
+
+    @MockkBean
+    lateinit var firebaseConfig: FirebaseConfig
 
     @Test
     @Order(2)
