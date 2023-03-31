@@ -6,7 +6,7 @@ COPY src /usr/app/src
 COPY .mvn /usr/app/.mvn
 
 WORKDIR /usr/app
-RUN mvn clean package
+RUN mvn --update-snapshots --no-transfer-progress --errors clean verify
 
 # Run
 FROM eclipse-temurin:17.0.3_7-jre-focal
