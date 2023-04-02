@@ -58,8 +58,20 @@ class RecipeRestController(
     }
 
     @DeleteMapping("/recipe/{recipeId}")
-    fun deleteRecipeById(@PathVariable(value = "recipeId") recipeId: String): ResponseEntity<ActionResponse> {
-        val result = recipeService.deleteRecipeById(recipeId = recipeId)
+    fun deleteRecipeById(
+        @RequestBody request: DeleteRecipeRequest,
+        @PathVariable(value = "recipeId") recipeId: String,
+    ): ResponseEntity<ActionResponse> {
+        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
+            ?: return ResponseEntity(
+                ActionResponse(
+                    message = "Invalid user token.",
+                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
+                ),
+                HttpStatus.UNAUTHORIZED
+            )
+
+        val result = recipeService.deleteRecipeById(recipeId = recipeId, userId = userId)
         return ActionResponse.responseEntityForResult(result = result)
     }
 
@@ -145,6 +157,10 @@ class RecipeRestController(
 
 class CreateRecipeRequest(
     val name: String,
+    val userToken: String
+)
+
+class DeleteRecipeRequest(
     val userToken: String
 )
 

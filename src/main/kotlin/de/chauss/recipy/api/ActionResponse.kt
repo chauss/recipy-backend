@@ -53,6 +53,11 @@ class ActionResponse(
                     ActionResponse(message = result.message, errorCode = result.errorCode),
                     HttpStatus.CONFLICT
                 )
+
+                ActionResultStatus.UNAUTHORIZED -> ResponseEntity(
+                    ActionResponse(message = result.message, errorCode = result.errorCode),
+                    HttpStatus.UNAUTHORIZED
+                )
             }
         }
     }

@@ -8,6 +8,7 @@ data class RecipeDto(
     val ingredientUsages: Set<IngredientUsageDto>,
     val preparationSteps: List<PreparationStepDto>,
     val recipeImages: List<RecipeImageDto>,
+    val creator: String,
     val created: Long,
 ) {
     companion object {
@@ -22,6 +23,7 @@ data class RecipeDto(
                     .map { PreparationStepDto.from(it) },
                 recipeImages = recipe.recipeImages
                     .map { RecipeImageDto.from(it) },
+                creator = recipe.creator,
                 created = recipe.created.toEpochMilli(),
             )
         }

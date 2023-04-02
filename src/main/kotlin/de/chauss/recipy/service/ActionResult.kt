@@ -9,6 +9,7 @@ enum class ActionResultStatus {
     UPDATED,
     DELETED,
     FAILED_TO_DELETE,
+    UNAUTHORIZED
 }
 
 class ActionResult(
