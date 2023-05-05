@@ -21,7 +21,7 @@ class IngredientService(
         val trimmedName = name.trim()
         val existingIngredientUnits = ingredientUnitRepository.findByNameIgnoreCase(trimmedName)
 
-        if (existingIngredientUnits != null) {
+        existingIngredientUnits?.let {
             return ActionResult(
                 status = ActionResultStatus.ALREADY_EXISTS,
                 message = "ERROR: An ingredientUnit with the name \"$trimmedName\" already exists.",
@@ -93,7 +93,7 @@ class IngredientService(
         val trimmedName = name.trim()
         val existingIngredient = ingredientRepository.findByNameIgnoreCase(trimmedName)
 
-        if (existingIngredient != null) {
+        existingIngredient?.let {
             return ActionResult(
                 status = ActionResultStatus.ALREADY_EXISTS,
                 message = "ERROR: An ingredient with the name \"$trimmedName\" already exists.",

@@ -56,13 +56,13 @@ class RecipeService(
 
     fun deleteRecipeById(recipeId: String, userId: String): ActionResult {
         val recipe = recipeRepository.findById(recipeId).orElse(null) ?: return ActionResult(
-            status = ActionResultStatus.UNAUTHORIZED,
+            status = ActionResultStatus.ELEMENT_NOT_FOUND,
             message = "INFO: Could not delete recipe with id $recipeId because no recipe with the given id exists",
             errorCode = ErrorCodes.DELETE_RECIPE_RECIPE_ID_NOT_FOUND.value
         )
         if (recipe.creator != userId) {
             return ActionResult(
-                status = ActionResultStatus.ELEMENT_NOT_FOUND,
+                status = ActionResultStatus.UNAUTHORIZED,
                 message = "INFO: Could not delete recipe with id $recipeId because the user is not authorized to delete this recipe",
                 errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
             )

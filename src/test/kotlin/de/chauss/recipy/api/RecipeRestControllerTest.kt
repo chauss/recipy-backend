@@ -29,7 +29,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
 
     @MockkBean
     lateinit var userAuthTokenVerifier: UserAuthTokenVerifier
-    
+
     @MockkBean
     lateinit var firebaseConfig: FirebaseConfig
 
@@ -109,6 +109,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
                 ingredientUsages = Collections.emptySet(),
                 preparationSteps = Collections.emptyList(),
                 recipeImages = Collections.emptyList(),
+                creator = "fake-userId",
                 created = 123
             ),
             RecipeDto(
@@ -117,6 +118,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
                 ingredientUsages = Collections.emptySet(),
                 preparationSteps = Collections.emptyList(),
                 recipeImages = Collections.emptyList(),
+                creator = "fake-userId",
                 created = 234
             ),
         )

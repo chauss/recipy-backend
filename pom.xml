@@ -116,7 +116,6 @@
       <version>${firebase-admin.version}</version>
     </dependency>
 
-
     <!--Runtime Dependencies -->
     <dependency>
       <artifactId>postgresql</artifactId>

@@ -74,4 +74,17 @@ terraform init
 terraform apply
 ```
 
+## Useful commands
+
+To access the recipe_image_volume with a debian-shell:
+
+```bash
+docker run --rm -v recipe_image_volume:/data/imagesVolume -it debian bash
+```
+
+To access the recipy-backend-application container with a shell:
+
+```bash
+docker exec -it recipy-backend-application bash  
+```
 

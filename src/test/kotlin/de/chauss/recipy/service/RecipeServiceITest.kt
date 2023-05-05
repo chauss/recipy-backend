@@ -20,7 +20,7 @@ class RecipeServiceITest(
 
     @MockkBean
     lateinit var firebaseConfig: FirebaseConfig
-    
+
     @BeforeEach
     @AfterEach
     fun cleanup() {
@@ -58,10 +58,10 @@ class RecipeServiceITest(
         assertEquals(recipeFound.name, recipeNameToSave)
 
         // when
-        val deletionResult = recipeService.deleteRecipeById(recipeId)
+        val deletionResult = recipeService.deleteRecipeById(recipeId, "fake-user-id")
 
         // expect
-        assertEquals(deletionResult.status, ActionResultStatus.DELETED);
+        assertEquals(ActionResultStatus.DELETED, deletionResult.status)
         val recipeFoundAgain = recipeService.getRecipeById(recipeId)
         assertNull(recipeFoundAgain)
     }
@@ -72,10 +72,25 @@ class RecipeServiceITest(
         val unknownRecipeId = "unknown_recipe_id"
 
         // when
-        val deletionResult = recipeService.deleteRecipeById(unknownRecipeId)
+        val deletionResult = recipeService.deleteRecipeById(unknownRecipeId, "fake-user-id")
 
         // expect
-        assertEquals(deletionResult.status, ActionResultStatus.ELEMENT_NOT_FOUND)
+        assertEquals(ActionResultStatus.ELEMENT_NOT_FOUND, deletionResult.status)
+    }
+
+    @Test
+    fun `deleting another users recipe returns UNAUTHORIZED and recipe is not deleted`() {
+        // given
+        val result = recipeService.createRecipe("Recipe of User One", "fake-user-id-one")
+        val recipeId = result.id!!
+
+        // when
+        val deletionResult = recipeService.deleteRecipeById(recipeId, "fake-user-id-two")
+
+        // expect
+        assertEquals(ActionResultStatus.UNAUTHORIZED, deletionResult.status)
+        val recipeWrongUserTriedToDelete = recipeService.getRecipeById(recipeId)
+        assertNotNull(recipeWrongUserTriedToDelete)
     }
 
     @Test
@@ -87,7 +102,7 @@ class RecipeServiceITest(
             "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
 
         val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
-        assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
+        assertEquals(ActionResultStatus.CREATED, recipeCreateResult.status)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!
 
@@ -104,12 +119,12 @@ class RecipeServiceITest(
         val preparationStepId = result.id!!
 
         val recipeFound = recipeService.getRecipeById(recipeId)!!
-        assertEquals(recipeFound.preparationSteps.size, 1)
-        assertEquals(recipeFound.preparationSteps.first().preparationStepId, preparationStepId)
-        assertEquals(recipeFound.preparationSteps.first().recipeId, recipeId)
-        assertEquals(recipeFound.preparationSteps.first().stepNumber, stepNumber)
-        assertEquals(recipeFound.preparationSteps.first().description, stepDescription)
-        assertEquals(recipeFound.name, recipeNameToSave)
+        assertEquals(1, recipeFound.preparationSteps.size)
+        assertEquals(preparationStepId, recipeFound.preparationSteps.first().preparationStepId)
+        assertEquals(recipeId, recipeFound.preparationSteps.first().recipeId)
+        assertEquals(stepNumber, recipeFound.preparationSteps.first().stepNumber)
+        assertEquals(stepDescription, recipeFound.preparationSteps.first().description)
+        assertEquals(recipeNameToSave, recipeFound.name)
     }
 
     @Test
@@ -121,7 +136,7 @@ class RecipeServiceITest(
             "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
 
         val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
-        assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
+        assertEquals(ActionResultStatus.CREATED, recipeCreateResult.status)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!
         val createPreparationStepResult = recipeService.createPreparationStep(
@@ -129,16 +144,16 @@ class RecipeServiceITest(
             stepNumber = stepNumber,
             description = stepDescription,
         )
-        assertEquals(createPreparationStepResult.status, ActionResultStatus.CREATED)
+        assertEquals(ActionResultStatus.CREATED, createPreparationStepResult.status)
         assertNotNull(createPreparationStepResult.id)
         val preparationStepId = createPreparationStepResult.id!!
 
         // when
-        val deleteResult = recipeService.deleteRecipeById(recipeId)
+        val deleteResult = recipeService.deleteRecipeById(recipeId, "fake-user-id")
 
         // expect
-        assertEquals(deleteResult.status, ActionResultStatus.DELETED)
-        assertEquals(deleteResult.id, recipeId)
+        assertEquals(ActionResultStatus.DELETED, deleteResult.status)
+        assertEquals(recipeId, deleteResult.id)
 
         val foundPreparationStep = recipeService.getPreparationStepById(preparationStepId)
         assertNull(foundPreparationStep)
@@ -156,7 +171,7 @@ class RecipeServiceITest(
             "Heftig umrühren bis die Soße sich richtig verflüssigt. Dabei darauf achten, dass die Pilze nicht zerstört werden da sonst ein Brei entsteht"
 
         val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
-        assertEquals(recipeCreateResult.status, ActionResultStatus.CREATED)
+        assertEquals(ActionResultStatus.CREATED, recipeCreateResult.status)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!
         val createPreparationStepResult = recipeService.createPreparationStep(
@@ -164,7 +179,7 @@ class RecipeServiceITest(
             stepNumber = stepNumber,
             description = stepDescription,
         )
-        assertEquals(createPreparationStepResult.status, ActionResultStatus.CREATED)
+        assertEquals(ActionResultStatus.CREATED, createPreparationStepResult.status)
         assertNotNull(createPreparationStepResult.id)
         val preparationStepId = createPreparationStepResult.id!!
 
@@ -176,13 +191,13 @@ class RecipeServiceITest(
         )
 
         // expect
-        assertEquals(updateResult.status, ActionResultStatus.UPDATED)
-        assertEquals(updateResult.id, preparationStepId)
+        assertEquals(ActionResultStatus.UPDATED, updateResult.status)
+        assertEquals(preparationStepId, updateResult.id)
 
         val foundPreparationStep = recipeService.getPreparationStepById(preparationStepId)
         assertNotNull(foundPreparationStep)
-        assertEquals(foundPreparationStep?.preparationStepId, preparationStepId)
-        assertEquals(foundPreparationStep?.preparationStepId, preparationStepId)
-        assertEquals(foundPreparationStep?.preparationStepId, preparationStepId)
+        assertEquals(preparationStepId, foundPreparationStep?.preparationStepId)
+        assertEquals(newStepNumber, foundPreparationStep?.stepNumber)
+        assertEquals(newStepDescription, foundPreparationStep?.description)
     }
 }

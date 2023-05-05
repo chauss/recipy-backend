@@ -8,7 +8,7 @@ import kotlin.random.Random
 
 @Component
 class FileSystemImageRepository(
-    @Value("\${app.data.dir}") var appDataDir: String
+    @Value("\${data.images.path}") var appDataDir: String
 ) : ImageRepository {
 
     private val imageRandomPartLength: Int = 10
