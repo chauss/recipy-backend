@@ -6,7 +6,7 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
     <relativePath/>
-    <version>3.1.0-M2</version> <!-- lookup parent from repository -->
+    <version>3.1.0-RC2</version> <!-- lookup parent from repository -->
   </parent>
 
   <artifactId>recipy-backend</artifactId>
