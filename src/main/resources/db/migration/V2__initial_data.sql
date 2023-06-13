@@ -62,13 +62,17 @@ VALUES ('ingredient_11c7436a-c8cb-47c5-bf00-816f1ae21a90', 'Hefe', now());
 
 -- RECIPES
 INSERT INTO recipy.recipes (recipe_id, name, creator, created)
-VALUES ('recipe_c9a3dee2-cac5-4547-bd4f-955f5ba1eca5', 'Kartoffelsalat', 'initialDataUser', now());
+VALUES ('recipe_c9a3dee2-cac5-4547-bd4f-955f5ba1eca5', 'Kartoffelsalat',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
 INSERT INTO recipy.recipes (recipe_id, name, creator, created)
-VALUES ('recipe_7a84327e-8aab-4b4e-b08f-6cca50b9279e', 'Karottensalat', 'initialDataUser', now());
+VALUES ('recipe_7a84327e-8aab-4b4e-b08f-6cca50b9279e', 'Karottensalat',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
 INSERT INTO recipy.recipes (recipe_id, name, creator, created)
-VALUES ('recipe_a1885b4c-fe88-4f5d-91fe-742432db15c2', 'Quinoasalat', 'initialDataUser', now());
+VALUES ('recipe_a1885b4c-fe88-4f5d-91fe-742432db15c2', 'Quinoasalat',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
 INSERT INTO recipy.recipes (recipe_id, name, creator, created)
-VALUES ('recipe_9d483aab-6435-4741-9e88-89cf5b5d8d7c', 'Pizza-Teig', 'initialDataUser', now());
+VALUES ('recipe_9d483aab-6435-4741-9e88-89cf5b5d8d7c', 'Pizza-Teig', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
 
 -- INGREDIENT USAGES
 -- Kartoffelsalat

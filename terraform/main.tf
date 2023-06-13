@@ -81,18 +81,18 @@ resource "docker_container" "recipy_backend" {
     container_path = var.googleApplicationCredentialsFilePath
   }
 }
-#
-#resource "docker_image" "recipy_website" {
-#  name = "chauss/recipy-website:alpha-0.0.1"
-#}
-#
-#resource "docker_container" "recipy_website" {
-#  image    = docker_image.recipy_website
-#  name     = var.webContainerName
-#  restart  = "always"
-#  hostname = var.webContainerName
-#  ports {
-#    internal = "80"
-#    external = "80"
-#  }
-#}
+
+resource "docker_image" "recipy_website" {
+  name = "chauss/recipy-website:alpha-0.0.1"
+}
+
+resource "docker_container" "recipy_website" {
+  image    = docker_image.recipy_website.image_id
+  name     = var.webContainerName
+  restart  = "always"
+  hostname = var.webContainerName
+  ports {
+    internal = "80"
+    external = "80"
+  }
+}
