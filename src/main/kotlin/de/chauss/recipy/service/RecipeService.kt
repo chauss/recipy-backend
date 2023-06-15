@@ -95,7 +95,8 @@ class RecipeService(
     fun createPreparationStep(
         recipeId: String,
         stepNumber: Int,
-        description: String
+        description: String,
+        userId: String
     ): ActionResult {
         val recipeOptional = recipeRepository.findById(recipeId)
         if (recipeOptional.isEmpty) {
@@ -106,6 +107,14 @@ class RecipeService(
             )
         }
         val recipe = recipeOptional.get()
+
+        if (recipe.creator != userId) {
+            return ActionResult(
+                status = ActionResultStatus.UNAUTHORIZED,
+                message = "INFO: Could add preparationStep to recipe with id $recipeId because the user is not authorized to edit the recipe",
+                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+            )
+        }
 
         val newPreparationStep = PreparationStep(
             recipe = recipe,
@@ -121,12 +130,22 @@ class RecipeService(
         )
     }
 
-    fun deletePreparationStepById(preparationStepId: String): ActionResult {
-        preparationStepRepository.findById(preparationStepId).orElse(null) ?: return ActionResult(
-            status = ActionResultStatus.ELEMENT_NOT_FOUND,
-            message = "INFO: Could not delete preparationStep with id $preparationStepId because no preparationStep with the given id exists",
-            errorCode = ErrorCodes.DELETE_PREPARATION_STEP_PREPARATION_STEP_ID_NOT_FOUND.value
-        )
+    fun deletePreparationStepById(preparationStepId: String, userId: String): ActionResult {
+        val preparationStep = preparationStepRepository.findById(preparationStepId).orElse(null)
+            ?: return ActionResult(
+                status = ActionResultStatus.ELEMENT_NOT_FOUND,
+                message = "INFO: Could not delete preparationStep with id $preparationStepId because no preparationStep with the given id exists",
+                errorCode = ErrorCodes.DELETE_PREPARATION_STEP_PREPARATION_STEP_ID_NOT_FOUND.value
+            )
+
+        if (preparationStep.recipe.creator != userId) {
+            return ActionResult(
+                status = ActionResultStatus.UNAUTHORIZED,
+                message = "INFO: Could delete preparationStep to recipe with id ${preparationStep.recipe.recipeId} because the user is not authorized to edit the recipe",
+                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+            )
+        }
+
         preparationStepRepository.deleteById(preparationStepId)
         recipeRepository.findById(preparationStepId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.DELETED,
@@ -142,7 +161,8 @@ class RecipeService(
     fun updatePreparationStep(
         preparationStepId: String,
         stepNumber: Int,
-        description: String
+        description: String,
+        userId: String
     ): ActionResult {
         val preparationStep = preparationStepRepository.findById(preparationStepId).orElse(null)
             ?: return ActionResult(
@@ -150,6 +170,15 @@ class RecipeService(
                 message = "ERROR: Could not update preparationStep with id $preparationStepId because no preparationStep with the given id exists",
                 errorCode = ErrorCodes.UPDATE_PREPARATION_STEP_PREPARATION_STEP_ID_NOT_FOUND.value
             )
+
+        if (preparationStep.recipe.creator != userId) {
+            return ActionResult(
+                status = ActionResultStatus.UNAUTHORIZED,
+                message = "INFO: Could update preparationStep of recipe with id ${preparationStep.recipe.recipeId} because the user is not authorized to edit the recipe",
+                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+            )
+        }
+
         preparationStep.stepNumber = stepNumber
         preparationStep.description = description
 
@@ -165,6 +194,7 @@ class RecipeService(
         imageData: ByteArray,
         recipeId: String,
         fileExtension: String,
+        userId: String,
     ): ActionResult {
         val recipeOptional = recipeRepository.findById(recipeId)
         if (recipeOptional.isEmpty) {
@@ -175,6 +205,15 @@ class RecipeService(
             )
         }
         val recipe = recipeOptional.get()
+
+        if (recipe.creator != userId) {
+            return ActionResult(
+                status = ActionResultStatus.UNAUTHORIZED,
+                message = "INFO: Could not add image to recipe with id $recipeId because the user is not authorized to edit the recipe",
+                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+            )
+        }
+
         if (imageData.isEmpty()) {
             return ActionResult(
                 status = ActionResultStatus.INVALID_ARGUMENTS,
@@ -212,7 +251,7 @@ class RecipeService(
         )
     }
 
-    fun deleteRecipeImageById(recipeId: String, imageId: String): ActionResult {
+    fun deleteRecipeImageById(recipeId: String, imageId: String, userId: String): ActionResult {
         val recipeImageOptional = recipeImageRepository.findById(imageId)
         if (recipeImageOptional.isEmpty) {
             return ActionResult(
@@ -222,6 +261,15 @@ class RecipeService(
             )
         }
         val recipeImage = recipeImageOptional.get()
+        
+        if (recipeImage.recipe.creator != userId) {
+            return ActionResult(
+                status = ActionResultStatus.UNAUTHORIZED,
+                message = "INFO: Could not delete image of recipe with id $recipeId because the user is not authorized to edit the recipe",
+                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+            )
+        }
+
         recipeImageRepository.delete(recipeImage)
         imageRepository.deleteImage(imageId = imageId, recipeId = recipeId)
 

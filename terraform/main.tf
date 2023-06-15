@@ -49,8 +49,7 @@ resource "docker_container" "postgres" {
 }
 
 resource "docker_image" "recipy_backend" {
-  name         = "chauss/recipy-backend:alpha-0.0.1"
-  keep_locally = true
+  name = "chauss/recipy-backend:alpha-0.0.1"
 }
 
 resource "docker_container" "recipy_backend" {
