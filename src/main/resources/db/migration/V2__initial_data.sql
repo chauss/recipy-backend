@@ -1,64 +1,93 @@
 -- INGREDIENT UNITS
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_fb9a7cd0-36fe-4fb8-92f1-41683c420e36', 'Teelöffel', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_71b575ad-548e-4dbd-9036-f18977d9a689', 'Esslöffel', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_bc84ba25-2eb6-4434-92fd-33b12d12b168', 'Prise', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_5c2c23c2-f086-462c-a012-2e0529a7bbc4', 'Glas', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_86acc1e4-c763-474c-9143-b4013ccb7756', 'Dose', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_1068b1c1-165d-4728-a179-3acf1e4db78c', 'Stück', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_89ff16f6-e271-4563-8592-49c7f439e300', 'Kilogramm', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_c49ef910-0ae4-4c2b-9764-88d628b767ab', 'Gramm', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_882306c7-306b-4c42-b26c-6e298d95e624', 'Blätter', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_ecfc599d-b142-46b9-8fa5-555840317337', 'ml', now());
-INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, created)
-VALUES ('ingredient_unit_7b47a4b1-305f-4848-b93b-98458a9621a1', 'Würfel', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_fb9a7cd0-36fe-4fb8-92f1-41683c420e36', 'Teelöffel',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_71b575ad-548e-4dbd-9036-f18977d9a689', 'Esslöffel',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_bc84ba25-2eb6-4434-92fd-33b12d12b168', 'Prise',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_5c2c23c2-f086-462c-a012-2e0529a7bbc4', 'Glas',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_86acc1e4-c763-474c-9143-b4013ccb7756', 'Dose',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_1068b1c1-165d-4728-a179-3acf1e4db78c', 'Stück',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_89ff16f6-e271-4563-8592-49c7f439e300', 'Kilogramm',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_c49ef910-0ae4-4c2b-9764-88d628b767ab', 'Gramm',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_882306c7-306b-4c42-b26c-6e298d95e624', 'Blätter',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_ecfc599d-b142-46b9-8fa5-555840317337', 'ml',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredient_units (ingredient_unit_id, name, creator, created)
+VALUES ('ingredient_unit_7b47a4b1-305f-4848-b93b-98458a9621a1', 'Würfel',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
 
 -- INGREDIENTS
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_ccc129d4-81c7-45f5-b2e8-8f6f9038985c', 'Kartoffeln', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_ffafbb8c-ff6d-499c-9ae7-cab69013708d', 'Karotten', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_b87a200a-a0e2-4948-aa2f-6671a8ecd57a', 'Mais', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_ff310a50-d073-459a-8612-60f1af178bb9', 'Sahne', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_d636b2b1-fc14-477e-8eb6-275d730ffd59', 'Salz', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_31afb24f-e0eb-466e-88f6-9c17ea4ae3db', 'Pfeffer', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_c37523cd-cba9-498a-8947-b0acaddab3cd', 'Butter', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_2312d88d-bcb0-4727-8ccd-6af2fb6225f7', 'Vollkorn Dinkelmehl', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_c8e9da44-9bf4-4005-9510-0521d5e3cf4b', 'Dinkelmehl', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_244fb39d-8dbf-4008-9a30-e5b90787724d', 'Wasser', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_8ba55248-2039-4c7a-99a2-00916c00fd6d', 'Avocado', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_c732de08-df22-403c-8f97-7f6d70732bb9', 'Paprika', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_fb890e9d-75c5-416a-b209-a0277a35365c', 'Quinoa', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_e2c2a187-9e51-4a86-be44-be3922181556', 'Minze', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_217cb18f-1004-4026-8b92-8a83eac03c16', 'Tomaten', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_496dca44-1a3c-4e74-80fa-94eb532b14fd', 'Gurke', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_9bc8f0df-df11-4d73-a4b0-02e76989d292', 'Olivenöl', now());
-INSERT INTO recipy.ingredients (ingredient_id, name, created)
-VALUES ('ingredient_11c7436a-c8cb-47c5-bf00-816f1ae21a90', 'Hefe', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_ccc129d4-81c7-45f5-b2e8-8f6f9038985c', 'Kartoffeln',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_ffafbb8c-ff6d-499c-9ae7-cab69013708d', 'Karotten',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_b87a200a-a0e2-4948-aa2f-6671a8ecd57a', 'Mais', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_ff310a50-d073-459a-8612-60f1af178bb9', 'Sahne', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_d636b2b1-fc14-477e-8eb6-275d730ffd59', 'Salz', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_31afb24f-e0eb-466e-88f6-9c17ea4ae3db', 'Pfeffer',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_c37523cd-cba9-498a-8947-b0acaddab3cd', 'Butter', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_2312d88d-bcb0-4727-8ccd-6af2fb6225f7', 'Vollkorn Dinkelmehl',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_c8e9da44-9bf4-4005-9510-0521d5e3cf4b', 'Dinkelmehl',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_244fb39d-8dbf-4008-9a30-e5b90787724d', 'Wasser', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_8ba55248-2039-4c7a-99a2-00916c00fd6d', 'Avocado',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_c732de08-df22-403c-8f97-7f6d70732bb9', 'Paprika',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_fb890e9d-75c5-416a-b209-a0277a35365c', 'Quinoa', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_e2c2a187-9e51-4a86-be44-be3922181556', 'Minze', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_217cb18f-1004-4026-8b92-8a83eac03c16', 'Tomaten',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_496dca44-1a3c-4e74-80fa-94eb532b14fd', 'Gurke', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_9bc8f0df-df11-4d73-a4b0-02e76989d292', 'Olivenöl',
+        's1Gm7MrE5qSFChap05wzu3KCqDt1', now());
+INSERT INTO recipy.ingredients (ingredient_id, name, creator, created)
+VALUES ('ingredient_11c7436a-c8cb-47c5-bf00-816f1ae21a90', 'Hefe', 's1Gm7MrE5qSFChap05wzu3KCqDt1',
+        now());
 
 -- RECIPES
 INSERT INTO recipy.recipes (recipe_id, name, creator, created)

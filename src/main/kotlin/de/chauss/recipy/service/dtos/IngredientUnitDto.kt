@@ -5,6 +5,7 @@ import de.chauss.recipy.database.models.IngredientUnit
 class IngredientUnitDto(
     val ingredientUnitId: String,
     val name: String,
+    val creator: String,
     val created: Long
 ) {
     companion object {
@@ -12,6 +13,7 @@ class IngredientUnitDto(
             IngredientUnitDto(
                 ingredientUnitId = ingredientUnit.ingredientUnitId,
                 name = ingredientUnit.name,
+                creator = ingredientUnit.creator,
                 created = ingredientUnit.created.toEpochMilli()
             )
     }
