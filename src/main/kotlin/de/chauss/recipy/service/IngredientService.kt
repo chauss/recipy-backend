@@ -12,12 +12,12 @@ class IngredientService(
     @Autowired val ingredientUsageRepository: IngredientUsageRepository,
     @Autowired val ingredientUnitRepository: IngredientUnitRepository,
     @Autowired val ingredientRepository: IngredientRepository,
-    @Autowired val recipeRepository: RecipeRepository
+    @Autowired val recipeRepository: RecipeRepository,
 ) {
     // ########################################################################
     // # Ingredient Unit
     // ########################################################################
-    fun createIngredientUnit(name: String): ActionResult {
+    fun createIngredientUnit(name: String, userId: String): ActionResult {
         val trimmedName = name.trim()
         val existingIngredientUnits = ingredientUnitRepository.findByNameIgnoreCase(trimmedName)
 
@@ -28,7 +28,7 @@ class IngredientService(
                 errorCode = ErrorCodes.CREATE_INGREDIENT_UNIT_INGREDIENT_UNIT_NAME_ALREADY_EXISTS.value
             )
         }
-        val newIngredientUnit = IngredientUnit(name = trimmedName)
+        val newIngredientUnit = IngredientUnit(name = trimmedName, creator = userId)
         ingredientUnitRepository.save(newIngredientUnit)
 
         return ActionResult(
@@ -57,7 +57,8 @@ class IngredientService(
         return ingredientUnits.map { IngredientUnitDto.from(ingredientUnit = it) }
     }
 
-    fun deleteIngredientUnitById(ingredientUnitId: String): ActionResult {
+    fun deleteIngredientUnitById(ingredientUnitId: String, userId: String): ActionResult {
+        // TODO Think about how to use userId to protect this (ROLES maybe?)
         ingredientUnitRepository.findById(ingredientUnitId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.ELEMENT_NOT_FOUND,
             message = "INFO: Could not delete ingredientUnit with id $ingredientUnitId because no ingredientUnit with the given id exists",
@@ -89,7 +90,7 @@ class IngredientService(
     // ########################################################################
     // # Ingredient
     // ########################################################################
-    fun createIngredient(name: String): ActionResult {
+    fun createIngredient(name: String, userId: String): ActionResult {
         val trimmedName = name.trim()
         val existingIngredient = ingredientRepository.findByNameIgnoreCase(trimmedName)
 
@@ -100,7 +101,7 @@ class IngredientService(
                 errorCode = ErrorCodes.CREATE_INGREDIENT_INGREDIENT_NAME_ALREADY_EXISTS.value
             )
         }
-        val newIngredient = Ingredient(name = trimmedName)
+        val newIngredient = Ingredient(name = trimmedName, creator = userId)
         ingredientRepository.save(newIngredient)
 
         return ActionResult(
@@ -130,7 +131,8 @@ class IngredientService(
         return ingredients.map { IngredientDto.from(ingredient = it) }
     }
 
-    fun deleteIngredientById(ingredientId: String): ActionResult {
+    fun deleteIngredientById(ingredientId: String, userId: String): ActionResult {
+        // TODO Think about how to use userId to protect this (ROLES maybe?)
         ingredientRepository.findById(ingredientId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.ELEMENT_NOT_FOUND,
             message = "INFO: Could not delete ingredient with id $ingredientId because no ingredient with the given id exists",
@@ -163,8 +165,28 @@ class IngredientService(
     // # IngredientUsage
     // ########################################################################
     fun createIngredientUsage(
-        recipeId: String, ingredientId: String, ingredientUnitId: String, amount: Double
+        recipeId: String,
+        ingredientId: String,
+        ingredientUnitId: String,
+        amount: Double,
+        userId: String
     ): ActionResult {
+        val recipe =
+            recipeRepository.findById(recipeId).orElse(null)
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
+                    message = "ERROR: RecipeId \"$recipeId\" does not exist",
+                    errorCode = ErrorCodes.CREATE_INGREDIENT_USAGE_RECIPE_ID_DOES_NOT_EXIST.value
+                )
+
+        if (recipe.creator != userId) {
+            return ActionResult(
+                status = ActionResultStatus.UNAUTHORIZED,
+                message = "INFO: Could not add ingredientUSage to recipe with id $recipeId because the user is not authorized to edit the recipe",
+                errorCode = ErrorCodes.UPDATE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+            )
+        }
+
         val ingredient =
             ingredientRepository.findById(ingredientId).orElse(null)
                 ?: return ActionResult(
@@ -181,14 +203,6 @@ class IngredientService(
                     errorCode = ErrorCodes.CREATE_INGREDIENT_USAGE_INGREDIENT_UNIT_ID_DOES_NOT_EXIST.value
                 )
 
-        val recipe =
-            recipeRepository.findById(recipeId).orElse(null)
-                ?: return ActionResult(
-                    status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: RecipeId \"$recipeId\" does not exist",
-                    errorCode = ErrorCodes.CREATE_INGREDIENT_USAGE_RECIPE_ID_DOES_NOT_EXIST.value
-                )
-
         if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId }) {
             return ActionResult(
                 status = ActionResultStatus.INVALID_ARGUMENTS,
@@ -201,7 +215,7 @@ class IngredientService(
             ingredient = ingredient,
             ingredientUnit = ingredientUnit,
             recipe = recipe,
-            amount = amount
+            amount = amount,
         )
         ingredientUsageRepository.save(newIngredientUsage)
 
@@ -229,7 +243,8 @@ class IngredientService(
         ingredientUsageId: String,
         ingredientId: String,
         ingredientUnitId: String,
-        amount: Double
+        amount: Double,
+        userId: String,
     ): ActionResult {
         val ingredientUsage =
             ingredientUsageRepository.findById(ingredientUsageId).orElse(null)
@@ -238,6 +253,22 @@ class IngredientService(
                     message = "ERROR: IngredientUsageId \"$ingredientUsageId\" does not exist",
                     errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_INGREDIENT_USAGE_ID_NOT_FOUND.value
                 )
+
+        val recipe =
+            recipeRepository.findById(ingredientUsage.recipe.recipeId).orElse(null)
+                ?: return ActionResult(
+                    status = ActionResultStatus.INVALID_ARGUMENTS,
+                    message = "ERROR: RecipeId \"${ingredientUsage.recipe.recipeId}\" does not exist",
+                    errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_RECIPE_ID_NOT_FOUND.value
+                )
+
+        if (recipe.creator != userId) {
+            return ActionResult(
+                status = ActionResultStatus.UNAUTHORIZED,
+                message = "INFO: Could not update ingredientUsage of recipe with id ${recipe.recipeId} because the user is not authorized to edit the recipe",
+                errorCode = ErrorCodes.UPDATE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+            )
+        }
 
         val ingredient =
             ingredientRepository.findById(ingredientId).orElse(null)
@@ -253,14 +284,6 @@ class IngredientService(
                     status = ActionResultStatus.INVALID_ARGUMENTS,
                     message = "ERROR: IngredientUnitId \"$ingredientUnitId\" does not exist",
                     errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_INGREDIENT_UNIT_ID_NOT_FOUND.value
-                )
-
-        val recipe =
-            recipeRepository.findById(ingredientUsage.recipe.recipeId).orElse(null)
-                ?: return ActionResult(
-                    status = ActionResultStatus.INVALID_ARGUMENTS,
-                    message = "ERROR: RecipeId \"${ingredientUsage.recipe.recipeId}\" does not exist",
-                    errorCode = ErrorCodes.UPDATE_INGREDIENT_USAGE_RECIPE_ID_NOT_FOUND.value
                 )
 
         if (recipe.ingredientUsages.any { it.ingredient.ingredientId == ingredient.ingredientId && it.ingredientUsageId != ingredientUsageId }) {
@@ -279,12 +302,22 @@ class IngredientService(
         return ActionResult(status = ActionResultStatus.UPDATED, id = ingredientUsageId)
     }
 
-    fun deleteIngredientUsageById(ingredientUsageId: String): ActionResult {
-        ingredientUsageRepository.findById(ingredientUsageId).orElse(null) ?: return ActionResult(
-            status = ActionResultStatus.ELEMENT_NOT_FOUND,
-            message = "INFO: Could not delete ingredientUsage with id $ingredientUsageId because no ingredientUsage with the given id exists",
-            errorCode = ErrorCodes.DELETE_INGREDIENT_USAGE_INGREDIENT_USAGE_ID_NOT_FOUND.value
-        )
+    fun deleteIngredientUsageById(ingredientUsageId: String, userId: String): ActionResult {
+        val ingredientUsage = ingredientUsageRepository.findById(ingredientUsageId).orElse(null)
+            ?: return ActionResult(
+                status = ActionResultStatus.ELEMENT_NOT_FOUND,
+                message = "INFO: Could not delete ingredientUsage with id $ingredientUsageId because no ingredientUsage with the given id exists",
+                errorCode = ErrorCodes.DELETE_INGREDIENT_USAGE_INGREDIENT_USAGE_ID_NOT_FOUND.value
+            )
+
+        if (ingredientUsage.recipe.creator != userId) {
+            return ActionResult(
+                status = ActionResultStatus.UNAUTHORIZED,
+                message = "INFO: Could not delete ingredientUsage of recipe with id ${ingredientUsage.recipe.recipeId} because the user is not authorized to edit the recipe",
+                errorCode = ErrorCodes.UPDATE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+            )
+        }
+
         ingredientUsageRepository.deleteById(ingredientUsageId)
         ingredientUsageRepository.findById(ingredientUsageId).orElse(null) ?: return ActionResult(
             status = ActionResultStatus.DELETED,

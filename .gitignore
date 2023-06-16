@@ -64,3 +64,6 @@ Temporary Items
 # Terraform
 **/*.tfstate*
 **/.terraform*
+
+# Google Cloud Credentials
+**/google-application-credentials.json

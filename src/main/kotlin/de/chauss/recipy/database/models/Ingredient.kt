@@ -13,7 +13,8 @@ class Ingredient(
     val ingredientId: String = "ingredient_${UUID.randomUUID()}",
     @Column(unique = true)
     val name: String = "",
-    val created: Instant = Instant.now()
+    val creator: String = "",
+    val created: Instant = Instant.now(),
 )
 
 interface IngredientRepository : JpaRepository<Ingredient, String> {

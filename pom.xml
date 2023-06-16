@@ -27,6 +27,8 @@
     <junit-jupiter.version>5.9.3</junit-jupiter.version>
     <apache-common-io.version>2.13.0</apache-common-io.version>
     <firebase-admin.version>9.1.1</firebase-admin.version>
+    <spring-boot-starter-security.version>3.1.0</spring-boot-starter-security.version>
+    <kotlin-loggin-jvm.version>2.0.11</kotlin-loggin-jvm.version>
   </properties>
 
   <build>
@@ -114,6 +116,21 @@
       <groupId>com.google.firebase</groupId>
       <artifactId>firebase-admin</artifactId>
       <version>${firebase-admin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <version>${spring-boot-starter-security.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+      <version>${spring-boot-starter-security.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.microutils</groupId>
+      <artifactId>kotlin-logging-jvm</artifactId>
+      <version>${kotlin-loggin-jvm.version}</version>
     </dependency>
 
     <!--Runtime Dependencies -->

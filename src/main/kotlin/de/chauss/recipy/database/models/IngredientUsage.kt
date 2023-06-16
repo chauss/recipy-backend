@@ -15,7 +15,7 @@ class IngredientUsage(
     @ManyToOne
     @JoinColumn(name = "ingredientUnitId")
     var ingredientUnit: IngredientUnit = IngredientUnit(),
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipeId")
     val recipe: Recipe = Recipe(),
     var amount: Double = 0.0,

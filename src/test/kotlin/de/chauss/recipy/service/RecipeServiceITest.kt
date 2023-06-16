@@ -1,6 +1,7 @@
 package de.chauss.recipy.service
 
 import com.ninjasquad.springmockk.MockkBean
+import de.chauss.recipy.TestObjects
 import de.chauss.recipy.config.FirebaseConfig
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -35,7 +36,7 @@ class RecipeServiceITest(
         val recipeNameToSave = "Kartoffelauflauf"
 
         // when
-        val result = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
+        val result = recipeService.createRecipe(recipeNameToSave, TestObjects.TEST_USER_ID)
 
         // expect
         assertEquals(result.status, ActionResultStatus.CREATED)
@@ -50,7 +51,7 @@ class RecipeServiceITest(
     fun `deleted recipe is not found again`() {
         // given
         val recipeNameToSave = "Kartoffelauflauf"
-        val creationResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
+        val creationResult = recipeService.createRecipe(recipeNameToSave, TestObjects.TEST_USER_ID)
         assertEquals(creationResult.status, ActionResultStatus.CREATED)
         assertNotNull(creationResult.id)
         val recipeId = creationResult.id!!
@@ -58,7 +59,7 @@ class RecipeServiceITest(
         assertEquals(recipeFound.name, recipeNameToSave)
 
         // when
-        val deletionResult = recipeService.deleteRecipeById(recipeId, "fake-user-id")
+        val deletionResult = recipeService.deleteRecipeById(recipeId, TestObjects.TEST_USER_ID)
 
         // expect
         assertEquals(ActionResultStatus.DELETED, deletionResult.status)
@@ -72,7 +73,8 @@ class RecipeServiceITest(
         val unknownRecipeId = "unknown_recipe_id"
 
         // when
-        val deletionResult = recipeService.deleteRecipeById(unknownRecipeId, "fake-user-id")
+        val deletionResult =
+            recipeService.deleteRecipeById(unknownRecipeId, TestObjects.TEST_USER_ID)
 
         // expect
         assertEquals(ActionResultStatus.ELEMENT_NOT_FOUND, deletionResult.status)
@@ -81,11 +83,11 @@ class RecipeServiceITest(
     @Test
     fun `deleting another users recipe returns UNAUTHORIZED and recipe is not deleted`() {
         // given
-        val result = recipeService.createRecipe("Recipe of User One", "fake-user-id-one")
+        val result = recipeService.createRecipe("Recipe of User One", TestObjects.TEST_USER_ID)
         val recipeId = result.id!!
 
         // when
-        val deletionResult = recipeService.deleteRecipeById(recipeId, "fake-user-id-two")
+        val deletionResult = recipeService.deleteRecipeById(recipeId, "different_user_id")
 
         // expect
         assertEquals(ActionResultStatus.UNAUTHORIZED, deletionResult.status)
@@ -101,7 +103,8 @@ class RecipeServiceITest(
         val stepDescription =
             "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
 
-        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
+        val recipeCreateResult =
+            recipeService.createRecipe(recipeNameToSave, TestObjects.TEST_USER_ID)
         assertEquals(ActionResultStatus.CREATED, recipeCreateResult.status)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!
@@ -111,6 +114,7 @@ class RecipeServiceITest(
             recipeId = recipeId,
             stepNumber = stepNumber,
             description = stepDescription,
+            userId = TestObjects.TEST_USER_ID
         )
 
         // expect
@@ -135,7 +139,8 @@ class RecipeServiceITest(
         val stepDescription =
             "Kräftig umrühren bis die Soße sich richtig verbindet. Dabei darauf achten, dass die Pilze nicht kaputt gehen da sonst ein Brei entsteht"
 
-        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
+        val recipeCreateResult =
+            recipeService.createRecipe(recipeNameToSave, TestObjects.TEST_USER_ID)
         assertEquals(ActionResultStatus.CREATED, recipeCreateResult.status)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!
@@ -143,13 +148,14 @@ class RecipeServiceITest(
             recipeId = recipeId,
             stepNumber = stepNumber,
             description = stepDescription,
+            userId = TestObjects.TEST_USER_ID
         )
         assertEquals(ActionResultStatus.CREATED, createPreparationStepResult.status)
         assertNotNull(createPreparationStepResult.id)
         val preparationStepId = createPreparationStepResult.id!!
 
         // when
-        val deleteResult = recipeService.deleteRecipeById(recipeId, "fake-user-id")
+        val deleteResult = recipeService.deleteRecipeById(recipeId, TestObjects.TEST_USER_ID)
 
         // expect
         assertEquals(ActionResultStatus.DELETED, deleteResult.status)
@@ -170,7 +176,8 @@ class RecipeServiceITest(
         val newStepDescription =
             "Heftig umrühren bis die Soße sich richtig verflüssigt. Dabei darauf achten, dass die Pilze nicht zerstört werden da sonst ein Brei entsteht"
 
-        val recipeCreateResult = recipeService.createRecipe(recipeNameToSave, "fake-user-id")
+        val recipeCreateResult =
+            recipeService.createRecipe(recipeNameToSave, TestObjects.TEST_USER_ID)
         assertEquals(ActionResultStatus.CREATED, recipeCreateResult.status)
         assertNotNull(recipeCreateResult.id)
         val recipeId = recipeCreateResult.id!!
@@ -178,6 +185,7 @@ class RecipeServiceITest(
             recipeId = recipeId,
             stepNumber = stepNumber,
             description = stepDescription,
+            userId = TestObjects.TEST_USER_ID,
         )
         assertEquals(ActionResultStatus.CREATED, createPreparationStepResult.status)
         assertNotNull(createPreparationStepResult.id)
@@ -187,7 +195,8 @@ class RecipeServiceITest(
         val updateResult = recipeService.updatePreparationStep(
             preparationStepId = preparationStepId,
             stepNumber = newStepNumber,
-            description = newStepDescription
+            description = newStepDescription,
+            userId = TestObjects.TEST_USER_ID,
         )
 
         // expect

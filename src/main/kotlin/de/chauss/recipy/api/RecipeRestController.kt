@@ -1,6 +1,6 @@
 package de.chauss.recipy.api
 
-import de.chauss.recipy.service.ErrorCodes
+import de.chauss.recipy.config.UserAuthTokenVerifier.AuthenticatedUser
 import de.chauss.recipy.service.RecipeService
 import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeImageDto
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
@@ -20,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping(value = ["/api/v1"])
 class RecipeRestController(
     @Autowired val recipeService: RecipeService,
-    @Autowired val userAuthTokenVerifier: UserAuthTokenVerifier
 ) {
     // ########################################################################
     // # Recipes
@@ -34,17 +34,11 @@ class RecipeRestController(
     }
 
     @PostMapping("/recipe", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun createRecipe(@RequestBody request: CreateRecipeRequest): ResponseEntity<ActionResponse> {
-        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
-            ?: return ResponseEntity(
-                ActionResponse(
-                    message = "Invalid user token.",
-                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
-                ),
-                HttpStatus.UNAUTHORIZED
-            )
-
-        val result = recipeService.createRecipe(request.name, userId)
+    fun createRecipe(
+        @AuthenticationPrincipal user: AuthenticatedUser,
+        @RequestBody request: CreateRecipeRequest,
+    ): ResponseEntity<ActionResponse> {
+        val result = recipeService.createRecipe(request.name, user.userId)
         return ActionResponse.responseEntityForResult(result = result)
     }
 
@@ -59,19 +53,10 @@ class RecipeRestController(
 
     @DeleteMapping("/recipe/{recipeId}")
     fun deleteRecipeById(
-        @RequestBody request: DeleteRecipeRequest,
+        @AuthenticationPrincipal user: AuthenticatedUser,
         @PathVariable(value = "recipeId") recipeId: String,
     ): ResponseEntity<ActionResponse> {
-        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
-            ?: return ResponseEntity(
-                ActionResponse(
-                    message = "Invalid user token.",
-                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
-                ),
-                HttpStatus.UNAUTHORIZED
-            )
-
-        val result = recipeService.deleteRecipeById(recipeId = recipeId, userId = userId)
+        val result = recipeService.deleteRecipeById(recipeId = recipeId, userId = user.userId)
         return ActionResponse.responseEntityForResult(result = result)
     }
 
@@ -79,41 +64,27 @@ class RecipeRestController(
     // # Preparation steps
     // ########################################################################
     @PostMapping("/recipe/preparationStep", consumes = [MediaType.APPLICATION_JSON_VALUE])
-    fun addPreparationStepToRecipe(@RequestBody request: CreatePreparationStepRequest): ResponseEntity<ActionResponse> {
-        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
-            ?: return ResponseEntity(
-                ActionResponse(
-                    message = "Invalid user token.",
-                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
-                ),
-                HttpStatus.UNAUTHORIZED
-            )
+    fun addPreparationStepToRecipe(
+        @RequestBody request: CreatePreparationStepRequest,
+        @AuthenticationPrincipal user: AuthenticatedUser,
+    ): ResponseEntity<ActionResponse> {
         val result = recipeService.createPreparationStep(
             recipeId = request.recipeId,
             stepNumber = request.stepNumber,
             description = request.description,
-            userId = userId,
+            userId = user.userId,
         )
         return ActionResponse.responseEntityForResult(result = result)
     }
 
     @DeleteMapping("/recipe/preparationStep/{preparationStepId}")
     fun deletePreparationStepById(
+        @AuthenticationPrincipal user: AuthenticatedUser,
         @PathVariable(value = "preparationStepId") preparationStepId: String,
-        @RequestBody request: DeletePreparationStepRequest
     ): ResponseEntity<ActionResponse> {
-        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
-            ?: return ResponseEntity(
-                ActionResponse(
-                    message = "Invalid user token.",
-                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
-                ),
-                HttpStatus.UNAUTHORIZED
-            )
-
         val result = recipeService.deletePreparationStepById(
             preparationStepId = preparationStepId,
-            userId = userId,
+            userId = user.userId,
         )
         return ActionResponse.responseEntityForResult(result = result)
     }
@@ -123,23 +94,15 @@ class RecipeRestController(
         consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
     fun updatePreparationStep(
+        @AuthenticationPrincipal user: AuthenticatedUser,
+        @PathVariable(value = "preparationStepId") preparationStepId: String,
         @RequestBody request: UpdatePreparationStepRequest,
-        @PathVariable(value = "preparationStepId") preparationStepId: String
     ): ResponseEntity<ActionResponse> {
-        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
-            ?: return ResponseEntity(
-                ActionResponse(
-                    message = "Invalid user token.",
-                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
-                ),
-                HttpStatus.UNAUTHORIZED
-            )
-
         val result = recipeService.updatePreparationStep(
             preparationStepId = preparationStepId,
             stepNumber = request.stepNumber,
             description = request.description,
-            userId = userId,
+            userId = user.userId,
         )
         return ActionResponse.responseEntityForResult(result = result)
     }
@@ -148,45 +111,30 @@ class RecipeRestController(
     // # Recipe Images
     // ########################################################################
     @PostMapping("/recipe/image", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun addImageToRecipe(@ModelAttribute request: AddImageToRecipeRequest): ResponseEntity<ActionResponse> {
-        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
-            ?: return ResponseEntity(
-                ActionResponse(
-                    message = "Invalid user token.",
-                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
-                ),
-                HttpStatus.UNAUTHORIZED
-            )
-
+    fun addImageToRecipe(
+        @AuthenticationPrincipal user: AuthenticatedUser,
+        @ModelAttribute request: AddImageToRecipeRequest,
+    ): ResponseEntity<ActionResponse> {
         val fileExtension = FilenameUtils.getExtension(request.image.originalFilename)
         val result = recipeService.addImageToRecipe(
             recipeId = request.recipeId,
             imageData = request.image.bytes,
             fileExtension = fileExtension,
-            userId = userId,
+            userId = user.userId,
         )
         return ActionResponse.responseEntityForResult(result = result)
     }
 
     @DeleteMapping("/recipe/{recipeId}/image/{imageId}")
     fun deleteRecipeImageById(
+        @AuthenticationPrincipal user: AuthenticatedUser,
         @PathVariable(value = "recipeId") recipeId: String,
         @PathVariable(value = "imageId") imageId: String,
-        @RequestBody request: DeleteRecipeImageRequest,
     ): ResponseEntity<ActionResponse> {
-        val userId = userAuthTokenVerifier.verifyToken(request.userToken)
-            ?: return ResponseEntity(
-                ActionResponse(
-                    message = "Invalid user token.",
-                    errorCode = ErrorCodes.INVALID_USER_CREDENTIALS.value
-                ),
-                HttpStatus.UNAUTHORIZED
-            )
-
         val result = recipeService.deleteRecipeImageById(
             recipeId = recipeId,
             imageId = imageId,
-            userId = userId,
+            userId = user.userId,
         )
         return ActionResponse.responseEntityForResult(result = result)
     }
@@ -194,7 +142,7 @@ class RecipeRestController(
     @GetMapping("/recipe/{recipeId}/image/{imageId}")
     fun getRecipeImageById(
         @PathVariable(value = "recipeId") recipeId: String,
-        @PathVariable(value = "imageId") imageId: String
+        @PathVariable(value = "imageId") imageId: String,
     ): ResponseEntity<Any> {
         val result = recipeService.getRecipeImageById(recipeId = recipeId, imageId = imageId)
         return if (result == null) {
@@ -207,7 +155,7 @@ class RecipeRestController(
 
     @GetMapping("/recipe/{recipeId}/images")
     fun getRecipeImagesForRecipeId(
-        @PathVariable(value = "recipeId") recipeId: String
+        @PathVariable(value = "recipeId") recipeId: String,
     ): Collection<RecipeImageDto> {
         return recipeService.getRecipeImagesForRecipeId(recipeId = recipeId)
     }
@@ -215,36 +163,20 @@ class RecipeRestController(
 
 class CreateRecipeRequest(
     val name: String,
-    val userToken: String
-)
-
-class DeleteRecipeRequest(
-    val userToken: String
 )
 
 class CreatePreparationStepRequest(
     val recipeId: String,
     val stepNumber: Int,
     val description: String,
-    val userToken: String
 )
 
 class UpdatePreparationStepRequest(
     val stepNumber: Int,
     val description: String,
-    val userToken: String
-)
-
-class DeletePreparationStepRequest(
-    val userToken: String
 )
 
 class AddImageToRecipeRequest(
     val recipeId: String,
     val image: MultipartFile,
-    val userToken: String
-)
-
-class DeleteRecipeImageRequest(
-    val userToken: String
 )

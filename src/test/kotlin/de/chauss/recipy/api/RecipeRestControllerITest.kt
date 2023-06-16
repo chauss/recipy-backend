@@ -2,7 +2,8 @@ package de.chauss.recipy.api
 
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.ninjasquad.springmockk.MockkBean
-import de.chauss.recipy.config.FirebaseConfig
+import de.chauss.recipy.TestObjects
+import de.chauss.recipy.config.UserAuthTokenVerifier
 import de.chauss.recipy.service.ActionResult
 import de.chauss.recipy.service.ActionResultStatus
 import de.chauss.recipy.service.RecipeService
@@ -11,18 +12,18 @@ import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import java.util.*
 
-@WebMvcTest
-@ContextConfiguration(classes = [RecipeRestController::class])
-class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
+@SpringBootTest
+@AutoConfigureMockMvc
+class RecipeRestControllerITest(@Autowired val mockMvc: MockMvc) {
 
     @MockkBean
     lateinit var recipeService: RecipeService
@@ -30,19 +31,35 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
     @MockkBean
     lateinit var userAuthTokenVerifier: UserAuthTokenVerifier
 
-    @MockkBean
-    lateinit var firebaseConfig: FirebaseConfig
-
     @BeforeEach
     fun setup() {
-        every { userAuthTokenVerifier.verifyToken(any()) } returns "fake-user-id"
+        val authenticatedUser = UserAuthTokenVerifier.AuthenticatedUser(
+            userId = TestObjects.TEST_USER_ID,
+            email = "fake-email",
+            name = "fake-name",
+            claims = hashMapOf("fake-claim" to "some claim"),
+            issuer = "fake-issuer",
+            picture = "fake-picture",
+            tenantId = "fake-tenantId",
+            emailVerified = true,
+        )
+        val authenticationResult =
+            UserAuthTokenVerifier.UserAuthenticationToken(
+                listOf(),
+                TestObjects.VALID_BUT_EXPIRED_TOKEN,
+                authenticatedUser
+            )
+        authenticationResult.isAuthenticated = true
+
+
+        every { userAuthTokenVerifier.authenticate(any()) } returns authenticationResult
+        every { userAuthTokenVerifier.supports(any()) } returns true
     }
 
     @Test
     fun `call to createRecipe endpoint returns created recipeId`() {
         // given
         val newRecipeId = "new_recipe_id"
-        val userAuthToken = "fake-auth-token"
         val createRecipeResult =
             ActionResult(status = ActionResultStatus.CREATED, id = newRecipeId)
         every { recipeService.createRecipe(any(), any()) } returns createRecipeResult
@@ -50,10 +67,10 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
         // when
         mockMvc.post("/api/v1/recipe") {
             contentType = MediaType.APPLICATION_JSON
+            header("Authorization", "Bearer ${TestObjects.VALID_BUT_EXPIRED_TOKEN}")
             content = jsonMapper().writeValueAsString(
                 CreateRecipeRequest(
                     name = newRecipeId,
-                    userToken = userAuthToken
                 )
             )
             accept = MediaType.APPLICATION_JSON
@@ -70,7 +87,6 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
     fun `call to createRecipe endpoint returns reason if not created`() {
         // given
         val newRecipeId = "new_recipe_id"
-        val userAuthToken = "fake-auth-token"
         val createRecipeResult =
             ActionResult(status = ActionResultStatus.ALREADY_EXISTS, message = "Duplicate")
         every { recipeService.createRecipe(any(), any()) } returns createRecipeResult
@@ -78,10 +94,10 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
         // when
         mockMvc.post("/api/v1/recipe") {
             contentType = MediaType.APPLICATION_JSON
+            header("Authorization", "Bearer ${TestObjects.VALID_BUT_EXPIRED_TOKEN}")
             content = jsonMapper().writeValueAsString(
                 CreateRecipeRequest(
                     name = newRecipeId,
-                    userToken = userAuthToken
                 )
             )
             accept = MediaType.APPLICATION_JSON
@@ -96,7 +112,7 @@ class RecipeRestControllerTest(@Autowired val mockMvc: MockMvc) {
     }
 
     @Test
-    fun `call to getRecipes endpoint returns recipes`() {
+    fun `call to getAllRecipes endpoint returns recipes`() {
         // given
         val recipeIdOne = "recipe_id_one"
         val recipeNameOne = "name_one"

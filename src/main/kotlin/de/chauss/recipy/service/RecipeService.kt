@@ -112,7 +112,7 @@ class RecipeService(
             return ActionResult(
                 status = ActionResultStatus.UNAUTHORIZED,
                 message = "INFO: Could add preparationStep to recipe with id $recipeId because the user is not authorized to edit the recipe",
-                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+                errorCode = ErrorCodes.UPDATE_RECIPE_USER_IS_NOT_AUTHORIZED.value
             )
         }
 
@@ -142,7 +142,7 @@ class RecipeService(
             return ActionResult(
                 status = ActionResultStatus.UNAUTHORIZED,
                 message = "INFO: Could delete preparationStep to recipe with id ${preparationStep.recipe.recipeId} because the user is not authorized to edit the recipe",
-                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+                errorCode = ErrorCodes.UPDATE_RECIPE_USER_IS_NOT_AUTHORIZED.value
             )
         }
 
@@ -175,7 +175,7 @@ class RecipeService(
             return ActionResult(
                 status = ActionResultStatus.UNAUTHORIZED,
                 message = "INFO: Could update preparationStep of recipe with id ${preparationStep.recipe.recipeId} because the user is not authorized to edit the recipe",
-                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+                errorCode = ErrorCodes.UPDATE_RECIPE_USER_IS_NOT_AUTHORIZED.value
             )
         }
 
@@ -210,7 +210,7 @@ class RecipeService(
             return ActionResult(
                 status = ActionResultStatus.UNAUTHORIZED,
                 message = "INFO: Could not add image to recipe with id $recipeId because the user is not authorized to edit the recipe",
-                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+                errorCode = ErrorCodes.UPDATE_RECIPE_USER_IS_NOT_AUTHORIZED.value
             )
         }
 
@@ -261,12 +261,12 @@ class RecipeService(
             )
         }
         val recipeImage = recipeImageOptional.get()
-        
+
         if (recipeImage.recipe.creator != userId) {
             return ActionResult(
                 status = ActionResultStatus.UNAUTHORIZED,
                 message = "INFO: Could not delete image of recipe with id $recipeId because the user is not authorized to edit the recipe",
-                errorCode = ErrorCodes.DELETE_RECIPE_USER_IS_NOT_AUTHORIZED.value
+                errorCode = ErrorCodes.UPDATE_RECIPE_USER_IS_NOT_AUTHORIZED.value
             )
         }
 

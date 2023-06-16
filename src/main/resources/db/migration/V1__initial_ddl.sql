@@ -5,6 +5,7 @@ CREATE TABLE recipy.ingredient_units
 (
     ingredient_unit_id character varying(255)      NOT NULL,
     name               character varying(255)      NOT NULL,
+    creator            character varying(255)      NOT NULL,
     created            timestamp without time zone NOT NULL,
     CONSTRAINT ingredient_units_pkey PRIMARY KEY (ingredient_unit_id),
     CONSTRAINT ingredient_unit_name_unique UNIQUE (name)
@@ -18,6 +19,7 @@ CREATE TABLE recipy.ingredients
 (
     ingredient_id character varying(255)      NOT NULL,
     name          character varying(255)      NOT NULL,
+    creator       character varying(255)      NOT NULL,
     created       timestamp without time zone NOT NULL,
     CONSTRAINT ingredients_pkey PRIMARY KEY (ingredient_id),
     CONSTRAINT ingredients_name_unique UNIQUE (name)

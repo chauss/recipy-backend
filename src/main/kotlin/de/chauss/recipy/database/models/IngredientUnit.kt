@@ -1,6 +1,8 @@
 package de.chauss.recipy.database.models
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import org.springframework.data.jpa.repository.JpaRepository
 import java.time.Instant
 import java.util.*
@@ -11,7 +13,8 @@ class IngredientUnit(
     val ingredientUnitId: String = "ingredient_unit_${UUID.randomUUID()}",
     @Column(unique = true)
     val name: String = "",
-    val created: Instant = Instant.now()
+    val creator: String = "",
+    val created: Instant = Instant.now(),
 )
 
 interface IngredientUnitRepository : JpaRepository<IngredientUnit, String> {

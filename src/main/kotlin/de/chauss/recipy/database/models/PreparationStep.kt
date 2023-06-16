@@ -9,7 +9,7 @@ import java.util.*
 class PreparationStep(
     @Id
     val preparationStepId: String = "preparation_step_${UUID.randomUUID()}",
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipeId")
     val recipe: Recipe = Recipe(),
     var stepNumber: Int = 1,

@@ -9,7 +9,7 @@ class RecipeImage(
     @Id
     val imageId: String,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipeId")
     val recipe: Recipe,
 
