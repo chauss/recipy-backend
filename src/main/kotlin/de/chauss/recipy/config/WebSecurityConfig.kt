@@ -46,6 +46,8 @@ class WebSecurityConfig {
             .httpBasic { httpCustomizer -> httpCustomizer.disable() }
             .sessionManagement { customizer ->
                 customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }.cors { corsCustomizer ->
+                corsCustomizer.configure(http) // Enable configuration via @CrossOrigin
             }
 
         return http.build()

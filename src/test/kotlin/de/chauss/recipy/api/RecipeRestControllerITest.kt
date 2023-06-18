@@ -152,7 +152,7 @@ class RecipeRestControllerITest(@Autowired val mockMvc: MockMvc) {
                 content { jsonPath("$[0].recipeId").value(recipeIdOne) }
                 content { jsonPath("$[0].name").value(recipeNameOne) }
                 content { jsonPath("$[1].recipeId").value(recipeIdTwo) }
-                content { jsonPath("$[1].recipeId").value(recipeNameTwo) }
+                content { jsonPath("$[1].name").value(recipeNameTwo) }
             }
     }
 }
