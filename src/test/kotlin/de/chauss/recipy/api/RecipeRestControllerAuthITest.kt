@@ -1,7 +1,13 @@
 package de.chauss.recipy.api
 
 import com.fasterxml.jackson.module.kotlin.jsonMapper
+import com.google.firebase.ErrorCode
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuthException
 import com.ninjasquad.springmockk.MockkBean
+import com.ninjasquad.springmockk.SpykBean
+import de.chauss.recipy.config.FirebaseConfig
+import de.chauss.recipy.config.FirebaseUserAuthTokenVerifier
 import de.chauss.recipy.service.ActionResult
 import de.chauss.recipy.service.ActionResultStatus
 import de.chauss.recipy.service.RecipeService
@@ -23,6 +29,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 class RecipeRestControllerAuthITest(@Autowired val mockMvc: MockMvc) {
 
     @MockkBean
+    lateinit var firebaseConfig: FirebaseConfig
+
+    @SpykBean
+    lateinit var firebaseUserAuthTokenVerifier: FirebaseUserAuthTokenVerifier
+
+    @MockkBean
     lateinit var recipeService: RecipeService
 
     @Test
@@ -30,6 +42,10 @@ class RecipeRestControllerAuthITest(@Autowired val mockMvc: MockMvc) {
         // given
         val newRecipeId = "new_recipe_id"
         val userAuthToken = "fake-auth-token"
+
+        every { firebaseUserAuthTokenVerifier.verifyToken(any()) } throws FirebaseAuthException(
+            FirebaseException(ErrorCode.PERMISSION_DENIED, "test error", Throwable())
+        )
 
         // when
         mockMvc.post("/api/v1/recipe") {

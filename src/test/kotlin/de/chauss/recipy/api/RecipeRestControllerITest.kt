@@ -3,6 +3,7 @@ package de.chauss.recipy.api
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.ninjasquad.springmockk.MockkBean
 import de.chauss.recipy.TestObjects
+import de.chauss.recipy.config.FirebaseConfig
 import de.chauss.recipy.config.UserAuthTokenVerifier
 import de.chauss.recipy.service.ActionResult
 import de.chauss.recipy.service.ActionResultStatus
@@ -26,6 +27,9 @@ import java.util.*
 class RecipeRestControllerITest(@Autowired val mockMvc: MockMvc) {
 
     @MockkBean
+    lateinit var firebaseConfig: FirebaseConfig
+
+    @MockkBean
     lateinit var recipeService: RecipeService
 
     @MockkBean
@@ -33,21 +37,11 @@ class RecipeRestControllerITest(@Autowired val mockMvc: MockMvc) {
 
     @BeforeEach
     fun setup() {
-        val authenticatedUser = UserAuthTokenVerifier.AuthenticatedUser(
-            userId = TestObjects.TEST_USER_ID,
-            email = "fake-email",
-            name = "fake-name",
-            claims = hashMapOf("fake-claim" to "some claim"),
-            issuer = "fake-issuer",
-            picture = "fake-picture",
-            tenantId = "fake-tenantId",
-            emailVerified = true,
-        )
         val authenticationResult =
             UserAuthTokenVerifier.UserAuthenticationToken(
                 listOf(),
                 TestObjects.VALID_BUT_EXPIRED_TOKEN,
-                authenticatedUser
+                TestObjects.authenticatedTestUser,
             )
         authenticationResult.isAuthenticated = true
 
