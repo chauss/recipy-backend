@@ -9,3 +9,7 @@ updates:
     open-pull-requests-limit: 20
     reviewers:
       - "chauss"
+    ignore:
+      # seems like spring boot is not ready for the new update 9.20.0 yet
+      - dependency-name: "flyway-core:org.flywaydb"
+        update-types: [ "version-update:semver-minor" ]

@@ -21,7 +21,7 @@
     <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
     <kotlin.version>1.8.22</kotlin.version>
     <hibernate-core.version>6.1.7.Final</hibernate-core.version>
-    <flyway-core.version>9.20.0</flyway-core.version>
+    <flyway-core.version>9.19.4</flyway-core.version>
     <h2.version>2.1.214</h2.version>
     <springmockk.version>4.0.2</springmockk.version>
     <junit-jupiter.version>5.9.3</junit-jupiter.version>
