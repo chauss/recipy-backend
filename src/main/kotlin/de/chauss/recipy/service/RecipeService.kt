@@ -24,8 +24,12 @@ class RecipeService(
         return recipes.map { RecipeDto.from(it) }
     }
 
-    fun getAllRecipesAsOverview(): List<RecipeOverviewDto> {
-        val recipes = recipeRepository.findAll()
+    fun getAllRecipesAsOverview(forUserId: String?): List<RecipeOverviewDto> {
+        val recipes: List<Recipe> = if (forUserId == null) {
+            recipeRepository.findAll()
+        } else {
+            recipeRepository.findByCreator(forUserId) ?: Collections.emptyList()
+        }
         return recipes.map { RecipeOverviewDto.from(it) }
     }
 

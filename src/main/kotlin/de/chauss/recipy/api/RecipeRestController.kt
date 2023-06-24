@@ -30,7 +30,12 @@ class RecipeRestController(
 
     @GetMapping("/recipes/overview")
     fun getAllRecipesAsOverview(): List<RecipeOverviewDto> {
-        return recipeService.getAllRecipesAsOverview()
+        return recipeService.getAllRecipesAsOverview(null)
+    }
+
+    @GetMapping("/recipes/overview/userId/{userId}")
+    fun getAllRecipesForUserAsOverview(@PathVariable(value = "userId") userId: String): List<RecipeOverviewDto> {
+        return recipeService.getAllRecipesAsOverview(forUserId = userId)
     }
 
     @PostMapping("/recipe", consumes = [MediaType.APPLICATION_JSON_VALUE])

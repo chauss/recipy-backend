@@ -34,4 +34,5 @@ class Recipe(
 
 interface RecipeRepository : JpaRepository<Recipe, String> {
     fun findByName(name: String): List<Recipe>?
+    fun findByCreator(creator: String): List<Recipe>?
 }

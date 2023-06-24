@@ -96,6 +96,22 @@ class RecipeServiceITest(
     }
 
     @Test
+    fun `find only recipe for userId when userId is given`() {
+        // given
+        val newRecipeIdOfTestUser =
+            recipeService.createRecipe("Recipe of User One", TestObjects.TEST_USER_ID).id
+        recipeService.createRecipe("Recipe of User Two", "another user id")
+
+        // when
+        val allRecipesForTestUserAsOverview =
+            recipeService.getAllRecipesAsOverview(forUserId = TestObjects.TEST_USER_ID)
+
+        // expect
+        assertEquals(1, allRecipesForTestUserAsOverview.size)
+        assertEquals(newRecipeIdOfTestUser, allRecipesForTestUserAsOverview.first().recipeId)
+    }
+
+    @Test
     fun `created preparationStep is found again`() {
         // given
         val recipeNameToSave = "Recipe with step"
