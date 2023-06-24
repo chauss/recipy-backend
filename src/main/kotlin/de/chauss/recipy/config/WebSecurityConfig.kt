@@ -32,6 +32,7 @@ class WebSecurityConfig {
                         // Recipe
                         "/api/v1/recipes",
                         "/api/v1/recipes/overview",
+                        "/api/v1/recipes/overview/userId/{userId}",
                         "/api/v1/recipe/{recipeId}",
                         "/api/v1/recipe/{recipeId}/image/{imageId}",
                         "/api/v1/recipe/{recipeId}/images",
