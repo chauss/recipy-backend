@@ -5,6 +5,7 @@ import de.chauss.recipy.service.RecipeService
 import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeImageDto
 import de.chauss.recipy.service.dtos.RecipeOverviewDto
+import mu.KotlinLogging
 import org.apache.commons.io.FilenameUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -22,19 +23,26 @@ import org.springframework.web.server.ResponseStatusException
 class RecipeRestController(
     @Autowired val recipeService: RecipeService,
 ) {
+    private val logger = KotlinLogging.logger {}
+
     // ########################################################################
     // # Recipes
     // ########################################################################
     @GetMapping("/recipes")
-    fun getAllRecipes() = recipeService.getAllRecipes()
+    fun getAllRecipes(): List<RecipeDto> {
+        logger.debug { "Requesting all recipes..." }
+        return recipeService.getAllRecipes()
+    }
 
     @GetMapping("/recipes/overview")
     fun getAllRecipesAsOverview(): List<RecipeOverviewDto> {
+        logger.debug { "Requesting all recipes as overview..." }
         return recipeService.getAllRecipesAsOverview(null)
     }
 
     @GetMapping("/recipes/overview/userId/{userId}")
     fun getAllRecipesForUserAsOverview(@PathVariable(value = "userId") userId: String): List<RecipeOverviewDto> {
+        logger.debug { "Requesting all recipes as overview for userId=$userId..." }
         return recipeService.getAllRecipesAsOverview(forUserId = userId)
     }
 
@@ -43,12 +51,14 @@ class RecipeRestController(
         @AuthenticationPrincipal user: AuthenticatedUser,
         @RequestBody request: CreateRecipeRequest,
     ): ResponseEntity<ActionResponse> {
+        logger.debug { "Creating recipe by userId=${user.userId} with recipe-name=${request.name}..." }
         val result = recipeService.createRecipe(request.name, user.userId)
         return ActionResponse.responseEntityForResult(result = result)
     }
 
     @GetMapping("/recipe/{recipeId}")
     fun getRecipeById(@PathVariable(value = "recipeId") recipeId: String): RecipeDto {
+        logger.debug { "Requesting recipe with id=$recipeId" }
         val foundRecipe = recipeService.getRecipeById(recipeId = recipeId)
         if (foundRecipe != null) {
             return foundRecipe
@@ -61,6 +71,7 @@ class RecipeRestController(
         @AuthenticationPrincipal user: AuthenticatedUser,
         @PathVariable(value = "recipeId") recipeId: String,
     ): ResponseEntity<ActionResponse> {
+        logger.debug { "Deleting recipe with id=$recipeId. AuthenticatedUserId=${user.userId}..." }
         val result = recipeService.deleteRecipeById(recipeId = recipeId, userId = user.userId)
         return ActionResponse.responseEntityForResult(result = result)
     }
@@ -70,9 +81,10 @@ class RecipeRestController(
     // ########################################################################
     @PostMapping("/recipe/preparationStep", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun addPreparationStepToRecipe(
-        @RequestBody request: CreatePreparationStepRequest,
         @AuthenticationPrincipal user: AuthenticatedUser,
+        @RequestBody request: CreatePreparationStepRequest,
     ): ResponseEntity<ActionResponse> {
+        logger.debug { "Creating preparationStep on recipeId=${request.recipeId}. AuthenticatedUserId=${user.userId}..." }
         val result = recipeService.createPreparationStep(
             recipeId = request.recipeId,
             stepNumber = request.stepNumber,
@@ -87,6 +99,7 @@ class RecipeRestController(
         @AuthenticationPrincipal user: AuthenticatedUser,
         @PathVariable(value = "preparationStepId") preparationStepId: String,
     ): ResponseEntity<ActionResponse> {
+        logger.debug { "Deleting preparationStep with id=$preparationStepId. AuthenticatedUserId=${user.userId}..." }
         val result = recipeService.deletePreparationStepById(
             preparationStepId = preparationStepId,
             userId = user.userId,
@@ -103,6 +116,7 @@ class RecipeRestController(
         @PathVariable(value = "preparationStepId") preparationStepId: String,
         @RequestBody request: UpdatePreparationStepRequest,
     ): ResponseEntity<ActionResponse> {
+        logger.debug { "Updating preparationStep with id=$preparationStepId. AuthenticatedUserId=${user.userId}..." }
         val result = recipeService.updatePreparationStep(
             preparationStepId = preparationStepId,
             stepNumber = request.stepNumber,
@@ -120,6 +134,7 @@ class RecipeRestController(
         @AuthenticationPrincipal user: AuthenticatedUser,
         @ModelAttribute request: AddImageToRecipeRequest,
     ): ResponseEntity<ActionResponse> {
+        logger.debug { "Adding recipeImage to recipe with id=${request.recipeId}. AuthenticatedUserId=${user.userId}..." }
         val fileExtension = FilenameUtils.getExtension(request.image.originalFilename)
         val result = recipeService.addImageToRecipe(
             recipeId = request.recipeId,
@@ -136,6 +151,7 @@ class RecipeRestController(
         @PathVariable(value = "recipeId") recipeId: String,
         @PathVariable(value = "imageId") imageId: String,
     ): ResponseEntity<ActionResponse> {
+        logger.debug { "Deleting recipeImage with Id=$imageId from recipe with id=$recipeId. AuthenticatedUserId=${user.userId}..." }
         val result = recipeService.deleteRecipeImageById(
             recipeId = recipeId,
             imageId = imageId,
@@ -149,6 +165,7 @@ class RecipeRestController(
         @PathVariable(value = "recipeId") recipeId: String,
         @PathVariable(value = "imageId") imageId: String,
     ): ResponseEntity<Any> {
+        logger.debug { "Requesting recipeImage with id=$imageId for recipe with id=$recipeId..." }
         val result = recipeService.getRecipeImageById(recipeId = recipeId, imageId = imageId)
         return if (result == null) {
             ResponseEntity.notFound().build()
@@ -162,6 +179,7 @@ class RecipeRestController(
     fun getRecipeImagesForRecipeId(
         @PathVariable(value = "recipeId") recipeId: String,
     ): Collection<RecipeImageDto> {
+        logger.debug { "Requesting all recipeImages for recipe with id=$recipeId..." }
         return recipeService.getRecipeImagesForRecipeId(recipeId = recipeId)
     }
 }

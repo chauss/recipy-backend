@@ -3,6 +3,7 @@ package de.chauss.recipy.config
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
+import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import java.io.File
@@ -14,6 +15,7 @@ import java.net.URL
 class FirebaseConfig(
     @Value("\${google.application.credentials}") var googleCredentialsFile: String
 ) {
+    private val logger = KotlinLogging.logger {}
 
     init {
         var inputStream: InputStream? = null
@@ -46,6 +48,7 @@ class FirebaseConfig(
         }
 
         FirebaseApp.initializeApp(options)
+        logger.info { "Initialized Firebase..." }
     }
 
 }

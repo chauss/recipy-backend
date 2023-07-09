@@ -34,6 +34,7 @@ class FirebaseUserAuthTokenVerifier : UserAuthTokenVerifier {
         val authenticatedUser: AuthenticatedUser
         try {
             authenticatedUser = verifyToken(token)
+            logger.debug { "Successfully authenticated user with id=${authenticatedUser.userId}" }
         } catch (e: FirebaseAuthException) {
             logger.debug { e.message }
             throw BadCredentialsException("Failed to verify userToken", e)

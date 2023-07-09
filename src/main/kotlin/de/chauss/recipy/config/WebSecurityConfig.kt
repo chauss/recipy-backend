@@ -1,6 +1,7 @@
 package de.chauss.recipy.config
 
 import jakarta.servlet.http.HttpServletRequest
+import mu.KotlinLogging
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -15,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig {
+    private val logger = KotlinLogging.logger {}
 
     @Bean
     fun filterChain(
@@ -50,6 +52,9 @@ class WebSecurityConfig {
             }.cors { corsCustomizer ->
                 corsCustomizer.configure(http) // Enable configuration via @CrossOrigin
             }
+
+        logger.info { "Building security filter chain..." }
+        logger.debug { "Building security filter chain... DEBUG!" }
 
         return http.build()
     }
