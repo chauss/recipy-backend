@@ -54,7 +54,6 @@ class WebSecurityConfig {
             }
 
         logger.info { "Building security filter chain..." }
-        logger.debug { "Building security filter chain... DEBUG!" }
 
         return http.build()
     }
