@@ -61,7 +61,7 @@ resource "docker_container" "recipy_backend" {
   remove_volumes = false
   env            = [
     "DB_IP_ADDRESS=${lookup(docker_container.postgres.network_data[0], "ip_address")}",
-    "DP_NAME=${var.dbName}",
+    "DB_NAME=${var.dbName}",
     "DATA_IMAGES_PATH=${var.imageDataPath}",
     "GOOGLE_APPLICATION_CREDENTIALS=${var.googleApplicationCredentialsFilePath}",
   ]
