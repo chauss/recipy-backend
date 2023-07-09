@@ -10,12 +10,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @TestMethodOrder(OrderAnnotation::class)
-class IngredientServiceTest(
+@ActiveProfiles("test")
+class IngredientServiceITest(
     @Autowired val ingredientService: IngredientService,
     @Autowired val recipeService: RecipeService,
 ) {

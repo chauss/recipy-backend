@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
+@ActiveProfiles("test")
 class RecipeServiceITest(
     @Autowired val recipeService: RecipeService,
     @Autowired val jdbc: JdbcTemplate
@@ -25,9 +27,9 @@ class RecipeServiceITest(
     @BeforeEach
     @AfterEach
     fun cleanup() {
-        jdbc.execute("DELETE FROM preparation_steps WHERE TRUE")
-        jdbc.execute("DELETE FROM ingredient_usages WHERE TRUE")
-        jdbc.execute("DELETE FROM recipes WHERE TRUE")
+        jdbc.execute("DELETE FROM recipy.preparation_steps WHERE TRUE")
+        jdbc.execute("DELETE FROM recipy.ingredient_usages WHERE TRUE")
+        jdbc.execute("DELETE FROM recipy.recipes WHERE TRUE")
     }
 
     @Test
