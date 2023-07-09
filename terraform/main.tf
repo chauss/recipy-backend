@@ -30,9 +30,9 @@ resource "docker_volume" "recipe_image_volume" {
 
 resource "docker_container" "postgres" {
   image    = docker_image.postgres.image_id
-  name     = var.dbContainerName
+  name     = local.dbContainerName
   restart  = "always"
-  hostname = var.dbContainerName
+  hostname = local.dbContainerName
   networks_advanced {
     name         = docker_network.recipy_network.name
     ipv4_address = "172.18.0.5"
@@ -40,7 +40,7 @@ resource "docker_container" "postgres" {
   env = [
     "POSTGRES_USER=${var.dbSuperUser}",
     "POSTGRES_PASSWORD=${var.dbPassword}",
-    "POSTGRES_DB=${var.dbName}"
+    "POSTGRES_DB=${local.database_name}"
   ]
   ports {
     internal = "5432"
@@ -55,15 +55,16 @@ resource "docker_image" "recipy_backend" {
 resource "docker_container" "recipy_backend" {
   depends_on     = [docker_container.postgres]
   image          = docker_image.recipy_backend.image_id
-  name           = var.appContainerName
+  name           = local.appContainerName
   restart        = "always"
-  hostname       = var.appContainerName
+  hostname       = local.appContainerName
   remove_volumes = false
   env            = [
     "DB_IP_ADDRESS=${lookup(docker_container.postgres.network_data[0], "ip_address")}",
-    "DB_NAME=${var.dbName}",
-    "DATA_IMAGES_PATH=${var.imageDataPath}",
+    "DB_NAME=${local.database_name}",
+    "DATA_IMAGES_PATH=${local.imageDataPath}",
     "GOOGLE_APPLICATION_CREDENTIALS=${var.googleApplicationCredentialsFilePath}",
+    "SPRING_PROFILES_ACTIVE=${local.activeSpringProfile}"
   ]
   networks_advanced {
     name = docker_network.recipy_network.name
@@ -74,7 +75,7 @@ resource "docker_container" "recipy_backend" {
   }
   volumes {
     volume_name    = docker_volume.recipe_image_volume.name
-    container_path = var.imageDataPath
+    container_path = local.imageDataPath
   }
   volumes {
     host_path      = var.googleApplicationCredentialsFileHostPath
@@ -88,9 +89,9 @@ resource "docker_image" "recipy_website" {
 
 resource "docker_container" "recipy_website" {
   image    = docker_image.recipy_website.image_id
-  name     = var.webContainerName
+  name     = local.webContainerName
   restart  = "always"
-  hostname = var.webContainerName
+  hostname = local.webContainerName
   ports {
     internal = "80"
     external = "80"
