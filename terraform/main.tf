@@ -62,7 +62,7 @@ resource "docker_container" "recipy_backend" {
   env            = [
     "DB_IP_ADDRESS=${lookup(docker_container.postgres.network_data[0], "ip_address")}",
     "DB_NAME=${local.database_name}",
-    "DATA_IMAGES_PATH=${local.imageDataPath}",
+    "RECIPY_DATA_IMAGES_PATH=${local.imageDataPath}",
     "GOOGLE_APPLICATION_CREDENTIALS=${var.googleApplicationCredentialsFilePath}",
     "SPRING_PROFILES_ACTIVE=${local.activeSpringProfile}"
   ]
