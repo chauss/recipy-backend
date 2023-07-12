@@ -20,6 +20,7 @@
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
     <kotlin.version>1.9.0</kotlin.version>
+    <spring-boot-starter-web.version>3.1.0-RC2</spring-boot-starter-web.version>
     <hibernate-core.version>6.2.6.Final</hibernate-core.version>
     <flyway-core.version>9.19.4</flyway-core.version>
     <h2.version>2.2.220</h2.version>
@@ -37,8 +38,8 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>spring-boot-maven-plugin</artifactId>
         <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <artifactId>kotlin-maven-plugin</artifactId>
@@ -80,34 +81,45 @@
   <dependencies>
     <!--Compile Time Dependencies -->
     <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+      <version>${spring-boot-starter-web.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>jackson-module-kotlin</artifactId>
-      <groupId>com.fasterxml.jackson.module</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>kotlin-reflect</artifactId>
-      <groupId>org.jetbrains.kotlin</groupId>
-    </dependency>
-    <dependency>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <groupId>org.springframework.boot</groupId>
     </dependency>
     <dependency>
-      <artifactId>kotlin-maven-noarg</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+      <version>${spring-boot-starter-security.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+      <version>${spring-boot-starter-security.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-kotlin</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-reflect</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-maven-noarg</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
     <dependency>
-      <artifactId>hibernate-core</artifactId>
       <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-core</artifactId>
       <version>${hibernate-core.version}</version>
     </dependency>
     <dependency>
-      <artifactId>flyway-core</artifactId>
       <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
       <version>${flyway-core.version}</version>
     </dependency>
     <dependency>
@@ -119,16 +131,6 @@
       <groupId>com.google.firebase</groupId>
       <artifactId>firebase-admin</artifactId>
       <version>${firebase-admin.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
-      <version>${spring-boot-starter-security.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-      <version>${spring-boot-starter-security.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.microutils</groupId>
@@ -153,14 +155,15 @@
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <artifactId>spring-boot-devtools</artifactId>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
       <optional>true</optional>
       <scope>runtime</scope>
     </dependency>
 
     <!--Testing Dependencies -->
     <dependency>
+      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <exclusions>
         <exclusion>
@@ -168,30 +171,29 @@
           <groupId>org.mockito</groupId>
         </exclusion>
       </exclusions>
-      <groupId>org.springframework.boot</groupId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <artifactId>springmockk</artifactId>
       <groupId>com.ninja-squad</groupId>
+      <artifactId>springmockk</artifactId>
       <version>${springmockk.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <artifactId>h2</artifactId>
       <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
       <version>${h2.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <artifactId>hibernate-testing</artifactId>
       <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-testing</artifactId>
       <version>${hibernate-core.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <artifactId>junit-jupiter</artifactId>
       <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <version>${junit-jupiter.version}</version>
       <scope>test</scope>
     </dependency>

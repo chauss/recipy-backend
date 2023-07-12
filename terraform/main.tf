@@ -63,8 +63,8 @@ resource "docker_container" "recipy_backend" {
     "DB_IP_ADDRESS=${lookup(docker_container.postgres.network_data[0], "ip_address")}",
     "DB_NAME=${local.database_name}",
     "RECIPY_DATA_IMAGES_PATH=${local.imageDataPath}",
-    "GOOGLE_APPLICATION_CREDENTIALS=${var.googleApplicationCredentialsFilePath}",
-    "SPRING_PROFILES_ACTIVE=${local.activeSpringProfile}"
+    "SPRING_PROFILES_ACTIVE=${local.activeSpringProfile}",
+    "RECIPY_ENCRYPTION_FIREBASE_SECRET_KEY=<SET>"
   ]
   networks_advanced {
     name = docker_network.recipy_network.name
@@ -76,10 +76,6 @@ resource "docker_container" "recipy_backend" {
   volumes {
     volume_name    = docker_volume.recipe_image_volume.name
     container_path = local.imageDataPath
-  }
-  volumes {
-    host_path      = var.googleApplicationCredentialsFileHostPath
-    container_path = var.googleApplicationCredentialsFilePath
   }
 }
 

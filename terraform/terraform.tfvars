@@ -1,5 +1,2 @@
-dbName                                   = "recipy-backend"
-dbSuperUser                              = "root"
-dbPassword                               = "root"
-googleApplicationCredentialsFilePath     = "/tmp/google-application-credentials.json"
-googleApplicationCredentialsFileHostPath = "/tmp/google-application-credentials.json"
+dbSuperUser = "postgres"
+dbPassword  = "postgres"

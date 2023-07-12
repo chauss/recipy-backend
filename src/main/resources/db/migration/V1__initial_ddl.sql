@@ -1,7 +1,5 @@
-CREATE SCHEMA recipy;
-
 -- INGREDIENT UNITS
-CREATE TABLE recipy.ingredient_units
+CREATE TABLE ingredient_units
 (
     ingredient_unit_id character varying(255)      NOT NULL,
     name               character varying(255)      NOT NULL,
@@ -11,11 +9,11 @@ CREATE TABLE recipy.ingredient_units
     CONSTRAINT ingredient_unit_name_unique UNIQUE (name)
 );
 
-ALTER TABLE recipy.ingredient_units
-    OWNER to root;
+ALTER TABLE ingredient_units
+    OWNER to postgres;
 
 -- INGREDIENTS
-CREATE TABLE recipy.ingredients
+CREATE TABLE ingredients
 (
     ingredient_id character varying(255)      NOT NULL,
     name          character varying(255)      NOT NULL,
@@ -25,11 +23,11 @@ CREATE TABLE recipy.ingredients
     CONSTRAINT ingredients_name_unique UNIQUE (name)
 );
 
-ALTER TABLE recipy.ingredients
-    OWNER to root;
+ALTER TABLE ingredients
+    OWNER to postgres;
 
 -- RECIPE
-CREATE TABLE recipy.recipes
+CREATE TABLE recipes
 (
     recipe_id character varying(255)      NOT NULL,
     name      character varying(255)      NOT NULL,
@@ -39,12 +37,12 @@ CREATE TABLE recipy.recipes
     CONSTRAINT recipes_name_unique UNIQUE (name)
 );
 
-ALTER TABLE recipy.recipes
-    OWNER to root;
+ALTER TABLE recipes
+    OWNER to postgres;
 
 
 -- INGREDIENT USAGES
-CREATE TABLE recipy.ingredient_usages
+CREATE TABLE ingredient_usages
 (
     ingredient_usage_id character varying(255)      NOT NULL,
     amount              double precision            NOT NULL,
@@ -54,24 +52,24 @@ CREATE TABLE recipy.ingredient_usages
     created             timestamp without time zone NOT NULL,
     CONSTRAINT ingredient_usages_pkey PRIMARY KEY (ingredient_usage_id),
     CONSTRAINT ingredient_usages_recipe_fkey FOREIGN KEY (recipe_id)
-        REFERENCES recipy.recipes (recipe_id) MATCH SIMPLE
+        REFERENCES recipes (recipe_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT ingredient_usages_ingredient_unit_fkey FOREIGN KEY (ingredient_unit_id)
-        REFERENCES recipy.ingredient_units (ingredient_unit_id) MATCH SIMPLE
+        REFERENCES ingredient_units (ingredient_unit_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT ingredient_usages_ingredient_fkey FOREIGN KEY (ingredient_id)
-        REFERENCES recipy.ingredients (ingredient_id) MATCH SIMPLE
+        REFERENCES ingredients (ingredient_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
-ALTER TABLE recipy.ingredient_usages
-    OWNER to root;
+ALTER TABLE ingredient_usages
+    OWNER to postgres;
 
 -- PREPARATION STEPS
-CREATE TABLE recipy.preparation_steps
+CREATE TABLE preparation_steps
 (
     preparation_step_id character varying(255)      NOT NULL,
     description         character varying(255),
@@ -80,16 +78,16 @@ CREATE TABLE recipy.preparation_steps
     created             timestamp without time zone NOT NULL,
     CONSTRAINT preparation_steps_pkey PRIMARY KEY (preparation_step_id),
     CONSTRAINT preparation_steps_recipe_fkey FOREIGN KEY (recipe_id)
-        REFERENCES recipy.recipes (recipe_id) MATCH SIMPLE
+        REFERENCES recipes (recipe_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
-ALTER TABLE recipy.preparation_steps
-    OWNER to root;
+ALTER TABLE preparation_steps
+    OWNER to postgres;
 
 -- RECIPE IMAGES
-CREATE TABLE recipy.recipe_images
+CREATE TABLE recipe_images
 (
     image_id  character varying(255)      NOT NULL,
     recipe_id character varying(255)      NOT NULL,
@@ -97,10 +95,10 @@ CREATE TABLE recipy.recipe_images
     created   timestamp without time zone NOT NULL,
     CONSTRAINT recipe_images_pkey PRIMARY KEY (image_id),
     CONSTRAINT recipe_images_recipe_fkey FOREIGN KEY (recipe_id)
-        REFERENCES recipy.recipes (recipe_id) MATCH SIMPLE
+        REFERENCES recipes (recipe_id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 );
 
-ALTER TABLE recipy.recipe_images
-    OWNER to root;
+ALTER TABLE recipe_images
+    OWNER to postgres;
