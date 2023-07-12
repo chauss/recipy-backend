@@ -31,6 +31,7 @@
     <kotlin-loggin-jvm.version>3.0.5</kotlin-loggin-jvm.version>
     <spring-cloud-gcp.version>3.5.4</spring-cloud-gcp.version>
     <com-google-cloud-sql.version>1.13.0</com-google-cloud-sql.version>
+    <org-postgres-postgres.version>42.6.0</org-postgres-postgres.version>
   </properties>
 
   <build>
@@ -146,8 +147,9 @@
 
     <!--Runtime Dependencies -->
     <dependency>
-      <artifactId>postgresql</artifactId>
       <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${org-postgres-postgres.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
