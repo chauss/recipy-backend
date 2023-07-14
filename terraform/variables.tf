@@ -1,2 +1,0 @@
-variable "dbSuperUser" {}
-variable "dbPassword" {}

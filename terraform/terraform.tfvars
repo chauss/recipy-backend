@@ -1,2 +1,0 @@
-dbSuperUser = "postgres"
-dbPassword  = "postgres"
