@@ -4,8 +4,9 @@
 2. network
 3. database
 4. postgres
-5. service
-6. ext-access
+5. resources
+6. service
+7. ext-access
 
 ## State
 This is the state bucket in google cloud that has to be created first. All other terraform modules will use this bucket to store their state remote.
@@ -18,6 +19,9 @@ This will create the Cloud SQL instance and database as well as the initial supe
 
 ## Postgres
 Creates the database schema for the application and a custom editor role for the schema. Then creates the SA for the recipy-backend CR service as well as a database user for this SA and grants it the custom editor role.
+
+## Resources
+This deploys the cloud resources which the cloud run service will need.
 
 ## Service
 This deploys the cloud run service that runs the recipy-backend.
