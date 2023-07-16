@@ -35,3 +35,11 @@ data "terraform_remote_state" "postgres" {
     prefix = "postgres"
   }
 }
+
+data "terraform_remote_state" "resources" {
+  backend = "gcs"
+  config = {
+    bucket = "tf-state-recipy"
+    prefix = "resources"
+  }
+}

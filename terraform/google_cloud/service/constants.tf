@@ -9,5 +9,6 @@ locals {
     "roles/cloudsql.editor",
     "roles/cloudsql.instanceUser",
     "roles/iam.serviceAccountTokenCreator",
+    "roles/storage.admin",
   ]
 }

@@ -69,6 +69,10 @@ resource "google_cloud_run_v2_service" "recipy_backend_service" {
         name  = "DB_ACCESS_SA"
         value = trimsuffix(data.terraform_remote_state.postgres.outputs.cloud_run_sa_email, ".gserviceaccount.com")
       }
+      env {
+        name  = "RECIPY_REPOSITORIES_IMAGE_GCS_BUCKET_NAME"
+        value = data.terraform_remote_state.resources.outputs.image_gcs_bucket_name
+      }
     }
     vpc_access {
       connector = data.google_vpc_access_connector.recipy_vpc_serverless_access_connector.id

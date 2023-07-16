@@ -5,10 +5,10 @@ resource "random_string" "random_bucket_suffix" {
 }
 
 resource "google_storage_bucket" "images_bucket" {
-  name          = "recipy-images-${random_string.random_bucket_suffix.result}"
-  location      = "EU"
+  name                        = "recipy-images-${random_string.random_bucket_suffix.result}"
+  location                    = "EU"
   uniform_bucket_level_access = true
-  force_destroy = true
+  force_destroy               = true
 }
 
 # Make bucket public for allUser / everybody
