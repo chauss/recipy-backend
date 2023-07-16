@@ -1,6 +1,7 @@
 package de.chauss.recipy.service
 
 import de.chauss.recipy.database.models.*
+import de.chauss.recipy.repositories.image.ImageRepository
 import de.chauss.recipy.service.dtos.PreparationStepDto
 import de.chauss.recipy.service.dtos.RecipeDto
 import de.chauss.recipy.service.dtos.RecipeImageDto

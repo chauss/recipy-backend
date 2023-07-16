@@ -18,7 +18,7 @@
   <properties>
     <java.version>17</java.version>
     <kotlin.code.style>official</kotlin.code.style>
-    <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
+    <kotlin.compiler.jvmTarget>1.9</kotlin.compiler.jvmTarget>
     <kotlin.version>1.9.0</kotlin.version>
     <spring-boot-starter-web.version>3.1.0-RC2</spring-boot-starter-web.version>
     <hibernate-core.version>6.2.6.Final</hibernate-core.version>
@@ -32,7 +32,9 @@
     <kotlin-loggin-jvm.version>3.0.5</kotlin-loggin-jvm.version>
     <spring-cloud-gcp.version>3.5.4</spring-cloud-gcp.version>
     <com-google-cloud-sql.version>1.13.0</com-google-cloud-sql.version>
+    <com-google-cloud-storage.version>2.24.0</com-google-cloud-storage.version>
     <org-postgres-postgres.version>42.6.0</org-postgres-postgres.version>
+    <google-http-client-jackson2.version>1.43.3</google-http-client-jackson2.version>
   </properties>
 
   <build>
@@ -42,7 +44,24 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
       <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
+        <version>${kotlin.version}</version>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+
+          <execution>
+            <id>test-compile</id>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <args>
             <arg>-Xjsr305=strict</arg>
@@ -71,7 +90,6 @@
             <version>${kotlin.version}</version>
           </dependency>
         </dependencies>
-        <groupId>org.jetbrains.kotlin</groupId>
       </plugin>
     </plugins>
     <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
@@ -80,6 +98,12 @@
 
   <dependencies>
     <!--Compile Time Dependencies -->
+    <!-- This is necessary to prevent ClassNotFoundException JacksonFactory on init of FirebaseOptions-->
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-jackson2</artifactId>
+      <version>${google-http-client-jackson2.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -145,6 +169,11 @@
       <groupId>com.google.cloud.sql</groupId>
       <artifactId>postgres-socket-factory</artifactId>
       <version>${com-google-cloud-sql.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-storage</artifactId>
+      <version>${com-google-cloud-storage.version}</version>
     </dependency>
 
     <!--Runtime Dependencies -->

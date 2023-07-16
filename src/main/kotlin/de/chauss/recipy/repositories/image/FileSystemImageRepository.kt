@@ -1,21 +1,15 @@
-package de.chauss.recipy.database.models
+package de.chauss.recipy.repositories.image
 
+import de.chauss.recipy.repositories.image.ImageRepository.Companion.generateRandomImageId
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.stereotype.Component
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.random.Random
 
-@Component
 class FileSystemImageRepository(
     @Value("\${recipy.data.images.path}") var appDataDir: String
 ) : ImageRepository {
 
-    private val imageRandomPartLength: Int = 10
-
     val imageDirName: String = "recipy_images"
-
-    private val imageNameCharPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 
     override fun saveImage(bytes: ByteArray, recipeId: String, extension: String): String {
         val imageDirForRecipe = imageDirForRecipe(recipeId)
@@ -55,15 +49,5 @@ class FileSystemImageRepository(
         return "%s/%s/%s".format(appDataDir, imageDirName, recipeId)
     }
 
-    private fun generateRandomImageId(extension: String): String {
-        val randomId = (1..imageRandomPartLength)
-            .map {
-                Random.nextInt(0, imageNameCharPool.size)
-                    .let { imageNameCharPool[it] }
-            }
-            .joinToString("")
-
-        return "image_%s.%s".format(randomId, extension)
-    }
 
 }

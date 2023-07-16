@@ -1,5 +1,7 @@
 package de.chauss.recipy.database.models
 
+import de.chauss.recipy.repositories.image.FileSystemImageRepository
+import de.chauss.recipy.repositories.image.ImageRepository
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import java.nio.file.Files
