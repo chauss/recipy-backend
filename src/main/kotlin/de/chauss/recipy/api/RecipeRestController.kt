@@ -18,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException
 
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping(value = ["/api/v1"])
 class RecipeRestController(
     @Autowired val recipeService: RecipeService,
