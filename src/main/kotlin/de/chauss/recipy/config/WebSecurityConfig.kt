@@ -51,7 +51,7 @@ class WebSecurityConfig {
                 customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .cors { corsCustomizer ->
-                corsCustomizer.configure(http)  // Enables cors
+                corsCustomizer.configure(http)  // Enable configuration via @CrossOrigin
             }
 
         logger.info { "Building security filter chain..." }

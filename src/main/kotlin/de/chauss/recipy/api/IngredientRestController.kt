@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping(value = ["/api/v1"])
+@CrossOrigin(origins = ["https://recipy-app.de"])
 class IngredientRestController(
     @Autowired val ingredientService: IngredientService,
 ) {

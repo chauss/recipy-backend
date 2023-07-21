@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
 
-
 @RestController
 @RequestMapping(value = ["/api/v1"])
+@CrossOrigin(origins = ["https://recipy-app.de"])
 class RecipeRestController(
     @Autowired val recipeService: RecipeService,
 ) {
