@@ -14,6 +14,6 @@ resource "google_storage_bucket" "images_bucket" {
 # Make bucket public for allUser / everybody
 resource "google_storage_bucket_iam_member" "osc_member" {
   bucket = google_storage_bucket.images_bucket.name
-  role   = "roles/storage.objectViewer"
+  role   = "roles/storage.legacyObjectReader"
   member = "allUsers"
 }
