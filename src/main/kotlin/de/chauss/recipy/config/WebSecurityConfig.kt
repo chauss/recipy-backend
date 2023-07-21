@@ -50,12 +50,14 @@ class WebSecurityConfig {
             .sessionManagement { customizer ->
                 customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
+            .cors { corsCustomizer ->
+                corsCustomizer.configure(http)  // Enables cors
+            }
 
         logger.info { "Building security filter chain..." }
 
         return http.build()
     }
-
 
     @Bean
     fun authenticationManagerResolver(
