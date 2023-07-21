@@ -37,6 +37,9 @@ class GcsBucketImageRepository(
         val blobs = bucket.list(
             Storage.BlobListOption.prefix(recipeId)
         )
+        if (!blobs.hasNextPage()) {
+            return
+        }
         for (blob in blobs.iterateAll()) {
             batch.delete(blob.blobId)
         }

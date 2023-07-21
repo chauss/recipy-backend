@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 
-
 @Configuration
 @EnableWebSecurity
 class WebSecurityConfig {
@@ -50,9 +49,9 @@ class WebSecurityConfig {
             .sessionManagement { customizer ->
                 customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-//            .cors { corsCustomizer ->
-//                corsCustomizer.configure(http)  // Enable configuration via @CrossOrigin
-//            }
+            .cors { corsCustomizer ->
+                corsCustomizer.configure(http)  // Enable configuration via @CrossOrigin
+            }
 
         logger.info { "Building security filter chain..." }
 
