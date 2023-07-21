@@ -22,6 +22,6 @@ class WebMvcConfiguration(
     override fun addCorsMappings(registry: CorsRegistry) {
         logger.info { "Setting cors allowed origins to $allowedOrigin" }
         registry.addMapping("/**").allowedOrigins(allowedOrigin)
-        registry.addMapping("/**").allowedMethods("GET", "DELETE", "UPDATE", "POST")
+        registry.addMapping("/**").allowedMethods("GET", "DELETE", "PUT", "POST")
     }
 }
