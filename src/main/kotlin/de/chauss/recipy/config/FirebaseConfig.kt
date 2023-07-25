@@ -9,10 +9,11 @@ import mu.KotlinLogging
 import org.springframework.beans.factory.BeanInitializationException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import java.net.URL
 
-
 @Configuration
+@Profile("!test")
 class FirebaseConfig(
     @Value("\${recipy.encryption.encrypted-firebase-credentials-file}") val encryptedFirebaseCredentialsFile: String,
     @Value("\${recipy.encryption.firebase.secret-key}") val firebaseSecretKey: String,
