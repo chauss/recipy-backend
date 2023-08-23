@@ -21,7 +21,7 @@ resource "google_sql_database_instance" "recipy_instance" {
         for_each = var.db_instance_with_public_ip ? [1] : []
         content {
           name  = "Terraform executor IP-Adress"
-          value = trim(data.http.myip.response_body, " \n")
+          value = trim(data.http.myip[0].response_body, " \n")
         }
       }
     }
