@@ -22,7 +22,7 @@
     <kotlin.version>1.9.10</kotlin.version>
     <spring-boot-starter-web.version>3.2.0-M2</spring-boot-starter-web.version>
     <hibernate-core.version>6.2.7.Final</hibernate-core.version>
-    <flyway-core.version>9.21.2</flyway-core.version>
+    <flyway-core.version>9.22.0</flyway-core.version>
     <h2.version>2.2.220</h2.version>
     <springmockk.version>4.0.2</springmockk.version>
     <junit-jupiter.version>5.10.0</junit-jupiter.version>
