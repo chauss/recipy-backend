@@ -33,7 +33,7 @@
     <spring-cloud-gcp.version>3.5.4</spring-cloud-gcp.version>
     <com-google-cloud-sql.version>1.15.0</com-google-cloud-sql.version>
     <com-google-cloud-storage.version>2.29.1</com-google-cloud-storage.version>
-    <org-postgres-postgres.version>42.6.0</org-postgres-postgres.version>
+    <org-postgres-postgres.version>42.7.0</org-postgres-postgres.version>
     <google-http-client-jackson2.version>1.43.3</google-http-client-jackson2.version>
   </properties>
 
