@@ -19,7 +19,7 @@
     <java.version>17</java.version>
     <kotlin.code.style>official</kotlin.code.style>
     <kotlin.compiler.jvmTarget>1.9</kotlin.compiler.jvmTarget>
-    <kotlin.version>1.9.24</kotlin.version>
+    <kotlin.version>2.0.0</kotlin.version>
     <spring-boot-starter-web.version>3.3.0-RC1</spring-boot-starter-web.version>
     <hibernate-core.version>6.5.2.Final</hibernate-core.version>
     <flyway-core.version>9.22.3</flyway-core.version>
