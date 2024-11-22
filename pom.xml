@@ -21,7 +21,7 @@
     <kotlin.compiler.jvmTarget>1.9</kotlin.compiler.jvmTarget>
     <kotlin.version>1.9.24</kotlin.version>
     <spring-boot-starter-web.version>3.4.0-RC1</spring-boot-starter-web.version>
-    <hibernate-core.version>6.6.2.Final</hibernate-core.version>
+    <hibernate-core.version>6.6.3.Final</hibernate-core.version>
     <flyway-core.version>9.22.3</flyway-core.version>
     <h2.version>2.3.232</h2.version>
     <springmockk.version>4.0.2</springmockk.version>
