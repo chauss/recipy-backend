@@ -34,7 +34,7 @@
     <com-google-cloud-sql.version>1.23.0</com-google-cloud-sql.version>
     <com-google-cloud-storage.version>2.48.1</com-google-cloud-storage.version>
     <org-postgres-postgres.version>42.7.5</org-postgres-postgres.version>
-    <google-http-client-jackson2.version>1.45.3</google-http-client-jackson2.version>
+    <google-http-client-jackson2.version>1.46.0</google-http-client-jackson2.version>
   </properties>
 
   <build>
