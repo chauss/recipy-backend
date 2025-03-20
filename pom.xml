@@ -31,7 +31,7 @@
     <spring-boot-starter-security.version>3.1.0</spring-boot-starter-security.version>
     <kotlin-loggin-jvm.version>3.0.5</kotlin-loggin-jvm.version>
     <spring-cloud-gcp.version>3.5.4</spring-cloud-gcp.version>
-    <com-google-cloud-sql.version>1.23.1</com-google-cloud-sql.version>
+    <com-google-cloud-sql.version>1.24.0</com-google-cloud-sql.version>
     <com-google-cloud-storage.version>2.50.0</com-google-cloud-storage.version>
     <org-postgres-postgres.version>42.7.5</org-postgres-postgres.version>
     <google-http-client-jackson2.version>1.46.3</google-http-client-jackson2.version>
