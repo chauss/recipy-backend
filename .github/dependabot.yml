@@ -7,5 +7,3 @@ updates:
       time: "07:00"
       timezone: Europe/Berlin
     open-pull-requests-limit: 20
-    reviewers:
-      - "chauss"
