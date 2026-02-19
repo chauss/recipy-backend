@@ -24,7 +24,7 @@
     <hibernate-core.version>6.6.15.Final</hibernate-core.version>
     <flyway-core.version>9.22.3</flyway-core.version>
     <h2.version>2.4.240</h2.version>
-    <springmockk.version>4.0.2</springmockk.version>
+    <springmockk.version>5.0.1</springmockk.version>
     <junit-jupiter.version>5.11.4</junit-jupiter.version>
     <apache-common-io.version>2.21.0</apache-common-io.version>
     <firebase-admin.version>9.7.1</firebase-admin.version>
